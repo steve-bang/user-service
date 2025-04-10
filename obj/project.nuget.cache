@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "zAHTVAl6eF4=",
+  "success": true,
+  "projectFilePath": "/Users/mrsteve.bang/Documents/_projects/manager-zero/UserService/UserService.csproj",
+  "expectedPackageFiles": [
+    "/Users/mrsteve.bang/.nuget/packages/microsoft.aspnetcore.openapi/9.0.0/microsoft.aspnetcore.openapi.9.0.0.nupkg.sha512",
+    "/Users/mrsteve.bang/.nuget/packages/microsoft.openapi/1.6.17/microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
