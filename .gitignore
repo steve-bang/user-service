@@ -492,4 +492,5 @@ $RECYCLE.BIN/
 /user.json
 .azure
 
-/obj
+ obj/
+ bin/
