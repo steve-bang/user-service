@@ -1,0 +1,205 @@
+/*
+* Author: Steve Bang
+* History:
+* - [2024-04-11] - Created by mrsteve.bang@gmail.com
+*/
+
+using Steve.ManagerHero.UserService.Domain.Common;
+using Steve.ManagerHero.UserService.Domain.Constants;
+using Steve.ManagerHero.UserService.Domain.Events;
+using Steve.ManagerHero.UserService.Domain.ValueObjects;
+
+namespace Steve.ManagerHero.UserService.Domain.AggregatesModel;
+
+/// <summary>
+/// This class represents a user in the system.
+/// </summary>
+public class User : AggregateRoot
+{
+    // Personal Information
+    public string FirstName { get; private set; }
+    public string LastName { get; private set; }
+    public string DisplayName { get; private set; }
+
+    // Contact Information
+    public EmailAddress EmailAddress { get; private set; }
+    public EmailAddress? SecondaryEmailAddress { get; private set; }
+    public PhoneNumber? PhoneNumber { get; private set; }
+
+    // Authentication
+    public PasswordHash PasswordHash { get; private set; }
+    public DateTime? PasswordChangedDate { get; private set; }
+    public DateTime? LastLoginDate { get; private set; }
+
+    // Address
+    public Address? Address { get; private set; }
+
+    // Status
+    public UserStatus Status { get; private set; }
+    public bool IsActive { get; private set; }
+    public bool IsEmailVerified { get; private set; }
+    public bool IsPhoneVerified { get; private set; }
+
+    // Timestamps
+    public DateTime CreatedAt { get; private set; }
+    public DateTime? UpdatedAt { get; private set; }
+
+    // Navigation Properties
+    private readonly List<Role> _roles = new();
+    public IReadOnlyCollection<Role> Roles => _roles.AsReadOnly();
+
+    //private readonly List<UserSession> _sessions = new();
+    //public IReadOnlyCollection<UserSession> Sessions => _sessions.AsReadOnly();
+
+    //private readonly List<RefreshToken> _refreshTokens = new();
+    //public IReadOnlyCollection<RefreshToken> RefreshTokens => _refreshTokens.AsReadOnly();
+
+    // Constructor for new user registration
+    private User(
+        string firstName,
+        string lastName,
+        EmailAddress emailAddress,
+        PasswordHash passwordHash)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        EmailAddress = emailAddress;
+        PasswordHash = passwordHash;
+        DisplayName = $"{firstName} {lastName}";
+        Status = UserStatus.Active;
+        IsActive = true;
+        CreatedAt = DateTime.UtcNow;
+
+        AddEvent(new UserCreatedEvent(this));
+    }
+
+    // Factory method for creating new user
+    public static User Create(
+        string firstName,
+        string lastName,
+        string email,
+        string password)
+    {
+        // Validate inputs
+        if (string.IsNullOrWhiteSpace(firstName))
+            throw new InvalidOperationException("First name cannot be empty");
+
+        if (string.IsNullOrWhiteSpace(lastName))
+            throw new InvalidOperationException("Last name cannot be empty");
+
+        var emailAddress = new EmailAddress(email);
+        var passwordHash = PasswordHash.Create(password);
+
+        return new User(firstName, lastName, emailAddress, passwordHash);
+    }
+
+    // Domain Methods
+    public void UpdateName(string firstName, string lastName)
+    {
+        if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName))
+            throw new InvalidOperationException("First and last names cannot be empty");
+
+        FirstName = firstName;
+        LastName = lastName;
+        DisplayName = $"{firstName} {lastName}";
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+    public void UpdateEmail(EmailAddress emailAddress)
+    {
+        if (EmailAddress == emailAddress) return;
+
+        EmailAddress = emailAddress;
+        IsEmailVerified = false;
+        UpdatedAt = DateTime.UtcNow;
+
+        AddEvent(new UserEmailChangedEvent(this));
+    }
+
+    public void UpdatePhoneNumber(PhoneNumber phoneNumber)
+    {
+        PhoneNumber = phoneNumber;
+        IsPhoneVerified = false;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+    public void UpdatePassword(string newPassword)
+    {
+        var newPasswordHash = PasswordHash.Create(newPassword);
+        PasswordHash = newPasswordHash;
+        PasswordChangedDate = DateTime.UtcNow;
+        UpdatedAt = DateTime.UtcNow;
+
+        // Revoke all refresh tokens
+        //_refreshTokens.ForEach(rt => rt.Revoke());
+
+        AddEvent(new UserPasswordChangedEvent(this));
+    }
+
+    public void VerifyEmail()
+    {
+        if (IsEmailVerified) return;
+
+        IsEmailVerified = true;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+    public void VerifyPhone()
+    {
+        if (PhoneNumber == null)
+            throw new InvalidOperationException("Phone number not set");
+
+        IsPhoneVerified = true;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+    public void AddRole(Role role)
+    {
+        if (_roles.Any(r => r.Id == role.Id))
+            return;
+
+        _roles.Add(role);
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+    public void RemoveRole(Role role)
+    {
+        _roles.RemoveAll(r => r.Id == role.Id);
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+    public bool HasPermission(string permissionCode)
+    {
+        return _roles.Any(r => r.RolePermissions.Any(p => p.Permission.Code == permissionCode));
+    }
+
+    public void RecordLogin()
+    {
+        LastLoginDate = DateTime.UtcNow;
+    }
+
+    public void Deactivate()
+    {
+        if (!IsActive) return;
+
+        IsActive = false;
+        Status = UserStatus.Inactive;
+        UpdatedAt = DateTime.UtcNow;
+
+        // Revoke all active sessions
+        //_sessions.ForEach(s => s.Deactivate());
+
+        AddEvent(new UserDeactivatedEvent(this));
+    }
+
+    public void Activate()
+    {
+        if (IsActive) return;
+
+        IsActive = true;
+        Status = UserStatus.Active;
+        UpdatedAt = DateTime.UtcNow;
+
+        AddEvent(new UserActivatedEvent(this));
+    }
+}
