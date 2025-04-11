@@ -1,6 +1,6 @@
 # Manager Zero User Service
 
-![.NET Core](https://img.shields.io/badge/.NET-6.0-blue)
+![.NET Core](https://img.shields.io/badge/.NET-9.0-blue)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Table of Contents
@@ -46,44 +46,44 @@
 ## Getting Started
 
 ### Prerequisites
-- .NET 6 SDK
+- .NET 9 SDK
 - PostgreSQL 12+
 - Docker (optional)
 
 ### Installation
 1. Clone the repository:
 ```bash
-git clone https://github.com/your-repo/user-management.git
-cd user-management
+git clone git@github.com:steve-bang/user-service-dot-net.git
+cd UserService
 ```
 2. Configure the application:
 ```bash
-cp src/UserManagement.Api/appsettings.Example.json src/UserManagement.Api/appsettings.json
+cp src/UserService.Api/appsettings.Example.json src/UserService.Api/appsettings.json
 ```
 3. Update configuration:
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost;Database=UserManagement;Username=postgres;Password=yourpassword"
+    "DefaultConnection": "Server=localhost;Database=your-database;Username=user;Password=yourpassword"
   },
   "Jwt": {
     "Key": "your-secure-key-here",
-    "Issuer": "user-management",
+    "Issuer": "user-service",
     "ExpiryInMinutes": 60
   }
 }
 ```
 4. Run database migrations:
 ```bash
-dotnet ef database update --project src/UserManagement.Infrastructure --startup-project src/UserManagement.Api
+dotnet ef database update
 ```
 5. Seed initial data:
 ```bash
-dotnet run --project src/UserManagement.Api seed
+dotnet run seed
 ```
 6. Run the application:
 ```bash
-dotnet run --project src/UserManagement.Api
+dotnet run
 ```
 
 ## Domain Model
