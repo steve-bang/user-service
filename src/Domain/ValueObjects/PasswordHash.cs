@@ -14,7 +14,7 @@ public sealed class PasswordHash : ValueObject
     public string Hash { get; }
     public string Salt { get; }
     
-    private PasswordHash(string hash, string salt)
+    public PasswordHash(string hash, string salt)
     {
         Hash = hash;
         Salt = salt;

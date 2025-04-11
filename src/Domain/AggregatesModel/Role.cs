@@ -14,17 +14,13 @@ public class Role : AggregateRoot
     public string Description { get; private set; }
     public bool IsDefault { get; private set; }
     public DateTime CreatedAt { get; private set; }
-    public DateTime? UpdatedAt { get; private set; }
-    
+
     // Navigation properties
     private readonly List<RolePermission> _rolePermissions = new();
     public IReadOnlyCollection<RolePermission> RolePermissions => _rolePermissions.AsReadOnly();
-    
+
     private readonly List<UserRole> _userRoles = new();
     public IReadOnlyCollection<UserRole> UserRoles => _userRoles.AsReadOnly();
-
-    // Private constructor for EF Core
-    private Role() { }
 
     public Role(string name, string description, bool isDefault = false)
     {
@@ -38,13 +34,11 @@ public class Role : AggregateRoot
     {
         Name = name;
         Description = description ?? string.Empty;
-        UpdatedAt = DateTime.UtcNow;
     }
 
     public void MarkAsDefault()
     {
         IsDefault = true;
-        UpdatedAt = DateTime.UtcNow;
     }
 
     public void AddPermission(Permission permission)
@@ -52,7 +46,6 @@ public class Role : AggregateRoot
         if (!_rolePermissions.Any(rp => rp.PermissionId == permission.Id))
         {
             _rolePermissions.Add(new RolePermission(this, permission));
-            UpdatedAt = DateTime.UtcNow;
         }
     }
 
@@ -62,13 +55,12 @@ public class Role : AggregateRoot
         if (rolePermission != null)
         {
             _rolePermissions.Remove(rolePermission);
-            UpdatedAt = DateTime.UtcNow;
         }
     }
 
     public bool HasPermission(string permissionName)
     {
-        return _rolePermissions.Any(rp => 
+        return _rolePermissions.Any(rp =>
             string.Equals(rp.Permission.Name, permissionName, StringComparison.OrdinalIgnoreCase));
     }
 }

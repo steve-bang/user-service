@@ -45,8 +45,8 @@ public class User : AggregateRoot
     public DateTime? UpdatedAt { get; private set; }
 
     // Navigation Properties
-    private readonly List<Role> _roles = new();
-    public IReadOnlyCollection<Role> Roles => _roles.AsReadOnly();
+    private readonly List<UserRole> _userRoles = new();
+    public IReadOnlyCollection<UserRole> UserRoles => _userRoles.AsReadOnly();
 
     //private readonly List<UserSession> _sessions = new();
     //public IReadOnlyCollection<UserSession> Sessions => _sessions.AsReadOnly();
@@ -153,25 +153,25 @@ public class User : AggregateRoot
         UpdatedAt = DateTime.UtcNow;
     }
 
-    public void AddRole(Role role)
-    {
-        if (_roles.Any(r => r.Id == role.Id))
-            return;
+    // public void AddRole(Role role)
+    // {
+    //     if (_roles.Any(r => r.Id == role.Id))
+    //         return;
 
-        _roles.Add(role);
-        UpdatedAt = DateTime.UtcNow;
-    }
+    //     _roles.Add(role);
+    //     UpdatedAt = DateTime.UtcNow;
+    // }
 
-    public void RemoveRole(Role role)
-    {
-        _roles.RemoveAll(r => r.Id == role.Id);
-        UpdatedAt = DateTime.UtcNow;
-    }
+    // public void RemoveRole(Role role)
+    // {
+    //     _roles.RemoveAll(r => r.Id == role.Id);
+    //     UpdatedAt = DateTime.UtcNow;
+    // }
 
-    public bool HasPermission(string permissionCode)
-    {
-        return _roles.Any(r => r.RolePermissions.Any(p => p.Permission.Code == permissionCode));
-    }
+    // public bool HasPermission(string permissionCode)
+    // {
+    //     return _roles.Any(r => r.RolePermissions.Any(p => p.Permission.Code == permissionCode));
+    // }
 
     public void RecordLogin()
     {

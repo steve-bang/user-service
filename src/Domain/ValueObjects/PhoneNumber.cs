@@ -12,7 +12,7 @@ public sealed class PhoneNumber : ValueObject
 {
     public string Value { get; }
 
-    private PhoneNumber(string value)
+    public PhoneNumber(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
             throw new InvalidOperationException("Phone number cannot be empty");

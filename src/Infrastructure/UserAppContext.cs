@@ -1,9 +1,17 @@
+/*
+* Author: Steve Bang
+* History:
+* - [2024-04-11] - Created by mrsteve.bang@gmail.com
+*/
 
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Steve.ManagerHero.UserService.Domain.AggregatesModel;
 using Steve.ManagerHero.UserService.Domain.Common;
 
+
+namespace Steve.ManagerHero.UserService.Infrastructure;
 
 /// <summary>
 /// 
@@ -11,7 +19,8 @@ using Steve.ManagerHero.UserService.Domain.Common;
 /// </summary>
 /// <param name="options"></param>
 public class UserAppContext(
-    DbContextOptions<UserAppContext> options
+    DbContextOptions<UserAppContext> options,
+    IMediator _mediator
 ) : DbContext(options), IUnitOfWork
 {
 
@@ -45,6 +54,11 @@ public class UserAppContext(
         // After executing this line all the changes (from the Command Handler and Domain Event Handlers) 
         // performed through the DbContext will be committed
         _ = await base.SaveChangesAsync(cancellationToken);
+
+        if (_mediator != null)
+        {
+            await _mediator.DispatchDomainEventsAsync(this);
+        }
 
         return true;
     }

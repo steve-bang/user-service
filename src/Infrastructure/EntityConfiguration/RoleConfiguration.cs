@@ -15,22 +15,33 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
     public void Configure(EntityTypeBuilder<Role> builder)
     {
         builder.ToTable("Role");
-        
+
         builder.HasKey(r => r.Id);
-        
+
         builder.Property(r => r.Name)
             .IsRequired()
-            .HasMaxLength(100);
-            
+            .HasMaxLength(100)
+            .HasColumnName("name");
+
         builder.Property(r => r.Description)
-            .HasMaxLength(500);
-            
+            .HasMaxLength(500)
+            .HasColumnName("description");
+
         builder.Property(r => r.IsDefault)
-            .HasDefaultValue(false);
-            
+            .HasDefaultValue(false)
+            .HasColumnName("is_default");
+
+        // Timestamps
         builder.Property(r => r.CreatedAt)
-            .IsRequired();
-            
+            .IsRequired()
+            .HasColumnName("created_at")
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+        builder
+            .HasMany(r => r.UserRoles)
+            .WithOne(ur => ur.Role)
+            .HasForeignKey(ur => ur.RoleId);
+
         builder.HasIndex(r => r.Name)
             .IsUnique();
     }

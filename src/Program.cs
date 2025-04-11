@@ -1,7 +1,11 @@
+using Steve.ManagerHero.UserService.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddOpenApi();
+
+builder.AddCoreServices();
 
 var app = builder.Build();
 
