@@ -73,9 +73,22 @@ public class ApiResponseSuccess<T> : ApiResponse
     /// </summary>
     /// <param name="data">The data to be returned</param>
     /// <returns></returns>
-    public static ApiResponseSuccess<T> BuildSuccess(T data)
+    public static ApiResponseSuccess<T> BuildOK(T data)
     {
         return new ApiResponseSuccess<T>(HttpStatusCode.OK, data);
+    }
+
+    /// <summary>
+    /// Returns a response with a status code of Created (201) and the data provided
+    /// </summary>
+    /// <param name="data">The data to be returned</param>
+    /// <returns></returns>
+    public static ObjectResult BuildOKObjectResult(T data)
+    {
+        return new ObjectResult(new ApiResponseSuccess<T>(HttpStatusCode.OK, data))
+        {
+            StatusCode = (int)HttpStatusCode.OK
+        };
     }
 
     /// <summary>
@@ -196,8 +209,8 @@ public class ApiResponseError : ApiResponse
             return new ApiResponseError("Internal_Server_Error", exception.ToString(), HttpStatusCode.InternalServerError);
         else
             return new ApiResponseError(
-                managerHeroException.ErrorCode, 
-                managerHeroException.Message, 
+                managerHeroException.ErrorCode,
+                managerHeroException.Message,
                 managerHeroException.HttpCode
             );
     }

@@ -9,10 +9,7 @@ using System.Net;
 namespace Steve.ManagerHero.UserService.Domain.Exceptions;
 public class NotFoundDataException : ManagerHeroException
 {
-    public NotFoundDataException(string entity, string code) : base(
-        code,
-        string.Format("The {0} was not found.", entity)
-    )
+    public NotFoundDataException(string code, string messsage) : base( code, messsage)
     {
         HttpCode = HttpStatusCode.NotFound;
     }

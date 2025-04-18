@@ -7,6 +7,7 @@
 using Steve.ManagerHero.UserService.Domain.Common;
 using Steve.ManagerHero.UserService.Domain.Constants;
 using Steve.ManagerHero.UserService.Domain.Events;
+using Steve.ManagerHero.UserService.Domain.Exceptions;
 using Steve.ManagerHero.UserService.Domain.ValueObjects;
 
 namespace Steve.ManagerHero.UserService.Domain.AggregatesModel;
@@ -178,6 +179,16 @@ public class User : AggregateRoot
 
     public void RecordLogin()
     {
+        LastLoginDate = DateTime.UtcNow;
+    }
+
+    public void LoginPassword(string passwordRequest)
+    {
+        bool isCorrectPassword = PasswordHash.Verify(passwordRequest);
+
+        if(!isCorrectPassword)
+            throw ExceptionProviders.User.LoginPasswordFailed;
+
         LastLoginDate = DateTime.UtcNow;
     }
 

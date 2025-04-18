@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Steve.ManagerHero.Api.Models;
 using Steve.ManagerHero.Application.Features.Users.Commands;
+using Steve.ManagerHero.Application.Features.Users.Queries;
 using Steve.ManagerHero.UserService.Application.DTO;
 
 // [ApiController]
@@ -29,5 +30,16 @@ public class AuthController : ControllerBase
         ));
 
         return ApiResponseSuccess<UserDto>.BuildCreatedObjectResult(result);
+    }
+
+    [HttpPost("authenticate")]
+    public async Task<IActionResult> AuthenticatePassword([FromBody] LoginPasswordRequest request)
+    {
+        var result = await _mediator.Send(new LoginPasswordQuery(
+            EmailAddress: request.EmailAddress,
+            Password: request.Password
+        ));
+
+        return ApiResponseSuccess<AuthenticationResponseDto>.BuildOKObjectResult(result);
     }
 }

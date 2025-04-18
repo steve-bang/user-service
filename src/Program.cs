@@ -7,7 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 
-builder.AddCoreServices();
+builder.AddCoreServices()
+        .AddAuthenticationService();
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {

@@ -25,9 +25,13 @@ public class UserRepository(
         return userAdded.Entity;
     }
 
-    public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
+    public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var user = await _context
+            .Users
+            .FirstOrDefaultAsync(x => x.EmailAddress == new EmailAddress(email));
+
+        return user;
     }
 
     public Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default)

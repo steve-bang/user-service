@@ -32,6 +32,13 @@ public sealed class PasswordHash : ValueObject
         return new PasswordHash(hash, salt);
     }
 
+    public bool Verify(string passwordRequest)
+    {
+        var passwordHasher = PasswordTheBestFactory.Create(HashAlgorithmName.SHA256);
+
+        return passwordHasher.Verify(passwordRequest, Hash, Salt);
+    }
+
 
     protected override IEnumerable<object> GetEqualityComponents()
     {
