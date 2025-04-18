@@ -54,6 +54,8 @@ public class User : AggregateRoot
     //private readonly List<RefreshToken> _refreshTokens = new();
     //public IReadOnlyCollection<RefreshToken> RefreshTokens => _refreshTokens.AsReadOnly();
 
+    public User () {}
+
     // Constructor for new user registration
     private User(
         string firstName,
@@ -78,7 +80,8 @@ public class User : AggregateRoot
         string firstName,
         string lastName,
         string email,
-        string password)
+        string password
+    )
     {
         // Validate inputs
         if (string.IsNullOrWhiteSpace(firstName))

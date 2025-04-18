@@ -48,7 +48,7 @@ public static class MigrateDbContextExtensions
         {
             logger.LogInformation("Migrating database associated with context {DbContextName}", typeof(TContext).Name);
 
-            if(context is null) return;
+            if (context is null) return;
 
             var strategy = context.Database.CreateExecutionStrategy();
 
@@ -74,7 +74,7 @@ public static class MigrateDbContextExtensions
             await context.Database.MigrateAsync();
             await seeder(context, services);
         }
-        catch (Exception ex)
+        catch
         {
             //activity.SetExceptionTags(ex);
 

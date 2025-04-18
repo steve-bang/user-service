@@ -154,6 +154,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasDatabaseName("ix_users_status");
 
         // Soft delete filter
-        builder.HasQueryFilter(u => u.IsActive);
+        //builder.HasQueryFilter(u => u.IsActive);
     }
 }

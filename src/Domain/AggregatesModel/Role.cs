@@ -22,6 +22,8 @@ public class Role : AggregateRoot
     private readonly List<UserRole> _userRoles = new();
     public IReadOnlyCollection<UserRole> UserRoles => _userRoles.AsReadOnly();
 
+    public Role() {}
+
     public Role(string name, string description, bool isDefault = false)
     {
         Name = name;

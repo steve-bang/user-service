@@ -1,4 +1,11 @@
-using System.Net;
+/*
+* Author: Steve Bang
+* History:
+* - [2025-04-18] - Created by mrsteve.bang@gmail.com
+*/
+
+
+using Steve.ManagerHero.Api.Models;
 
 public class ExceptionMiddleware
 {
@@ -26,15 +33,13 @@ public class ExceptionMiddleware
 
     private static Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
-        context.Response.ContentType = "application/json";
-        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+        // Build api response error custom
+        ApiResponseError apiResponse = ApiResponseError.BuildException(exception);
 
-        var errorResponse = System.Text.Json.JsonSerializer.Serialize(new
-        {
-            context.Response.StatusCode,
-            Message = "Internal Server Error"
-        });
+        // Build with Exception
+        context.Response.StatusCode = apiResponse.StatusCode;
 
-        return context.Response.WriteAsync(errorResponse);
+        // Write and response
+        return context.Response.WriteAsJsonAsync(apiResponse);
     }
 }
