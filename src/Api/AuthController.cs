@@ -1,12 +1,12 @@
 
-using System.Threading.Tasks;
+
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Steve.ManagerHero.Api.Models;
 using Steve.ManagerHero.Application.Features.Users.Commands;
 using Steve.ManagerHero.UserService.Application.DTO;
 
-[ApiController]
+// [ApiController]
 [Route("api/v1/auth")]
 public class AuthController : ControllerBase
 {

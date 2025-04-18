@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Steve.ManagerHero.UserService.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,11 @@ builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 
 builder.AddCoreServices();
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
 
 var app = builder.Build();
 

@@ -4,6 +4,8 @@ using Steve.ManagerHero.UserService.Infrastructure;
 using MediatR;
 using Steve.ManagerHero.UserService.Application.Interfaces.Repository;
 using Steve.ManagerHero.UserService.Infrastructure.Repository;
+using FluentValidation;
+using Steve.ManagerHero.Application.Features.Users.Commands;
 
 namespace Steve.ManagerHero.UserService.Extensions;
 
@@ -22,7 +24,17 @@ public static class DependencyInjection
         builder.Services.AddMigration<UserAppContext>();
 
         // Add the MediatR services
-        builder.Services.AddMediatR(typeof(Program).Assembly);
+        builder.Services.AddMediatR(config =>
+        {
+            // Register all the handlers from the current assembly
+            config.RegisterServicesFromAssemblyContaining<Program>();
+
+            // Register the ValidationBehavior
+            config.AddOpenBehavior(typeof(ValidationBehaviour<,>));
+        });
+
+        // Register validator
+        builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserCommandValidator>();
 
 
         builder.Services.AddScoped<IRoleRepository, RoleRepository>();
