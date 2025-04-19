@@ -20,7 +20,10 @@ public class JwtHandler : IJwtHandler
     {
         var claims = new List<Claim>
         {
-            new (ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new (JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new (JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()),
+            new (ClaimTypes.NameIdentifier, user.DisplayName),
             new (ClaimTypes.Email, user.EmailAddress.Value),
         };
 
@@ -32,7 +35,7 @@ public class JwtHandler : IJwtHandler
         expires = DateTime.Now.AddHours(_jwtSettings.AccessTokenExpiryHours);
 
         // Generate the tokens
-        accessToken =  new JwtSecurityTokenHandler().WriteToken(new JwtSecurityToken(
+        accessToken = new JwtSecurityTokenHandler().WriteToken(new JwtSecurityToken(
             issuer: _jwtSettings.Issuer,
             claims: claims,
             expires: expires,

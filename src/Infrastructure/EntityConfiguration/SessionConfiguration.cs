@@ -14,12 +14,12 @@ public class UserSessionConfiguration : IEntityTypeConfiguration<Session>
         builder.Property(us => us.AccessToken)
             .HasColumnName("access_token")
             .IsRequired()
-            .HasMaxLength(500);
+            .HasMaxLength(1000);
 
         builder.Property(us => us.RefreshToken)
             .HasColumnName("refresh_token")
             .IsRequired()
-            .HasMaxLength(500);
+            .HasMaxLength(1000);
 
         builder.Property(us => us.IpAddress)
             .HasColumnName("ip_address")
