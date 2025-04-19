@@ -49,8 +49,9 @@ public class User : AggregateRoot
     private readonly List<UserRole> _userRoles = new();
     public IReadOnlyCollection<UserRole> UserRoles => _userRoles.AsReadOnly();
 
-    //private readonly List<UserSession> _sessions = new();
-    //public IReadOnlyCollection<UserSession> Sessions => _sessions.AsReadOnly();
+
+    private readonly List<Session> _sessions = new();
+    public IReadOnlyCollection<Session> Sessions => _sessions.AsReadOnly();
 
     //private readonly List<RefreshToken> _refreshTokens = new();
     //public IReadOnlyCollection<RefreshToken> RefreshTokens => _refreshTokens.AsReadOnly();

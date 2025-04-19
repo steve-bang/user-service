@@ -6,6 +6,7 @@ using Steve.ManagerHero.UserService.Application.Interfaces.Repository;
 using Steve.ManagerHero.UserService.Infrastructure.Repository;
 using FluentValidation;
 using Steve.ManagerHero.Application.Features.Users.Commands;
+using Steve.ManagerHero.UserService.Application.Auth;
 
 namespace Steve.ManagerHero.UserService.Extensions;
 
@@ -13,6 +14,10 @@ public static class DependencyInjection
 {
     public static IHostApplicationBuilder AddCoreServices(this IHostApplicationBuilder builder)
     {
+        // Add http context
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddScoped<IIdentityService, IdentityService>();
+
         builder.Services.AddDbContext<UserAppContext>(options =>
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
         );
@@ -37,9 +42,11 @@ public static class DependencyInjection
         builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserCommandValidator>();
 
 
+        // Register repositories
         builder.Services.AddScoped<IRoleRepository, RoleRepository>();
         builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<ISessionRepository, SessionRepository>();
 
         return builder;
     }
