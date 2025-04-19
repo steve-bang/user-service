@@ -40,9 +40,17 @@ public static class DependencyInjection
 
         // Register validator
         builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserCommandValidator>();
+        builder.Services.AddValidatorsFromAssemblyContaining<UpdateUserCommandValidator>();
 
 
         // Register repositories
+        builder.AddRepositories();
+
+        return builder;
+    }
+
+    public static IHostApplicationBuilder AddRepositories(this IHostApplicationBuilder builder)
+    {
         builder.Services.AddScoped<IRoleRepository, RoleRepository>();
         builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();

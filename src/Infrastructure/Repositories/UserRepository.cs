@@ -72,4 +72,11 @@ public class UserRepository(
     {
         throw new NotImplementedException();
     }
+
+    public User Update(User user)
+    {
+        var result = _context.Users.Update(user);
+
+        return result.Entity;
+    }
 }

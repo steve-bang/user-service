@@ -61,7 +61,7 @@ public class User : AggregateRoot
     //private readonly List<RefreshToken> _refreshTokens = new();
     //public IReadOnlyCollection<RefreshToken> RefreshTokens => _refreshTokens.AsReadOnly();
 
-    public User () {}
+    public User() { }
 
     // Constructor for new user registration
     private User(
@@ -101,6 +101,39 @@ public class User : AggregateRoot
         var passwordHash = PasswordHash.Create(password);
 
         return new User(firstName, lastName, emailAddress, passwordHash);
+    }
+
+    public void Update(
+        string emailAddress,
+        string firstName,
+        string lastName,
+        string displayName,
+        string? secondaryEmailAddress,
+        string? phoneNumber,
+        Address? address
+    )
+    {
+        UpdateName(firstName, lastName);
+        if (!string.IsNullOrEmpty(displayName))
+            DisplayName = displayName;
+
+
+        UpdateEmail(new EmailAddress(emailAddress));
+
+        if (!string.IsNullOrEmpty(secondaryEmailAddress))
+        {
+            SecondaryEmailAddress = new EmailAddress(secondaryEmailAddress);
+        }
+
+
+        if (!string.IsNullOrEmpty(phoneNumber))
+            UpdatePhoneNumber(new PhoneNumber(phoneNumber));
+
+
+        if (address != null)
+            Address = address;
+
+        UpdatedAt = DateTime.UtcNow.ToUniversalTime();
     }
 
     // Domain Methods
@@ -192,7 +225,7 @@ public class User : AggregateRoot
     {
         bool isCorrectPassword = PasswordHash.Verify(passwordRequest);
 
-        if(!isCorrectPassword)
+        if (!isCorrectPassword)
             throw ExceptionProviders.User.LoginPasswordFailed;
 
         LastLoginDate = DateTime.UtcNow;

@@ -5,7 +5,6 @@
 */
 
 using FluentValidation;
-using Steve.ManagerHero.UserService.Domain.Exceptions;
 
 namespace Steve.ManagerHero.Application.Features.Users.Commands;
 

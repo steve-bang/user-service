@@ -4,7 +4,6 @@
 * - [2025-04-11] - Created by mrsteve.bang@gmail.com
 */
 
-using Steve.ManagerHero.UserService.Domain.AggregatesModel;
 using Steve.ManagerHero.UserService.Domain.Common;
 
 namespace Steve.ManagerHero.UserService.Application.Interfaces.Repository;
@@ -20,4 +19,5 @@ public interface IUserRepository : IRepository
     Task<bool> IsUsernameUniqueAsync(string username, CancellationToken cancellationToken = default);
     Task<List<User>> GetUsersByRoleAsync(string roleName, CancellationToken cancellationToken = default);
     Task<List<User>> SearchUsersAsync(string searchTerm, CancellationToken cancellationToken = default);
+    User Update(User user);
 }

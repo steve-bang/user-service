@@ -4,12 +4,7 @@
 * - [2025-04-18] - Created by mrsteve.bang@gmail.com
 */
 
-using MediatR;
 using Steve.ManagerHero.UserService.Application.Auth;
-using Steve.ManagerHero.UserService.Application.DTO;
-using Steve.ManagerHero.UserService.Application.Interfaces.Repository;
-using Steve.ManagerHero.UserService.Domain.AggregatesModel;
-using Steve.ManagerHero.UserService.Domain.Exceptions;
 
 namespace Steve.ManagerHero.Application.Features.Users.Queries;
 

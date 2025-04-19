@@ -4,14 +4,12 @@
 * - [2025-04-18] - Created by mrsteve.bang@gmail.com
 */
 
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steve.ManagerHero.Api.Models;
 using Steve.ManagerHero.Application.Features.Users.Commands;
 using Steve.ManagerHero.Application.Features.Users.Queries;
 using Steve.ManagerHero.UserService.Application.Auth;
-using Steve.ManagerHero.UserService.Application.DTO;
 
 [Route("api/v1/auth")]
 public class AuthController : ControllerBase

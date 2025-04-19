@@ -4,8 +4,6 @@
 * - [2025-04-19] - Created by mrsteve.bang@gmail.com
 */
 
-using MediatR;
-
 namespace Steve.ManagerHero.Application.Features.Users.Commands;
 
 public record LogoutUserCommand(

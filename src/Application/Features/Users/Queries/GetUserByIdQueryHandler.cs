@@ -4,12 +4,6 @@
 * - [2025-04-18] - Created by mrsteve.bang@gmail.com
 */
 
-using MediatR;
-using Steve.ManagerHero.UserService.Application.DTO;
-using Steve.ManagerHero.UserService.Application.Interfaces.Repository;
-using Steve.ManagerHero.UserService.Domain.AggregatesModel;
-using Steve.ManagerHero.UserService.Domain.Exceptions;
-
 namespace Steve.ManagerHero.Application.Features.Users.Queries;
 
 public class GetUserByIdQueryHandler(
@@ -20,6 +14,19 @@ public class GetUserByIdQueryHandler(
     {
         User user = await _userRepository.GetByIdAsync(request.Id) ?? throw ExceptionProviders.User.NotFoundException;
 
-        return new UserDto(user.Id, user.EmailAddress.Value, user.FirstName, user.LastName);
+        return new UserDto(
+            Id: user.Id, 
+            EmailAddress: user.EmailAddress.Value,
+            FirstName: user.FirstName, 
+            LastName: user.LastName,
+            DisplayName: user.DisplayName,
+            SecondaryEmailAddress: user.SecondaryEmailAddress != null ? user.SecondaryEmailAddress.Value : null,
+            PhoneNumber: user.PhoneNumber != null ? user.PhoneNumber.Value : null,
+            LastLogin: user.LastLoginDate,
+            Address: user.Address,
+            IsActive: user.IsActive,
+            IsEmailVerified: user.IsEmailVerified,
+            IsPhoneVerified: user.IsPhoneVerified
+        );
     }
 }
