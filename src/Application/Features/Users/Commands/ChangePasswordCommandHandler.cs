@@ -23,6 +23,8 @@ public class ChangePasswordCommandHandler(
         // Update data in state
         _userRepository.Update(user);
 
+        // Clear session
+
         await _userRepository.UnitOfWork.SaveEntitiesAsync();
 
         return true;

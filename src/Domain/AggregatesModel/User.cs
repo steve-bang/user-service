@@ -174,8 +174,8 @@ public class User : AggregateRoot
         PasswordChangedDate = DateTime.UtcNow;
         UpdatedAt = DateTime.UtcNow;
 
-        // Revoke all refresh tokens
-        //_refreshTokens.ForEach(rt => rt.Revoke());
+        // Revoke all session
+        _sessions.Clear();
 
         AddEvent(new UserPasswordChangedEvent(this));
     }
