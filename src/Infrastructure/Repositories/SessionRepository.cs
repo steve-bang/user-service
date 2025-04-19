@@ -12,8 +12,6 @@
 */
 
 using Microsoft.EntityFrameworkCore;
-using Steve.ManagerHero.UserService.Application.Interfaces.Repository;
-using Steve.ManagerHero.UserService.Domain.AggregatesModel;
 using Steve.ManagerHero.UserService.Domain.Common;
 
 namespace Steve.ManagerHero.UserService.Infrastructure.Repository;

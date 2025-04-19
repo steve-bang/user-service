@@ -68,7 +68,8 @@ public class User : AggregateRoot
         string firstName,
         string lastName,
         EmailAddress emailAddress,
-        PasswordHash passwordHash)
+        PasswordHash passwordHash
+    )
     {
         FirstName = firstName;
         LastName = lastName;
@@ -79,7 +80,7 @@ public class User : AggregateRoot
         IsActive = true;
         CreatedAt = DateTime.UtcNow;
 
-        AddEvent(new UserCreatedEvent(this));
+        AddEvent(new RegistrationEvent(this));
     }
 
     // Factory method for creating new user

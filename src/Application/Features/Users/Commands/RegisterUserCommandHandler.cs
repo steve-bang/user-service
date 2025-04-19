@@ -29,18 +29,18 @@ public class RegisterUserCommandHandler(
         await _userRepository.UnitOfWork.SaveEntitiesAsync();
 
         return new UserDto(
-            Id: user.Id,
-            EmailAddress: user.EmailAddress.Value,
-            FirstName: user.FirstName,
-            LastName: user.LastName,
-            DisplayName: user.DisplayName,
-            SecondaryEmailAddress: user.SecondaryEmailAddress != null ? user.SecondaryEmailAddress.Value : null,
-            PhoneNumber: user.PhoneNumber != null ? user.PhoneNumber.Value : null,
-            LastLogin: user.LastLoginDate,
-            Address: user.Address,
-            IsActive: user.IsActive,
-            IsEmailVerified: user.IsEmailVerified,
-            IsPhoneVerified: user.IsPhoneVerified
+            Id: userCreated.Id,
+            EmailAddress: userCreated.EmailAddress.Value,
+            FirstName: userCreated.FirstName,
+            LastName: userCreated.LastName,
+            DisplayName: userCreated.DisplayName,
+            SecondaryEmailAddress: userCreated.SecondaryEmailAddress != null ? userCreated.SecondaryEmailAddress.Value : null,
+            PhoneNumber: userCreated.PhoneNumber != null ? userCreated.PhoneNumber.Value : null,
+            LastLogin: userCreated.LastLoginDate,
+            Address: userCreated.Address,
+            IsActive: userCreated.IsActive,
+            IsEmailVerified: userCreated.IsEmailVerified,
+            IsPhoneVerified: userCreated.IsPhoneVerified
         );
     }
 }

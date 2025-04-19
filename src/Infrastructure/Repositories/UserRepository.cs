@@ -5,8 +5,6 @@
 */
 
 using Microsoft.EntityFrameworkCore;
-using Steve.ManagerHero.UserService.Application.Interfaces.Repository;
-using Steve.ManagerHero.UserService.Domain.AggregatesModel;
 using Steve.ManagerHero.UserService.Domain.Common;
 using Steve.ManagerHero.UserService.Domain.ValueObjects;
 
