@@ -227,7 +227,7 @@ public class User : AggregateRoot
         bool isCorrectPassword = PasswordHash.Verify(passwordRequest);
 
         if (!isCorrectPassword)
-            throw ExceptionProviders.User.LoginPasswordFailed;
+            throw ExceptionProviders.User.LoginPasswordFailedException;
 
         LastLoginDate = DateTime.UtcNow;
     }

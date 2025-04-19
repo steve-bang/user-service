@@ -17,7 +17,7 @@ public class LoginPasswordQueryHandler(
 {
     public async Task<AuthenticationResponseDto> Handle(LoginPasswordQuery request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByEmailAsync(request.EmailAddress) ?? throw ExceptionProviders.User.LoginPasswordFailed;
+        var user = await _userRepository.GetByEmailAsync(request.EmailAddress) ?? throw ExceptionProviders.User.LoginPasswordFailedException;
 
         // Login with password
         user.LoginPassword(request.Password);

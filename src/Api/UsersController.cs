@@ -42,6 +42,21 @@ public class UsersController : ControllerBase
         return ApiResponseSuccess<UserDto>.BuildOKObjectResult(result);
     }
 
+    [HttpPut("{id}/change-password")]
+    [Authorize]
+    public async Task<IActionResult> ChangePassword(Guid id, [FromBody] ChangePasswordRequest request)
+    {
+
+        var result = await _mediator.Send(new ChangePasswordCommand(
+            UserId: id,
+            CurrentPassword: request.CurrentPassword,
+            NewPassword: request.NewPassword,
+            ConfirmPassword: request.ConfirmPassword
+        ));
+
+        return ApiResponseSuccess<bool>.BuildOKObjectResult(result);
+    }
+
     [HttpPut("{id}")]
     [Authorize]
     public async Task<IActionResult> UpdateById(Guid id, [FromBody] UserUpdateRequest request)
