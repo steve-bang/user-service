@@ -11,6 +11,7 @@ namespace Steve.ManagerHero.UserService.Application.Interfaces.Repository;
 
 public interface IUserRepository : IRepository
 {
+    Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
     Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
     Task<User> CreateAsync(User user, CancellationToken cancellationToken = default);
     Task<bool> IsExistEmailAsync(string email, CancellationToken cancellationToken = default);

@@ -17,6 +17,11 @@ namespace Steve.ManagerHero.UserService.Domain.AggregatesModel;
 /// </summary>
 public class User : AggregateRoot
 {
+    /// <summary>
+    /// The key of the user current logged
+    /// </summary>
+    public const string CurrentUserKey = "me";
+
     // Personal Information
     public string FirstName { get; private set; }
     public string LastName { get; private set; }

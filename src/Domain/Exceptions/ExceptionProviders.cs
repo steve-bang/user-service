@@ -26,7 +26,7 @@ public class ExceptionProviders
             "The email address or password incorrect in the system."
         );
 
-        public static NotFoundDataException NotFound => new(
+        public static NotFoundDataException NotFoundException => new(
             UserNotFound,
             "The user not found in the system."
         );

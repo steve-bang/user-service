@@ -34,6 +34,11 @@ public class UserRepository(
         return user;
     }
 
+    public Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+    }
+
     public Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
