@@ -79,7 +79,7 @@ public class ApiResponseSuccess<T> : ApiResponse
     }
 
     /// <summary>
-    /// Returns a response with a status code of Created (201) and the data provided
+    /// Returns a response with a status code of OK (200) and the data provided
     /// </summary>
     /// <param name="data">The data to be returned</param>
     /// <returns></returns>

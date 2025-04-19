@@ -61,4 +61,12 @@ public class UsersController : ControllerBase
         return ApiResponseSuccess<UserDto>.BuildOKObjectResult(result);
     }
 
+    [HttpDelete("{id}")]
+    [Authorize]
+    public async Task<IActionResult> DeleteById(Guid id)
+    {
+        await _mediator.Send(new DeleteUserCommand(id));
+        return new NoContentResult();
+    }
+
 }

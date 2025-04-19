@@ -25,6 +25,13 @@ public class UserRepository(
         return userAdded.Entity;
     }
 
+    public bool Delete(User user)
+    {
+        var userDeleted = _context.Users.Remove(user);
+
+        return userDeleted.State == EntityState.Deleted;
+    }
+
     public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
         var user = await _context

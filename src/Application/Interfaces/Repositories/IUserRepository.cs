@@ -20,4 +20,5 @@ public interface IUserRepository : IRepository
     Task<List<User>> GetUsersByRoleAsync(string roleName, CancellationToken cancellationToken = default);
     Task<List<User>> SearchUsersAsync(string searchTerm, CancellationToken cancellationToken = default);
     User Update(User user);
+    bool Delete(User user);
 }
