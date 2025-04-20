@@ -17,13 +17,10 @@ public class RegistrationEventHandler(
     {
         var user = notification.User;
 
-        string encryptToken = EncryptionAESHelper.EncryptObject<object>(
-            new
-            {
-                UserId = user.Id
-            },
+        string encryptToken = EncryptionAESHelper.EncryptObject<UserPayloadEncrypt>(
+            new UserPayloadEncrypt(user.Id),
             _configuration.GetValue<string>("EncryptionSecretKey") ?? "Default_Key",
-            EncryptionPurpose.VerificationEmailAddress
+            EncryptionPurpose.VerificationEmailAddress.ToString()
         );
 
         // Build link

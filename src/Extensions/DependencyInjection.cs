@@ -11,6 +11,8 @@ using FluentValidation;
 using Steve.ManagerHero.Application.Features.Users.Commands;
 using Steve.ManagerHero.UserService.Application.Auth;
 using Steve.ManagerHero.UserService.Infrastructure.Services;
+using Steve.ManagerHero.UserService.Application.Interfaces.Caching;
+using Steve.ManagerHero.UserService.Infrastructure.Caching;
 
 namespace Steve.ManagerHero.UserService.Extensions;
 
@@ -49,9 +51,13 @@ public static class DependencyInjection
         builder.Services.AddValidatorsFromAssemblyContaining<ChangePasswordCommand>();
         builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserCommandValidator>();
         builder.Services.AddValidatorsFromAssemblyContaining<UpdateUserCommandValidator>();
+        builder.Services.AddValidatorsFromAssemblyContaining<ResetPasswordCommand>();
 
         // Register smtp setting
         builder.AddSmtpSettings();
+
+        // Add caching
+        builder.AddCacheServices();
 
         // Register repositories
         builder.AddRepositories();
@@ -108,5 +114,16 @@ public static class DependencyInjection
 
         return builder;
     }
+
+    public static IHostApplicationBuilder AddCacheServices(this IHostApplicationBuilder builder)
+    {
+        builder.Services.AddMemoryCache();
+
+        // Add caching service
+        builder.Services.AddScoped<ITokenCache, TokenCache>();
+
+        return builder;
+    }
+
 
 }

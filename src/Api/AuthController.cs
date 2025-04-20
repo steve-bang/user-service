@@ -52,6 +52,33 @@ public class AuthController : ControllerBase
         return ApiResponseSuccess<AuthenticationResponseDto>.BuildOKObjectResult(result);
     }
 
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+    {
+        await _mediator.Send(new ForgotPasswordCommand(request.EmailAddress));
+        return ApiResponseSuccess<string>.BuildOKObjectResult("If an account with that email exists, a password reset link has been sent.");
+    }
+
+    [HttpGet("reset-password/validate")]
+    public async Task<IActionResult> ValidateTokenResetPassword([FromQuery] string token)
+    {
+        var result = await _mediator.Send(new ResetPasswordValidateTokenQuery(token));
+
+        return ApiResponseSuccess<TokenValidateDto>.BuildOKObjectResult(result);
+    }
+
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+    {
+        var result = await _mediator.Send(new ResetPasswordCommand(
+            Token: request.Token,
+            NewPassword: request.NewPassword,
+            ConfirmPassword: request.ConfirmPassword
+        ));
+
+        return ApiResponseSuccess<bool>.BuildOKObjectResult(result);
+    }
+
     [HttpPost("logout")]
     [Authorize]
     public async Task<IActionResult> LogoutUser()

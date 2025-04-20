@@ -167,6 +167,14 @@ public class User : AggregateRoot
         UpdatedAt = DateTime.UtcNow;
     }
 
+    public void ChangePassword(string currentPassword, string newPassword)
+    {
+        if (PasswordHash.Verify(currentPassword) == false)
+            throw ExceptionProviders.User.PasswordIncorrectException;
+
+        UpdatePassword(newPassword);
+    }
+
     public void UpdatePassword(string newPassword)
     {
         var newPasswordHash = PasswordHash.Create(newPassword);

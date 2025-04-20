@@ -14,11 +14,8 @@ public class ChangePasswordCommandHandler(
     {
         User user = await _userRepository.GetByIdAsync(request.UserId, cancellationToken) ?? throw ExceptionProviders.User.NotFoundException;
 
-        if (user.PasswordHash.Verify(request.CurrentPassword) == false)
-            throw ExceptionProviders.User.PasswordIncorrectException;
-
         // Update password
-        user.UpdatePassword(request.NewPassword);
+        user.ChangePassword(request.CurrentPassword, request.NewPassword);
 
         // Update data in state
         _userRepository.Update(user);

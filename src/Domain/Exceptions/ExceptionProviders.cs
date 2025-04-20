@@ -13,6 +13,7 @@ public class ExceptionProviders
     public const string UserEmailOrPasswordIncorrect = "User.Login_Password_Failed";
     public const string UserNotFound = "User.Not_Found";
     public const string UserPasswordIncorrect = "User.Password_Incorrect";
+    public const string TokenInvalid = "token_invalid";
 
     public static class User
     {
@@ -34,6 +35,14 @@ public class ExceptionProviders
         public static BadRequestException PasswordIncorrectException => new(
             UserPasswordIncorrect,
             "The password incorrect."
+        );
+    }
+
+    public static class Token
+    {
+        public static BadRequestException InvalidException => new(
+            TokenInvalid,
+            "Token expired or invalid."
         );
     }
 }

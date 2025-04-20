@@ -17,7 +17,7 @@ public static class EncryptionAESHelper
     private static readonly int Iterations = 10000;
     private const char Separator = '|';
 
-    public static string EncryptObject<T>(T obj, string password, EncryptionPurpose purpose, int expiryMinutes = 1440)
+    public static string EncryptObject<T>(T obj, string password, string purpose, int expiryMinutes = 1440)
     {
         if (obj == null) throw new ArgumentNullException(nameof(obj));
         if (string.IsNullOrEmpty(password)) throw new ArgumentNullException(nameof(password));
@@ -36,7 +36,7 @@ public static class EncryptionAESHelper
         return JsonSerializer.Deserialize<T>(serializedObj);
     }
 
-    public static string Encrypt(string plainText, string password, EncryptionPurpose purpose, int expiryMinutes = 1440)
+    public static string Encrypt(string plainText, string password, string purpose, int expiryMinutes = 1440)
     {
         if (string.IsNullOrEmpty(plainText)) throw new ArgumentNullException(nameof(plainText));
         if (string.IsNullOrEmpty(password)) throw new ArgumentNullException(nameof(password));
@@ -87,12 +87,11 @@ public static class EncryptionAESHelper
     {
         if (string.IsNullOrEmpty(cipherText)) throw new ArgumentNullException(nameof(cipherText));
         if (string.IsNullOrEmpty(password)) throw new ArgumentNullException(nameof(password));
-        if (string.IsNullOrEmpty(expectedPurpose)) throw new ArgumentNullException(nameof(expectedPurpose));
 
         try
         {
             var cipherTextBytes = Convert.FromBase64String(cipherText);
-            
+
             // Extract components (salt 32, iv 16, ciphertext)
             var salt = cipherTextBytes.Take(32).ToArray();
             var iv = cipherTextBytes.Skip(32).Take(16).ToArray();
@@ -153,7 +152,8 @@ public static class EncryptionAESHelper
 
 public enum EncryptionPurpose
 {
-    VerificationEmailAddress
+    VerificationEmailAddress,
+    ResetPassword
 }
 
 public class SecurityException : Exception
@@ -161,3 +161,8 @@ public class SecurityException : Exception
     public SecurityException(string message) : base(message) { }
     public SecurityException(string message, Exception inner) : base(message, inner) { }
 }
+
+
+public record UserPayloadEncrypt(
+    Guid Id
+);
