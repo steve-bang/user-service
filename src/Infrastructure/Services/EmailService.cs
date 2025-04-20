@@ -78,7 +78,7 @@ public class EmailService : IEmailService
         );
     }
 
-    public async Task SendRestPasswordAsync(string email, string resetLink, int expiryMinutes)
+    public async Task SendResetPasswordAsync(string email, string resetLink, int expiryMinutes)
     {
         var template = await File.ReadAllTextAsync("resources/EmailTemplates/reset-password.html");
 
@@ -86,6 +86,23 @@ public class EmailService : IEmailService
         data.ResetLink = resetLink;
         data.ExpiryMinutes = expiryMinutes;
         string title = $"{_projectSettings.Name} - Password Reset";
+
+        await SendEmailAsync(
+            email,
+            title,
+            template,
+            data
+        );
+    }
+
+    public async Task SendVerificationEmailAsync(string email, string verificationLink, int expiryMinutes)
+    {
+        var template = await File.ReadAllTextAsync("resources/EmailTemplates/email-verification.html");
+
+        dynamic data = new ExpandoObject();
+        data.VertificationLink = verificationLink;
+        data.ExpiryMinutes = expiryMinutes;
+        string title = $"{_projectSettings.Name} - Verify Your Email";
 
         await SendEmailAsync(
             email,

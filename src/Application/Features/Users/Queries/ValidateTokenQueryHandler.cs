@@ -9,12 +9,12 @@ using Steve.ManagerHero.UserService.Helpers;
 
 namespace Steve.ManagerHero.Application.Features.Users.Queries;
 
-public class ResetPasswordValidateTokenQueryHandler(
+public class ValidateTokenQueryHandler(
     ITokenCache _tokenCache,
     IConfiguration _configuration
-) : IRequestHandler<ResetPasswordValidateTokenQuery, TokenValidateDto>
+) : IRequestHandler<ValidateTokenQuery, TokenValidateDto>
 {
-    public async Task<TokenValidateDto> Handle(ResetPasswordValidateTokenQuery request, CancellationToken cancellationToken)
+    public async Task<TokenValidateDto> Handle(ValidateTokenQuery request, CancellationToken cancellationToken)
     {
         try
         {
@@ -30,7 +30,7 @@ public class ResetPasswordValidateTokenQueryHandler(
             string tokenDecrypt = EncryptionAESHelper.Decrypt(
                 token, 
                 _configuration.GetValue<string>("EncryptionSecretKey"), 
-                EncryptionPurpose.ResetPassword.ToString()
+                request.Purpose.ToString()
             );
 
             if (!string.IsNullOrEmpty(tokenDecrypt))

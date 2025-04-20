@@ -76,6 +76,14 @@ public class UsersController : ControllerBase
         return ApiResponseSuccess<UserDto>.BuildOKObjectResult(result);
     }
 
+    [HttpPost("{id}/send-verification-email")]
+    [Authorize]
+    public async Task<IActionResult> SendVerificationEmail(Guid id)
+    {
+        await _mediator.Send(new SendVerificationEmailLinkCommand(id));
+        return ApiResponseSuccess<EmailVerificationSendDto>.BuildOKObjectResult(new());
+    }
+
     [HttpDelete("{id}")]
     [Authorize]
     public async Task<IActionResult> DeleteById(Guid id)

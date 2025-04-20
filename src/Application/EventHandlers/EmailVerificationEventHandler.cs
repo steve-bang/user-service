@@ -1,45 +1,43 @@
 /*
 * Author: Steve Bang
 * History:
-* - [2025-04-19] - Created by mrsteve.bang@gmail.com
+* - [2025-04-20] - Created by mrsteve.bang@gmail.com
 */
 
 using Steve.ManagerHero.UserService;
 using Steve.ManagerHero.UserService.Application.Interfaces.Caching;
-using Steve.ManagerHero.UserService.Domain.Events;
 using Steve.ManagerHero.UserService.Helpers;
 
-public class ForgotPasswordEventHandler(
+public class VerificationEmailEventHandler(
     IEmailService _emailService,
     ProjectSettings _projectSettings,
     IConfiguration _configuration,
     ITokenCache _tokenCache
-) : INotificationHandler<ForgotPasswordEvent>
+) : INotificationHandler<EmailVerificationEvent>
 {
-    private const int OneHourExprired = 60;
+    private const int ExpriresMinute = 60;
 
-    public Task Handle(ForgotPasswordEvent notification, CancellationToken cancellationToken)
+    public Task Handle(EmailVerificationEvent notification, CancellationToken cancellationToken)
     {
         var user = notification.User;
 
         string encryptToken = EncryptionAESHelper.EncryptObject<UserPayloadEncrypt>(
             new UserPayloadEncrypt(user.Id),
             _configuration.GetValue<string>("EncryptionSecretKey") ?? "Default_Key",
-            EncryptionPurpose.ResetPassword.ToString()
+            EncryptionPurpose.VerificationEmailAddress.ToString()
         );
 
         // Build link
-        UrlBuilder uriBuilder = new UrlBuilder(_projectSettings.ResetPassword)
-            .AddQueryParameter("user-id", user.Id.ToString())
-            .AddQueryParameter("token", encryptToken);
+        UrlBuilder uriBuilder = new UrlBuilder(_projectSettings.VerificationLink)
+        .AddQueryParameter("token", encryptToken);
 
-        _emailService.SendResetPasswordAsync(
+        _emailService.SendVerificationEmailAsync(
             user.EmailAddress.Value,
             uriBuilder.ToString(),
-            OneHourExprired
+            ExpriresMinute
         );
 
-        _tokenCache.SetToken(encryptToken, OneHourExprired);
+        _tokenCache.SetToken(encryptToken, ExpriresMinute);
 
         return Task.CompletedTask;
     }
