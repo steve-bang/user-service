@@ -11,7 +11,6 @@ using Steve.ManagerHero.UserService.Helpers;
 public class VerificationEmailEventHandler(
     IEmailService _emailService,
     ProjectSettings _projectSettings,
-    IConfiguration _configuration,
     ITokenCache _tokenCache
 ) : INotificationHandler<EmailVerificationEvent>
 {
@@ -23,7 +22,6 @@ public class VerificationEmailEventHandler(
 
         string encryptToken = EncryptionAESHelper.EncryptObject<UserPayloadEncrypt>(
             new UserPayloadEncrypt(user.Id),
-            _configuration.GetValue<string>("EncryptionSecretKey") ?? "Default_Key",
             EncryptionPurpose.VerificationEmailAddress.ToString()
         );
 

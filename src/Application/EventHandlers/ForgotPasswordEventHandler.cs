@@ -12,7 +12,6 @@ using Steve.ManagerHero.UserService.Helpers;
 public class ForgotPasswordEventHandler(
     IEmailService _emailService,
     ProjectSettings _projectSettings,
-    IConfiguration _configuration,
     ITokenCache _tokenCache
 ) : INotificationHandler<ForgotPasswordEvent>
 {
@@ -24,7 +23,6 @@ public class ForgotPasswordEventHandler(
 
         string encryptToken = EncryptionAESHelper.EncryptObject<UserPayloadEncrypt>(
             new UserPayloadEncrypt(user.Id),
-            _configuration.GetValue<string>("EncryptionSecretKey") ?? "Default_Key",
             EncryptionPurpose.ResetPassword.ToString()
         );
 

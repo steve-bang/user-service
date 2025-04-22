@@ -10,7 +10,6 @@ namespace Steve.ManagerHero.Application.Features.Users.Commands;
 
 public class VerificationEmailAddressCommandHandler(
     IUserRepository _userRepository,
-    IConfiguration _configuration,
     IMediator _mediator
 ) : IRequestHandler<VerificationEmailAddressCommand, bool>
 {
@@ -26,7 +25,6 @@ public class VerificationEmailAddressCommandHandler(
         {
             UserPayloadEncrypt? userDecrypt = EncryptionAESHelper.DecryptObject<UserPayloadEncrypt>(
                 token,
-                _configuration.GetValue<string>("EncryptionSecretKey"),
                 EncryptionPurpose.VerificationEmailAddress.ToString()
             );
 

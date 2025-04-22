@@ -9,8 +9,7 @@ using Steve.ManagerHero.UserService.Helpers;
 
 public class RegistrationEventHandler(
     IEmailService _emailService,
-    ProjectSettings _projectSettings,
-    IConfiguration _configuration
+    ProjectSettings _projectSettings
 ) : INotificationHandler<RegistrationEvent>
 {
     public Task Handle(RegistrationEvent notification, CancellationToken cancellationToken)
@@ -19,7 +18,6 @@ public class RegistrationEventHandler(
 
         string encryptToken = EncryptionAESHelper.EncryptObject<UserPayloadEncrypt>(
             new UserPayloadEncrypt(user.Id),
-            _configuration.GetValue<string>("EncryptionSecretKey") ?? "Default_Key",
             EncryptionPurpose.VerificationEmailAddress.ToString()
         );
 

@@ -17,22 +17,22 @@ public static class EncryptionAESHelper
     private static readonly int Iterations = 10000;
     private const char Separator = '|';
 
-    public static string EncryptObject<T>(T obj, string password, string purpose, int expiryMinutes = 1440)
+    // The secret key, you can change your key    
+    private const string SecretKey = "EncryptionSecretKey";
+
+    public static string EncryptObject<T>(T obj, string purpose, int expiryMinutes = 1440)
     {
-        if (obj == null) throw new ArgumentNullException(nameof(obj));
-        if (string.IsNullOrEmpty(password)) throw new ArgumentNullException(nameof(password));
 
         string serializedObj = JsonSerializer.Serialize(obj);
-        return Encrypt(serializedObj, password, purpose, expiryMinutes);
+        return Encrypt(serializedObj, SecretKey, purpose, expiryMinutes);
     }
 
-    public static T? DecryptObject<T>(string cipherText, string password, string expectedPurpose)
+    public static T? DecryptObject<T>(string cipherText, string expectedPurpose)
     {
         if (string.IsNullOrEmpty(cipherText)) throw new ArgumentNullException(nameof(cipherText));
-        if (string.IsNullOrEmpty(password)) throw new ArgumentNullException(nameof(password));
         if (string.IsNullOrEmpty(expectedPurpose)) throw new ArgumentNullException(nameof(expectedPurpose));
 
-        string serializedObj = Decrypt(cipherText, password, expectedPurpose);
+        string serializedObj = Decrypt(cipherText, SecretKey, expectedPurpose);
         return JsonSerializer.Deserialize<T>(serializedObj);
     }
 
@@ -81,6 +81,11 @@ public static class EncryptionAESHelper
                 return Convert.ToBase64String(result);
             }
         }
+    }
+
+    public static string Decrypt(string cipherText, string expectedPurpose)
+    {
+        return Decrypt(cipherText, SecretKey, expectedPurpose);
     }
 
     public static string Decrypt(string cipherText, string password, string expectedPurpose)

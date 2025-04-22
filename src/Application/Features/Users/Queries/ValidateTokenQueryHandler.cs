@@ -10,8 +10,7 @@ using Steve.ManagerHero.UserService.Helpers;
 namespace Steve.ManagerHero.Application.Features.Users.Queries;
 
 public class ValidateTokenQueryHandler(
-    ITokenCache _tokenCache,
-    IConfiguration _configuration
+    ITokenCache _tokenCache
 ) : IRequestHandler<ValidateTokenQuery, TokenValidateDto>
 {
     public async Task<TokenValidateDto> Handle(ValidateTokenQuery request, CancellationToken cancellationToken)
@@ -29,7 +28,6 @@ public class ValidateTokenQueryHandler(
 
             string tokenDecrypt = EncryptionAESHelper.Decrypt(
                 token, 
-                _configuration.GetValue<string>("EncryptionSecretKey"), 
                 request.Purpose.ToString()
             );
 

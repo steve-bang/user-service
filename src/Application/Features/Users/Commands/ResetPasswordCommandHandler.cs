@@ -11,7 +11,6 @@ namespace Steve.ManagerHero.Application.Features.Users.Commands;
 
 public class ResetPasswordCommandHandler(
     IUserRepository _userRepository,
-    IConfiguration _configuration,
     IMediator _mediator
 ) : IRequestHandler<ResetPasswordCommand, bool>
 {
@@ -27,7 +26,6 @@ public class ResetPasswordCommandHandler(
         {
             UserPayloadEncrypt? userDecrypt = EncryptionAESHelper.DecryptObject<UserPayloadEncrypt>(
                 token,
-                _configuration.GetValue<string>("EncryptionSecretKey"),
                 EncryptionPurpose.ResetPassword.ToString()
             );
 
