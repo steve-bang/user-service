@@ -8,16 +8,16 @@
 namespace Steve.ManagerHero.Application.Features.Users.Commands;
 
 public class DeleteUserCommandHandler(
-    IUserRepository _userRepository
+    IUnitOfWork _unitOfWork
 ) : IRequestHandler<DeleteUserCommand, bool>
 {
     public async Task<bool> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
-        User user = await _userRepository.GetByIdAsync(request.UserId, cancellationToken) ?? throw ExceptionProviders.User.NotFoundException;
+        User user = await _unitOfWork.Users.GetByIdAsync(request.UserId, cancellationToken) ?? throw ExceptionProviders.User.NotFoundException;
 
-        bool result = _userRepository.Delete(user);
+        bool result = _unitOfWork.Users.Delete(user);
 
-        await _userRepository.UnitOfWork.SaveEntitiesAsync();
+        await _unitOfWork.SaveChangesAsync();
 
         return result;
     }

@@ -8,18 +8,18 @@
 namespace Steve.ManagerHero.Application.Features.Roles.Commands;
 
 public class UpdateRoleCommandHandler(
-    IRoleRepository _roleRepository
+    IUnitOfWork _unitOfWork
 ) : IRequestHandler<UpdateRoleCommand, RoleDto>
 {
     public async Task<RoleDto> Handle(UpdateRoleCommand request, CancellationToken cancellationToken)
     {
-        Role role = await _roleRepository.GetByIdAsync(request.Id) ?? throw ExceptionProviders.Role.NotFoundException;
+        Role role = await _unitOfWork.Roles.GetByIdAsync(request.Id, cancellationToken) ?? throw ExceptionProviders.Role.NotFoundException;
 
         role.Update(request.Name, request.Description);
 
-        _roleRepository.Update(role);
+        _unitOfWork.Roles.Update(role, cancellationToken);
 
-        await _roleRepository.UnitOfWork.SaveEntitiesAsync();
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return new RoleDto(role.Id, role.Name, role.Description, role.CreatedAt);
     }

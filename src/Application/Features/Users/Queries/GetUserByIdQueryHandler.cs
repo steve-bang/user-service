@@ -7,12 +7,12 @@
 namespace Steve.ManagerHero.Application.Features.Users.Queries;
 
 public class GetUserByIdQueryHandler(
-    IUserRepository _userRepository
+    IUnitOfWork _unitOfWork
 ) : IRequestHandler<GetUserByIdQuery, UserDto>
 {
     public async Task<UserDto> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
     {
-        User user = await _userRepository.GetByIdAsync(request.Id) ?? throw ExceptionProviders.User.NotFoundException;
+        User user = await _unitOfWork.Users.GetByIdAsync(request.Id, cancellationToken) ?? throw ExceptionProviders.User.NotFoundException;
 
         return new UserDto(
             Id: user.Id, 

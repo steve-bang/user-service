@@ -8,12 +8,12 @@
 namespace Steve.ManagerHero.Application.Features.Roles.Queries;
 
 public class GetRoleByIdQueryHandler(
-    IRoleRepository _roleRepository
+    IUnitOfWork _unitOfWork
 ) : IRequestHandler<GetRoleByIdQuery, RoleDto>
 {
     public async Task<RoleDto> Handle(GetRoleByIdQuery request, CancellationToken cancellationToken)
     {
-        Role role = await _roleRepository.GetByIdAsync(request.Id) ?? throw ExceptionProviders.Role.NotFoundException;
+        Role role = await _unitOfWork.Roles.GetByIdAsync(request.Id) ?? throw ExceptionProviders.Role.NotFoundException;
 
         return new RoleDto(role.Id, role.Name, role.Description, role.CreatedAt);
     }

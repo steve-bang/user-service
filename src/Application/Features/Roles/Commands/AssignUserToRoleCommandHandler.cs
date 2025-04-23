@@ -7,21 +7,20 @@
 namespace Steve.ManagerHero.Application.Features.Roles.Commands;
 
 public class AssignUserToRoleCommandHandler(
-    IRoleRepository _roleRepository,
-    IUserRepository _userRepository
+    IUnitOfWork _unitOfWork
 ) : IRequestHandler<AssignUserToRoleCommand, bool>
 {
     public async Task<bool> Handle(AssignUserToRoleCommand request, CancellationToken cancellationToken)
     {
-        Role role = await _roleRepository.GetByIdAsync(request.RoleId) ?? throw ExceptionProviders.Role.NotFoundException;
+        Role role = await _unitOfWork.Roles.GetByIdAsync(request.RoleId, cancellationToken) ?? throw ExceptionProviders.Role.NotFoundException;
 
-        User user = await _userRepository.GetByIdAsync(request.UserId) ?? throw ExceptionProviders.User.NotFoundException;
+        User user = await _unitOfWork.Users.GetByIdAsync(request.UserId, cancellationToken) ?? throw ExceptionProviders.User.NotFoundException;
 
         user.AddRole(role);
 
-        _userRepository.Update(user);
+        _unitOfWork.Users.Update(user);
 
-        await _userRepository.UnitOfWork.SaveEntitiesAsync();
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return true;
     }

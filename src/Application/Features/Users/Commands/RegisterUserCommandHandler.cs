@@ -7,12 +7,12 @@
 namespace Steve.ManagerHero.Application.Features.Users.Commands;
 
 public class RegisterUserCommandHandler(
-    IUserRepository _userRepository
+    IUnitOfWork _unitOfWork
 ) : IRequestHandler<RegisterUserCommand, UserDto>
 {
     public async Task<UserDto> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
-        bool isExistsEmail = await _userRepository.IsExistEmailAsync(request.EmailAddress, cancellationToken);
+        bool isExistsEmail = await _unitOfWork.Users.IsExistEmailAsync(request.EmailAddress, cancellationToken);
 
         if (isExistsEmail) throw ExceptionProviders.User.EmailAlreadyExistsException;
 
@@ -24,9 +24,9 @@ public class RegisterUserCommandHandler(
             password: request.Password
         );
 
-        User userCreated = await _userRepository.CreateAsync(user, cancellationToken);
+        User userCreated = await _unitOfWork.Users.CreateAsync(user, cancellationToken);
 
-        await _userRepository.UnitOfWork.SaveEntitiesAsync();
+        await _unitOfWork.SaveChangesAsync();
 
         return new UserDto(
             Id: userCreated.Id,

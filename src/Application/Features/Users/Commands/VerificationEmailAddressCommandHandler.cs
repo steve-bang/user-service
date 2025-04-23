@@ -9,7 +9,7 @@ using Steve.ManagerHero.UserService.Helpers;
 namespace Steve.ManagerHero.Application.Features.Users.Commands;
 
 public class VerificationEmailAddressCommandHandler(
-    IUserRepository _userRepository,
+    IUnitOfWork _unitOfWork,
     IMediator _mediator
 ) : IRequestHandler<VerificationEmailAddressCommand, bool>
 {
@@ -21,26 +21,25 @@ public class VerificationEmailAddressCommandHandler(
         var validResult = await _mediator.Send(resetPasswordValidateTokenQuery);
 
         // Checks if the valid result is true
-        if (validResult.Valid)
-        {
-            UserPayloadEncrypt? userDecrypt = EncryptionAESHelper.DecryptObject<UserPayloadEncrypt>(
-                token,
-                EncryptionPurpose.VerificationEmailAddress.ToString()
-            );
+        if (validResult.Valid == false)
+            throw ExceptionProviders.Token.InvalidException;
 
-            if (userDecrypt is not null)
-            {
-                User? user = await _userRepository.GetByIdAsync(userDecrypt.Id) ?? throw ExceptionProviders.User.NotFoundException;
+        UserPayloadEncrypt? userDecrypt = EncryptionAESHelper.DecryptObject<UserPayloadEncrypt>(
+            token,
+            EncryptionPurpose.VerificationEmailAddress.ToString()
+        );
 
-                user.VerifyEmail();
+        if (userDecrypt is null) throw ExceptionProviders.Token.InvalidException;
 
-                _userRepository.Update(user);
+        User? user = await _unitOfWork.Users.GetByIdAsync(userDecrypt.Id, cancellationToken) ?? throw ExceptionProviders.User.NotFoundException;
 
-                await _userRepository.UnitOfWork.SaveEntitiesAsync();
+        user.VerifyEmail();
 
-                return true;
-            }
-        }
-        throw ExceptionProviders.Token.InvalidException;
+        _unitOfWork.Users.Update(user);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return true;
+
     }
 }

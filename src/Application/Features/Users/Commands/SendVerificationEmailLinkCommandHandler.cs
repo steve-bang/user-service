@@ -7,19 +7,19 @@
 namespace Steve.ManagerHero.Application.Features.Users.Commands;
 
 public class SendVerificationEmailLinkCommandHandler(
-    IUserRepository _userRepository,
+    IUnitOfWork _unitOfWork,
     IMediator _mediator
 ) : IRequestHandler<SendVerificationEmailLinkCommand, bool>
 {
     public async Task<bool> Handle(SendVerificationEmailLinkCommand request, CancellationToken cancellationToken)
     {
-        User user = await _userRepository.GetByIdAsync(request.UserId, cancellationToken) ?? throw ExceptionProviders.User.NotFoundException;
+        User user = await _unitOfWork.Users.GetByIdAsync(request.UserId, cancellationToken) ?? throw ExceptionProviders.User.NotFoundException;
 
         if (user.IsEmailVerified)
             throw ExceptionProviders.User.EmailAlreadyVerifiedException;
 
         EmailVerificationEvent emailVerification = new(user);
-        _ = _mediator.Publish(emailVerification);
+        _ = _mediator.Publish(emailVerification, cancellationToken);
 
         return true;
     }

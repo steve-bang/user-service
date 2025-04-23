@@ -8,12 +8,12 @@
 namespace Steve.ManagerHero.Application.Features.Roles.Queries;
 
 public class GetRolesByUserIdQueryHandler(
-    IRoleRepository _roleRepository
+    IUnitOfWork _unitOfWork
 ) : IRequestHandler<GetRolesByUserIdQuery, IEnumerable<RoleDto>>
 {
     public async Task<IEnumerable<RoleDto>> Handle(GetRolesByUserIdQuery request, CancellationToken cancellationToken)
     {
-        var roles = await _roleRepository.GetRolesByUserId(request.UserId);
+        var roles = await _unitOfWork.Roles.GetRolesByUserId(request.UserId);
 
         return roles.Select(role => new RoleDto(role.Id, role.Name, role.Description, role.CreatedAt));
     }

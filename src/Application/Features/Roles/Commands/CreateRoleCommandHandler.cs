@@ -8,7 +8,7 @@
 namespace Steve.ManagerHero.Application.Features.Roles.Commands;
 
 public class CreateRoleCommandHandler(
-    IRoleRepository _roleRepository
+    IUnitOfWork _unitOfWork
 ) : IRequestHandler<CreateRoleCommand, RoleDto>
 {
     public async Task<RoleDto> Handle(CreateRoleCommand request, CancellationToken cancellationToken)
@@ -18,9 +18,9 @@ public class CreateRoleCommandHandler(
             request.Description
         );
 
-        var roleCreated = await _roleRepository.CreateAsync(role, cancellationToken);
+        var roleCreated = await _unitOfWork.Roles.CreateAsync(role, cancellationToken);
 
-        await _roleRepository.UnitOfWork.SaveEntitiesAsync();
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return new RoleDto(roleCreated.Id, roleCreated.Name, roleCreated.Description, roleCreated.CreatedAt);
     }

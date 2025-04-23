@@ -10,7 +10,7 @@ using Steve.ManagerHero.UserService.Helpers;
 namespace Steve.ManagerHero.Application.Features.Users.Commands;
 
 public class ResetPasswordCommandHandler(
-    IUserRepository _userRepository,
+    IUnitOfWork _unitOfWork,
     IMediator _mediator
 ) : IRequestHandler<ResetPasswordCommand, bool>
 {
@@ -19,7 +19,7 @@ public class ResetPasswordCommandHandler(
         string token = request.Token;
 
         var resetPasswordValidateTokenQuery = new ValidateTokenQuery(token, EncryptionPurpose.ResetPassword);
-        var validResult = await _mediator.Send(resetPasswordValidateTokenQuery);
+        var validResult = await _mediator.Send(resetPasswordValidateTokenQuery, cancellationToken);
 
         // Checks if the valid result is true
         if (validResult.Valid)
@@ -31,14 +31,14 @@ public class ResetPasswordCommandHandler(
 
             if (userDecrypt is not null)
             {
-                User? user = await _userRepository.GetByIdAsync(userDecrypt.Id) ?? throw ExceptionProviders.User.NotFoundException;
+                User? user = await _unitOfWork.Users.GetByIdAsync(userDecrypt.Id, cancellationToken) ?? throw ExceptionProviders.User.NotFoundException;
 
                 // Update password
                 user.UpdatePassword(request.NewPassword);
 
-                _userRepository.Update(user);
+                _unitOfWork.Users.Update(user);
 
-                await _userRepository.UnitOfWork.SaveEntitiesAsync();
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
 
                 return true;
             }

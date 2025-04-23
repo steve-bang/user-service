@@ -14,7 +14,6 @@ public class UserRepository(
     UserAppContext _context
 ) : IUserRepository
 {
-    public IUnitOfWork UnitOfWork => _context;
 
     public async Task<User> CreateAsync(User user, CancellationToken cancellationToken = default)
     {

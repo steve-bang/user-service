@@ -12,5 +12,4 @@ public class PermissionRepository(
     UserAppContext _context
 ) : IPermissionRepository
 {
-    public IUnitOfWork UnitOfWork => _context;
 }

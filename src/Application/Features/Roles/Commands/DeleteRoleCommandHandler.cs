@@ -8,16 +8,16 @@
 namespace Steve.ManagerHero.Application.Features.Roles.Commands;
 
 public class DeleteRoleCommandHandler(
-    IRoleRepository _roleRepository
+    IUnitOfWork _unitOfWork
 ) : IRequestHandler<DeleteRoleCommand, bool>
 {
     public async Task<bool> Handle(DeleteRoleCommand request, CancellationToken cancellationToken)
     {
-        Role role = await _roleRepository.GetByIdAsync(request.Id) ?? throw ExceptionProviders.Role.NotFoundException;
+        Role role = await _unitOfWork.Roles.GetByIdAsync(request.Id, cancellationToken) ?? throw ExceptionProviders.Role.NotFoundException;
 
-        var result = _roleRepository.Delete(role);
+        var result = _unitOfWork.Roles.Delete(role, cancellationToken);
 
-        await _roleRepository.UnitOfWork.SaveEntitiesAsync();
+        await _unitOfWork.SaveChangesAsync();
 
         return result;
     }

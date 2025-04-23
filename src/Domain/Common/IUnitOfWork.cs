@@ -11,7 +11,11 @@ namespace Steve.ManagerHero.UserService.Domain.Common;
 /// </summary>
 public interface IUnitOfWork : IDisposable
 {
+    IUserRepository Users { get; }
+    IRoleRepository Roles { get; }
+    ISessionRepository Sessions { get; }
+    IPermissionRepository Permissions { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
-    Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default);
 
 }

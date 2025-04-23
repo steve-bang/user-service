@@ -13,7 +13,6 @@ public class RoleRepository(
     UserAppContext _context
 ) : IRoleRepository
 {
-    public IUnitOfWork UnitOfWork => _context;
 
     public async Task<Role> CreateAsync(Role role, CancellationToken cancellationToken = default)
     {

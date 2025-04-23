@@ -9,13 +9,13 @@ using Steve.ManagerHero.UserService.Domain.Events;
 namespace Steve.ManagerHero.Application.Features.Users.Commands;
 
 public class ForgotPasswordCommandHandler(
-    IUserRepository _userRepository,
+    IUnitOfWork _unitOfWork,
     IMediator _mediator
 ) : IRequestHandler<ForgotPasswordCommand, bool>
 {
     public async Task<bool> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
     {
-        User? user = await _userRepository.GetByEmailAsync(request.EmailAddress, cancellationToken);
+        User? user = await _unitOfWork.Users.GetByEmailAsync(request.EmailAddress, cancellationToken);
 
         if (user is null) return false;
 
