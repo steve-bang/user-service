@@ -28,9 +28,9 @@ src/
     ├──── Events/
     ├──── Exceptions/
     ├──── ValueObjects/
-    └── Extensions/
-    └── Helpers/
-    └── Infrastructure/
+    ├── Extensions/
+    ├── Helpers/
+    ├── Infrastructure/
     ├──── Auth/
     ├──── Caching/
     ├──── EntityConfiguration/
