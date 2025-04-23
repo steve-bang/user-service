@@ -15,10 +15,28 @@ A comprehensive user management system with:
 
 ```
 src/
-    ├── UserManagement.API/
-    ├── UserManagement.Application/
-    ├── UserManagement.Domain/
-    └── UserManagement.Infrastructure/
+    ├── Api/
+    ├── Application/
+    ├──── Auth/
+    ├──── DTOs/
+    ├──── EventHandlers/
+    ├──── Features/
+    ├── Domain/
+    ├──── AggregatesModel/
+    ├──── Common/
+    ├──── Constants/
+    ├──── Events/
+    ├──── Exceptions/
+    ├──── ValueObjects/
+    └── Extensions/
+    └── Helpers/
+    └── Infrastructure/
+    ├──── Auth/
+    ├──── Caching/
+    ├──── EntityConfiguration/
+    ├──── Repositories/
+    ├──── Services/
+    └── Middleware/
 ```
 
 - [x] Set up CI/CD pipeline (GitHub Actions)
