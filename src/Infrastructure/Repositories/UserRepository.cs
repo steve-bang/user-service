@@ -4,8 +4,8 @@
 * - [2025-04-11] - Created by mrsteve.bang@gmail.com
 */
 
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using Steve.ManagerHero.UserService.Domain.Common;
 using Steve.ManagerHero.UserService.Domain.ValueObjects;
 
 namespace Steve.ManagerHero.UserService.Infrastructure.Repository;
@@ -50,6 +50,31 @@ public class UserRepository(
     public Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<(IEnumerable<User> items, int totalCount)> GetUsersAsync(
+        Expression<Func<User, bool>> filter,
+        int pageNumber = PaginationConstant.PageNumberDefault,
+        int pageSize = PaginationConstant.PageSizeDefault,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var query = _context.Users.AsQueryable();
+
+        if (filter != null)
+        {
+            query = query.Where(filter);
+        }
+
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        var items = await query
+            .OrderBy(u => u.CreatedAt)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+
+        return (items, totalCount);
     }
 
     public Task<List<User>> GetUsersByRoleAsync(string roleName, CancellationToken cancellationToken = default)

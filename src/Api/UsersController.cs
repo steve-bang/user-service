@@ -94,6 +94,23 @@ public class UsersController : ControllerBase
         return new NoContentResult();
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetUsers(
+        [FromQuery] string? filter = null,
+        [FromQuery] int pageNumber = PaginationConstant.PageNumberDefault,
+        [FromQuery] int pageSize = PaginationConstant.PageSizeDefault
+    )
+    {
+        var users = await _mediator.Send(new GetUsersQuery()
+        {
+            Filter = filter,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        });
+
+        return ApiResponseSuccess<PaginatedList<UserDto>>.BuildOKObjectResult(users);
+    }
+
     [HttpGet("{id}/roles")]
     [Authorize]
     public async Task<IActionResult> GetRolesByUserId(Guid id)

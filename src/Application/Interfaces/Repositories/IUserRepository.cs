@@ -4,6 +4,7 @@
 * - [2025-04-11] - Created by mrsteve.bang@gmail.com
 */
 
+using System.Linq.Expressions;
 using Steve.ManagerHero.UserService.Domain.Common;
 
 namespace Steve.ManagerHero.UserService.Application.Interfaces.Repository;
@@ -21,4 +22,10 @@ public interface IUserRepository : IRepository
     Task<List<User>> SearchUsersAsync(string searchTerm, CancellationToken cancellationToken = default);
     User Update(User user);
     bool Delete(User user);
+    Task<(IEnumerable<User> items, int totalCount)> GetUsersAsync(
+        Expression<Func<User, bool>>? filter,
+        int pageNumber = PaginationConstant.PageNumberDefault,
+        int pageSize = PaginationConstant.PageSizeDefault,
+        CancellationToken cancellationToken = default
+    );
 }

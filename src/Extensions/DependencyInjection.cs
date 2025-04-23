@@ -14,6 +14,7 @@ using Steve.ManagerHero.UserService.Infrastructure.Services;
 using Steve.ManagerHero.UserService.Application.Interfaces.Caching;
 using Steve.ManagerHero.UserService.Infrastructure.Caching;
 using Steve.ManagerHero.UserService.Domain.Common;
+using Steve.ManagerHero.Application.Processors;
 
 namespace Steve.ManagerHero.UserService.Extensions;
 
@@ -62,6 +63,8 @@ public static class DependencyInjection
 
         // Register repositories
         builder.AddRepositories();
+
+        builder.Services.AddScoped<IScimFilterProcessor<User>, ScimFilterProcessor<User>>();
 
         return builder;
     }

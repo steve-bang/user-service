@@ -4,11 +4,8 @@
 * - [2025-04-11] - Created by mrsteve.bang@gmail.com
 */
 
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Steve.ManagerHero.UserService.Domain.AggregatesModel;
-using Steve.ManagerHero.UserService.Domain.Common;
 
 
 namespace Steve.ManagerHero.UserService.Infrastructure;

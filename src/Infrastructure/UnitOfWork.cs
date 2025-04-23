@@ -5,7 +5,6 @@
 */
 
 using Microsoft.EntityFrameworkCore;
-using Steve.ManagerHero.UserService.Domain.Common;
 using Steve.ManagerHero.UserService.Infrastructure;
 using Steve.ManagerHero.UserService.Infrastructure.Repository;
 
