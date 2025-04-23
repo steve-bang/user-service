@@ -12,11 +12,13 @@ A comprehensive user management system with:
 ### v0.1: Core Architecture Setup
 - [x] Initialize .NET 6 WebAPI project
 - [x] Configure Clean Architecture layers:
+
     src/
     ├── UserManagement.API/
     ├── UserManagement.Application/
     ├── UserManagement.Domain/
     └── UserManagement.Infrastructure/
+
 - [x] Set up CI/CD pipeline (GitHub Actions)
 - [x] Configure logging (Serilog)
 
