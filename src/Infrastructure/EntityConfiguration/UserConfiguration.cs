@@ -139,6 +139,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasForeignKey(ur => ur.UserId)
             .IsRequired(false);
 
+
         // Indexes
         builder.HasIndex(u => u.EmailAddress)
             .IsUnique()
@@ -152,6 +153,12 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.HasIndex(u => u.Status)
             .HasDatabaseName("ix_users_status");
+
+        // Configure the navigation with field access, this is required because the navigation is a collection of value objects
+        // Configure private field _userRoles as backing field for UserRoles
+        builder.Metadata
+            .FindNavigation(nameof(User.UserRoles))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
 
         // Soft delete filter
         //builder.HasQueryFilter(u => u.IsActive);

@@ -8,6 +8,8 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steve.ManagerHero.Api.Models;
+using Steve.ManagerHero.Application.Features.Roles.Commands;
+using Steve.ManagerHero.Application.Features.Roles.Queries;
 using Steve.ManagerHero.Application.Features.Users.Commands;
 using Steve.ManagerHero.Application.Features.Users.Queries;
 using Steve.ManagerHero.UserService.Application.Auth;
@@ -90,6 +92,26 @@ public class UsersController : ControllerBase
     {
         await _mediator.Send(new DeleteUserCommand(id));
         return new NoContentResult();
+    }
+
+    [HttpGet("{id}/roles")]
+    [Authorize]
+    public async Task<IActionResult> GetRolesByUserId(Guid id)
+    {
+        var roles = await _mediator.Send(new GetRolesByUserIdQuery(id));
+        return ApiResponseSuccess<IEnumerable<RoleDto>>.BuildOKObjectResult(roles);
+    }
+
+    [HttpPost("{userId}/roles/{roleId}")]
+    [Authorize]
+    public async Task<IActionResult> AssignRoleToUser(Guid userId, Guid roleId)
+    {
+        var roles = await _mediator.Send(new AssignUserToRoleCommand(
+            UserId: userId,
+            RoleId: roleId
+        ));
+
+        return ApiResponseSuccess<bool>.BuildOKObjectResult(roles);
     }
 
 }

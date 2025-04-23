@@ -12,7 +12,6 @@ public class Role : AggregateRoot
 {
     public string Name { get; private set; }
     public string Description { get; private set; }
-    public bool IsDefault { get; private set; }
     public DateTime CreatedAt { get; private set; }
 
     // Navigation properties
@@ -24,11 +23,10 @@ public class Role : AggregateRoot
 
     public Role() {}
 
-    public Role(string name, string description, bool isDefault = false)
+    public Role(string name, string description)
     {
         Name = name;
         Description = description ?? string.Empty;
-        IsDefault = isDefault;
         CreatedAt = DateTime.UtcNow;
     }
 
@@ -36,11 +34,6 @@ public class Role : AggregateRoot
     {
         Name = name;
         Description = description ?? string.Empty;
-    }
-
-    public void MarkAsDefault()
-    {
-        IsDefault = true;
     }
 
     public void AddPermission(Permission permission)

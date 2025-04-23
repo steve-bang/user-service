@@ -10,5 +10,13 @@ namespace Steve.ManagerHero.UserService.Application.Interfaces.Repository;
 
 public interface IRoleRepository : IRepository
 {
+    Task<Role> CreateAsync(Role role, CancellationToken cancellationToken = default);
 
+    Task<Role?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+
+    Role Update(Role role, CancellationToken cancellationToken = default);
+
+    bool Delete(Role role, CancellationToken cancellationToken = default);
+
+    Task<List<Role>> GetRolesByUserId(Guid userId, CancellationToken cancellationToken = default);
 }

@@ -7,7 +7,6 @@
 using Steve.ManagerHero.UserService.Domain.Common;
 using Steve.ManagerHero.UserService.Domain.Constants;
 using Steve.ManagerHero.UserService.Domain.Events;
-using Steve.ManagerHero.UserService.Domain.Exceptions;
 using Steve.ManagerHero.UserService.Domain.ValueObjects;
 
 namespace Steve.ManagerHero.UserService.Domain.AggregatesModel;
@@ -205,20 +204,33 @@ public class User : AggregateRoot
         UpdatedAt = DateTime.UtcNow;
     }
 
-    // public void AddRole(Role role)
-    // {
-    //     if (_roles.Any(r => r.Id == role.Id))
-    //         return;
+    /// <summary>
+    /// Add a role
+    /// </summary>
+    /// <param name="role">The role object to add</param>
+    /// <exception cref="ExceptionProviders.User.AlreadyHasRoleException">Throw if the user has already has role</exception>
+    public void AddRole(Role role)
+    {
+        if (_userRoles.Any(r => r.RoleId == role.Id))
+            throw ExceptionProviders.User.AlreadyHasRoleException;
 
-    //     _roles.Add(role);
-    //     UpdatedAt = DateTime.UtcNow;
-    // }
+        var userRole = new UserRole(this, role);
+        _userRoles.Add(userRole);
+        UpdatedAt = DateTime.UtcNow;
+    }
 
-    // public void RemoveRole(Role role)
-    // {
-    //     _roles.RemoveAll(r => r.Id == role.Id);
-    //     UpdatedAt = DateTime.UtcNow;
-    // }
+    public void RemoveRole(Role role)
+    {
+        var userRole = _userRoles.FirstOrDefault(ur => ur.RoleId == role.Id);
+        if (userRole == null)
+        {
+            throw new InvalidOperationException("User does not have this role.");
+        }
+
+        _userRoles.Remove(userRole);
+
+        UpdatedAt = DateTime.UtcNow;
+    }
 
     // public bool HasPermission(string permissionCode)
     // {

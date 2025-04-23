@@ -41,7 +41,11 @@ public class UserRepository(
 
     public Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+        return _context.Users
+            .Include(u => u.UserRoles)
+            .ThenInclude(ur => ur.Role)
+            .AsSplitQuery()
+            .FirstOrDefaultAsync(u => u.Id == id);
     }
 
     public Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default)

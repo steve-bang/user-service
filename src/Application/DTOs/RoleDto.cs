@@ -10,7 +10,5 @@ public record RoleDto(
     Guid Id,
     string Name,
     string Description,
-    bool IsDefault,
-    DateTime CreatedAt,
-    DateTime? UpdatedAt,
-    IEnumerable<string> Permissions);
+    DateTime CreatedAt
+);
