@@ -5,7 +5,6 @@
 */
 
 using System.Text.RegularExpressions;
-using Steve.ManagerHero.UserService.Domain.Common;
 
 namespace Steve.ManagerHero.UserService.Domain.ValueObjects;
 

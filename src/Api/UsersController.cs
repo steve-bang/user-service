@@ -95,6 +95,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetUsers(
         [FromQuery] string? filter = null,
         [FromQuery] int pageNumber = PaginationConstant.PageNumberDefault,
