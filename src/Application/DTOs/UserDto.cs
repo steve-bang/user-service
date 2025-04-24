@@ -8,17 +8,22 @@ using Steve.ManagerHero.UserService.Domain.ValueObjects;
 
 namespace Steve.ManagerHero.UserService.Application.DTO;
 
-public record UserDto(
-    Guid Id,
-    string EmailAddress,
-    string FirstName,
-    string LastName,
-    string DisplayName,
-    string? SecondaryEmailAddress,
-    string? PhoneNumber,
-    DateTime? LastLogin,
-    Address? Address,
-    bool IsActive,
-    bool IsEmailVerified,
-    bool IsPhoneVerified
-);
+public class UserDto
+{
+    public Guid Id { get; set; }
+    public string EmailAddress { get; set; } = null!;
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public string? DisplayName { get; set; }
+    public string? SecondaryEmailAddress { get; set; }
+    public string? PhoneNumber { get; set; }
+    public DateTime? LastLogin { get; set; }
+    public Address? Address { get; set; }
+    public bool IsActive { get; set; }
+    public bool IsEmailVerified { get; set; }
+    public bool IsPhoneVerified { get; set; }
+
+
+    public UserDto() { }
+
+}

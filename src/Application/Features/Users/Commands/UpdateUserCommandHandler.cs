@@ -5,10 +5,13 @@
 */
 
 
+using AutoMapper;
+
 namespace Steve.ManagerHero.Application.Features.Users.Commands;
 
 public class UpdateUserCommandHandler(
-    IUnitOfWork _unitOfWork
+    IUnitOfWork _unitOfWork,
+    IMapper _mapper
 ) : IRequestHandler<UpdateUserCommand, UserDto>
 {
     public async Task<UserDto> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
@@ -38,19 +41,6 @@ public class UpdateUserCommandHandler(
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new UserDto(
-            Id: user.Id,
-            EmailAddress: user.EmailAddress.Value,
-            FirstName: user.FirstName,
-            LastName: user.LastName,
-            DisplayName: user.DisplayName,
-            SecondaryEmailAddress: user.SecondaryEmailAddress != null ? user.SecondaryEmailAddress.Value : null,
-            PhoneNumber: user.PhoneNumber != null ? user.PhoneNumber.Value : null,
-            LastLogin: user.LastLoginDate,
-            Address: user.Address,
-            IsActive: user.IsActive,
-            IsEmailVerified: user.IsEmailVerified,
-            IsPhoneVerified: user.IsPhoneVerified
-        );
+        return _mapper.Map<UserDto>(user);
     }
 }

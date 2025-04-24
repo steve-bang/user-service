@@ -5,6 +5,7 @@
 */
 
 using System.Linq.Expressions;
+using AutoMapper;
 using Steve.ManagerHero.Application.Processors;
 
 namespace Steve.ManagerHero.Application.Features.Users.Queries;
@@ -13,13 +14,17 @@ public class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, PaginatedList
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IScimFilterProcessor<User> _scimFilterProcessor;
+    private readonly IMapper _mapper;
 
     public GetUsersQueryHandler(
         IUnitOfWork unitOfWork,
-        IScimFilterProcessor<User> scimFilterProcessor)
+        IScimFilterProcessor<User> scimFilterProcessor,
+        IMapper mapper
+    )
     {
         _unitOfWork = unitOfWork;
         _scimFilterProcessor = scimFilterProcessor;
+        _mapper = mapper;
     }
 
     public async Task<PaginatedList<UserDto>> Handle(
@@ -41,20 +46,7 @@ public class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, PaginatedList
 
         return new PaginatedList<UserDto>
         {
-            Items = users.Select(user => new UserDto(
-            Id: user.Id,
-            EmailAddress: user.EmailAddress.Value,
-            FirstName: user.FirstName,
-            LastName: user.LastName,
-            DisplayName: user.DisplayName,
-            SecondaryEmailAddress: user.SecondaryEmailAddress != null ? user.SecondaryEmailAddress.Value : null,
-            PhoneNumber: user.PhoneNumber != null ? user.PhoneNumber.Value : null,
-            LastLogin: user.LastLoginDate,
-            Address: user.Address,
-            IsActive: user.IsActive,
-            IsEmailVerified: user.IsEmailVerified,
-            IsPhoneVerified: user.IsPhoneVerified
-            )).ToList(),
+            Items = users.Select(_mapper.Map<UserDto>).ToList(),
             TotalCount = totalCount
         };
     }
