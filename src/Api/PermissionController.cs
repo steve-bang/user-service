@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Steve.ManagerHero.Api.Models;
 using Steve.ManagerHero.Application.Features.Permissions.Commands;
 using Steve.ManagerHero.Application.Features.Permissions.Queries;
+using Steve.ManagerHero.Application.Features.Roles.Queries;
 
 [Route("api/v1/permissions")]
 public class PermissionController : ControllerBase
@@ -80,4 +81,12 @@ public class PermissionController : ControllerBase
         return ApiResponseSuccess<PaginatedList<PermissionDto>>.BuildOKObjectResult(permissions);
     }
 
+
+    [HttpGet("{id}/roles")]
+    public async Task<IActionResult> GetRolesByPermissionId([FromRoute] Guid id)
+    {
+        var result = await _mediator.Send(new GetRolesByPermissionIdQuery(id));
+
+        return ApiResponseSuccess<IEnumerable<RoleDto>>.BuildOKObjectResult(result);
+    }
 }

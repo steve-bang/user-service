@@ -19,4 +19,6 @@ public interface IRoleRepository : IRepository
     bool Delete(Role role, CancellationToken cancellationToken = default);
 
     Task<List<Role>> GetRolesByUserId(Guid userId, CancellationToken cancellationToken = default);
+
+    Task<List<Role>> GetRolesByPermissionId(Guid permissionId, CancellationToken cancellationToken = default);
 }

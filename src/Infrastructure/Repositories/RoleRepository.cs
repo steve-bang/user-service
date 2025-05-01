@@ -5,7 +5,6 @@
 */
 
 using Microsoft.EntityFrameworkCore;
-using Steve.ManagerHero.UserService.Domain.Common;
 
 namespace Steve.ManagerHero.UserService.Infrastructure.Repository;
 
@@ -31,6 +30,16 @@ public class RoleRepository(
     public Task<Role?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return _context.Roles.FirstOrDefaultAsync(r => r.Id == id);
+    }
+
+    public Task<List<Role>> GetRolesByPermissionId(Guid permissionId, CancellationToken cancellationToken = default)
+    {
+        return _context.Roles
+            .Include(r => r.RolePermissions)
+            .ThenInclude(rp => rp.Permission)
+            .AsSplitQuery()
+            .Where(r => r.RolePermissions.Any(rp => rp.PermissionId == permissionId))
+            .ToListAsync();
     }
 
     public Task<List<Role>> GetRolesByUserId(Guid userId, CancellationToken cancellationToken = default)
