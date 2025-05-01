@@ -64,7 +64,9 @@ public static class DependencyInjection
         // Register repositories
         builder.AddRepositories();
 
+        // Add SCIM filter processor
         builder.Services.AddScoped<IScimFilterProcessor<User>, ScimFilterProcessor<User>>();
+        builder.Services.AddScoped<IScimFilterProcessor<Permission>, ScimFilterProcessor<Permission>>();
 
         return builder;
     }

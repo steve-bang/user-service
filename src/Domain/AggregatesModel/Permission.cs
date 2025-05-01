@@ -30,9 +30,11 @@ public class Permission : AggregateRoot
         CreatedAt = DateTime.UtcNow;
     }
 
-    public void UpdateDescription(string description)
+    public void Update(string code, string name, string descriptionn)
     {
-        Description = description ?? string.Empty;
+        Code = code;
+        Name = name;
+        Description = descriptionn ?? string.Empty;
     }
 
 }

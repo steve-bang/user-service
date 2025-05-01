@@ -10,7 +10,6 @@ public class ExceptionProviders
 {
     public const string InputInvalid = "Input_Invalid";
     public const string TokenInvalid = "token_invalid";
-    public const string RoleNotFound = "role.not_found";
 
     public static class User
     {
@@ -62,9 +61,21 @@ public class ExceptionProviders
 
     public static class Role
     {
+        public const string RoleNotFound = "role.not_found";
+
         public static NotFoundDataException NotFoundException => new(
             RoleNotFound,
             "The role was not found in the system."
+        );
+    }
+
+    public static class Permission
+    {
+        public const string PermissionNotFound = "permission.not_found";
+
+        public static NotFoundDataException NotFoundException => new(
+            PermissionNotFound,
+            "The permission was not found in the system."
         );
     }
 }
