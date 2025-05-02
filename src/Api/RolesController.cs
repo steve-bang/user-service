@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steve.ManagerHero.Api.Models;
 using Steve.ManagerHero.Application.Features.Permissions.Commands;
+using Steve.ManagerHero.Application.Features.Permissions.Queries;
 using Steve.ManagerHero.Application.Features.Roles.Commands;
 using Steve.ManagerHero.Application.Features.Roles.Queries;
 
@@ -85,6 +86,27 @@ public class RolesController : ControllerBase
     {
         var result = await _mediator.Send(new AssignPermissionToRoleCommand(roleId, request.PermissionIds));
         return ApiResponseSuccess<bool>.BuildOKObjectResult(result);
+    }
+
+    /// <summary>
+    /// Get permissions assigned to a specific role.
+    /// This endpoint retrieves a paginated list of permissions associated with the specified role.
+    /// </summary>
+    /// <param name="roleId"></param>
+    /// <param name="pagination"></param>
+    /// <returns></returns>
+    [HttpGet("{roleId}/permissions")]
+    [Authorize]
+    public async Task<IActionResult> GetPermissionsByRole(Guid roleId, [FromQuery] PaginationQuery pagination)
+    {
+        var result = await _mediator.Send(new GetPermissionsByRoleQuery()
+        {
+            RoleId = roleId,
+            PageNumber = pagination.PageNumber,
+            PageSize = pagination.PageSize
+        });
+
+        return ApiResponseSuccess<PaginatedList<PermissionDto>>.BuildOKObjectResult(result);
     }
 
 }

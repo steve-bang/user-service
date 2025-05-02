@@ -72,4 +72,23 @@ public class PermissionRepository(
             .Where(x => ids.Contains(x.Id))
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<(IEnumerable<Permission> items, int totalCount)> GetPermissionsByRoleAsync(Role role, int pageNumber = 1, int pageSize = 20, CancellationToken cancellationToken = default)
+    {
+        var query = _context.Permissions
+            .Include(x => x.RolePermissions)
+            .ThenInclude(x => x.Role)
+            .Where(x => x.RolePermissions.Any(rp => rp.RoleId == role.Id))
+            .AsQueryable();
+
+        var totalCount = query.Count();
+
+        var items = await query
+            .OrderBy(x => x.CreatedAt)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+
+        return (items, totalCount);
+    }
 }

@@ -38,6 +38,21 @@ public interface IPermissionRepository : IRepository
     );
 
     /// <summary>
+    /// Get permissions by role.
+    /// </summary>
+    /// <param name="role"></param>
+    /// <param name="pageNumber"></param>
+    /// <param name="pageSize"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<(IEnumerable<Permission> items, int totalCount)> GetPermissionsByRoleAsync(
+        Role role,
+        int pageNumber = PaginationConstant.PageNumberDefault,
+        int pageSize = PaginationConstant.PageSizeDefault,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>
     /// Get all permissions.
     /// </summary>
     /// <param name="filter"></param>
