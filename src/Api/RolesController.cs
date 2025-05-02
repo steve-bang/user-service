@@ -109,4 +109,22 @@ public class RolesController : ControllerBase
         return ApiResponseSuccess<PaginatedList<PermissionDto>>.BuildOKObjectResult(result);
     }
 
+    /// <summary>
+    /// Assigns permissions to a role.
+    /// This endpoint allows you to assign multiple permissions to a specific role.
+    /// </summary>
+    /// <param name="roleId">The id of the role to which permissions will be assigned.</param>
+    /// <param name="request">The request body containing the list of permission IDs to be assigned.</param>
+    /// <returns></returns>
+    [HttpDelete("{roleId}/permissions")]
+    [Authorize]
+    public async Task<IActionResult> RemovePermissionsFromRole(
+        Guid roleId,
+        [FromBody] AssignPermissionsToRoleRequest request
+    )
+    {
+        var result = await _mediator.Send(new RemovePermissionsFromRoleCommand(roleId, request.PermissionIds));
+        return new NoContentResult();
+    }
+
 }

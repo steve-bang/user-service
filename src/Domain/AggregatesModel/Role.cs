@@ -47,20 +47,15 @@ public class Role : AggregateRoot
         }
     }
 
-    public void AddPermission(Permission permission)
+    public void RemovePermissions(IEnumerable<Permission> permissions)
     {
-        if (!_rolePermissions.Any(rp => rp.PermissionId == permission.Id))
+        foreach (var permission in permissions)
         {
-            _rolePermissions.Add(new RolePermission(this, permission));
-        }
-    }
-
-    public void RemovePermission(Permission permission)
-    {
-        var rolePermission = _rolePermissions.FirstOrDefault(rp => rp.PermissionId == permission.Id);
-        if (rolePermission != null)
-        {
-            _rolePermissions.Remove(rolePermission);
+            var rolePermission = _rolePermissions.FirstOrDefault(rp => rp.PermissionId == permission.Id);
+            if (rolePermission != null)
+            {
+                _rolePermissions.Remove(rolePermission);
+            }
         }
     }
 
