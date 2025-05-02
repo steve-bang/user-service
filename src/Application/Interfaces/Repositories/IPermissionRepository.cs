@@ -25,6 +25,17 @@ public interface IPermissionRepository : IRepository
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task<Permission?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    
+    /// <summary>
+    /// Get permissions by ids.
+    /// </summary>
+    /// <param name="ids"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<IEnumerable<Permission>> GetByIdsAsync(
+        IEnumerable<Guid> ids,
+        CancellationToken cancellationToken = default
+    );
 
     /// <summary>
     /// Get all permissions.

@@ -36,6 +36,17 @@ public class Role : AggregateRoot
         Description = description ?? string.Empty;
     }
 
+    public void AddPermissions(IEnumerable<Permission> permissions)
+    {
+        foreach (var permission in permissions)
+        {
+            if (!_rolePermissions.Any(rp => rp.PermissionId == permission.Id))
+            {
+                _rolePermissions.Add(new RolePermission(this, permission));
+            }
+        }
+    }
+
     public void AddPermission(Permission permission)
     {
         if (!_rolePermissions.Any(rp => rp.PermissionId == permission.Id))

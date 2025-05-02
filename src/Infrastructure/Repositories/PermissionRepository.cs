@@ -65,4 +65,11 @@ public class PermissionRepository(
 
         return permissionToDelete.State == EntityState.Deleted;
     }
+
+    public async Task<IEnumerable<Permission>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken = default)
+    {
+        return await _context.Permissions
+            .Where(x => ids.Contains(x.Id))
+            .ToListAsync(cancellationToken);
+    }
 }

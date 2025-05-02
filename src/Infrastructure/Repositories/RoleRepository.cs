@@ -29,7 +29,11 @@ public class RoleRepository(
 
     public Task<Role?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return _context.Roles.FirstOrDefaultAsync(r => r.Id == id);
+        return _context.Roles
+                .Include(r => r.RolePermissions)
+                .ThenInclude(rp => rp.Permission)
+                .AsSplitQuery()
+                .FirstOrDefaultAsync(r => r.Id == id);
     }
 
     public Task<List<Role>> GetRolesByPermissionId(Guid permissionId, CancellationToken cancellationToken = default)
