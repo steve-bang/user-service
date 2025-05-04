@@ -5,7 +5,7 @@
 */
 using AutoMapper;
 
-namespace Steve.ManagerHero.Application.Features.Users.Mapping;
+namespace Steve.ManagerHero.Application.Features.Mapping;
 
 public class PermissionMappingProfile : Profile
 {

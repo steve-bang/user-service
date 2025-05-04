@@ -4,6 +4,7 @@
 * - [2025-04-11] - Created by mrsteve.bang@gmail.com
 */
 
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Steve.ManagerHero.UserService.Infrastructure.Repository;
@@ -54,6 +55,31 @@ public class RoleRepository(
             .AsSplitQuery()
             .Where(r => r.UserRoles.Any(ur => ur.UserId == userId))
             .ToListAsync();
+    }
+
+    public async Task<(IEnumerable<Role> items, int totalCount)> GetRolesAsync(
+        Expression<Func<Role, bool>> filter,
+        int pageNumber = PaginationConstant.PageNumberDefault,
+        int pageSize = PaginationConstant.PageSizeDefault,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var query = _context.Roles.AsQueryable();
+
+        if (filter != null)
+        {
+            query = query.Where(filter);
+        }
+
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        var items = await query
+            .OrderBy(u => u.CreatedAt)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+
+        return (items, totalCount);
     }
 
     public Role Update(Role role, CancellationToken cancellationToken = default)

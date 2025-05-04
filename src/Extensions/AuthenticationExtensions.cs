@@ -117,6 +117,12 @@ public static class AuthenticationExtensions
                     {
                         throw new UnauthorizedException();
                     },
+
+                    // Triggered when request resource was access deny.
+                    OnForbidden = context =>
+                    {
+                        throw new ForbiddenException();
+                    },
                 };
             });
 

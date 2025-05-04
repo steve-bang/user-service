@@ -25,6 +25,7 @@ public class JwtHandler : IJwtHandler
             new (JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()),
             new (ClaimTypes.NameIdentifier, user.DisplayName),
             new (ClaimTypes.Email, user.EmailAddress.Value),
+            new (ClaimTypes.Role, string.Join(",", user.RoleNames))
         };
 
         var signingCredentials = new SigningCredentials(

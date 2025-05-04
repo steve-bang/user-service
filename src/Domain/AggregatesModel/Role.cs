@@ -4,8 +4,6 @@
 * - [2025-04-11] - Created by mrsteve.bang@gmail.com
 */
 
-using Steve.ManagerHero.UserService.Domain.Common;
-
 namespace Steve.ManagerHero.UserService.Domain.AggregatesModel;
 
 public class Role : AggregateRoot

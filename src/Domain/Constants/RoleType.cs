@@ -6,12 +6,7 @@
 
 namespace Steve.ManagerHero.UserService.Domain.Constants;
 
-public enum RoleType
+public class RoleNames 
 {
-    SystemAdministrator,
-    Administrator,
-    Moderator,
-    User,
-    Guest,
-    Custom
+    public const string Admin = nameof(Admin);
 }

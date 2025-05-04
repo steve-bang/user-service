@@ -57,6 +57,9 @@ public class User : AggregateRoot
     private readonly List<Session> _sessions = new();
     public IReadOnlyCollection<Session> Sessions => _sessions.AsReadOnly();
 
+    public string[] RoleNames => _userRoles.Any() ? _userRoles.Select(ur => ur.Role).Select(r => r.Name).ToArray()
+        : [];
+
     //private readonly List<RefreshToken> _refreshTokens = new();
     //public IReadOnlyCollection<RefreshToken> RefreshTokens => _refreshTokens.AsReadOnly();
 
@@ -236,11 +239,6 @@ public class User : AggregateRoot
     // {
     //     return _roles.Any(r => r.RolePermissions.Any(p => p.Permission.Code == permissionCode));
     // }
-
-    public void RecordLogin()
-    {
-        LastLoginDate = DateTime.UtcNow;
-    }
 
     public void LoginPassword(string passwordRequest)
     {
