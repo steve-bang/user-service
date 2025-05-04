@@ -88,4 +88,11 @@ public class RoleRepository(
 
         return roleUpdated.Entity;
     }
+
+    public async Task<IEnumerable<Role>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken = default)
+    {
+        return await _context.Roles
+            .Where(x => ids.Contains(x.Id))
+            .ToListAsync(cancellationToken);
+    }
 }

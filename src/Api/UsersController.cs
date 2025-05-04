@@ -124,12 +124,27 @@ public class UsersController : ControllerBase
     [Authorize]
     public async Task<IActionResult> AssignRoleToUser(Guid userId, Guid roleId)
     {
-        var roles = await _mediator.Send(new AssignUserToRoleCommand(
+        var result = await _mediator.Send(new AssignUserToRoleCommand(
             UserId: userId,
             RoleId: roleId
         ));
 
-        return ApiResponseSuccess<bool>.BuildOKObjectResult(roles);
+        return ApiResponseSuccess<bool>.BuildOKObjectResult(result);
+    }
+
+    [HttpDelete("{userId}/roles")]
+    [Authorize]
+    public async Task<IActionResult> RemoveRolesFromUser(
+        Guid userId,
+        [FromBody] RemoveRolesFromUserRequest request
+    )
+    {
+        var result = await _mediator.Send(new RemoveRolesFromUserCommand(
+            UserId: userId,
+            RoleIds: request.RoleIds
+        ));
+
+        return ApiResponseSuccess<bool>.BuildOKObjectResult(result);
     }
 
 }

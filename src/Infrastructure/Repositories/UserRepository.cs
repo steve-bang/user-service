@@ -121,7 +121,7 @@ public class UserRepository(
         throw new NotImplementedException();
     }
 
-    public User Update(User user)
+    public User Update(User user, CancellationToken cancellationToken = default)
     {
         var result = _context.Users.Update(user);
 

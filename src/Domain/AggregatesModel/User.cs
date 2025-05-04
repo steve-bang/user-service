@@ -231,6 +231,14 @@ public class User : AggregateRoot
         }
 
         _userRoles.Remove(userRole);
+    }
+
+    public void RemoveRoles(IEnumerable<Role> roles)
+    {
+        foreach (var role in roles)
+        {
+            RemoveRole(role);
+        }
 
         UpdatedAt = DateTime.UtcNow;
     }

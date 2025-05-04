@@ -5,7 +5,6 @@
 */
 
 using System.Linq.Expressions;
-using Steve.ManagerHero.UserService.Domain.Common;
 
 namespace Steve.ManagerHero.UserService.Application.Interfaces.Repository;
 
@@ -33,6 +32,6 @@ public interface IUserRepository : IRepository
         CancellationToken cancellationToken = default
     );
 
-    User Update(User user);
+    User Update(User user, CancellationToken cancellationToken = default);
     bool Delete(User user);
 }

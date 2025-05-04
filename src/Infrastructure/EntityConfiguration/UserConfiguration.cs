@@ -133,11 +133,12 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired(false);
 
         // Relationships
-        builder
-            .HasMany(u => u.UserRoles)
-            .WithOne(ur => ur.User)
-            .HasForeignKey(ur => ur.UserId)
-            .IsRequired(false);
+        // builder
+        //     .HasMany<UserRole>("_userRoles")
+        //     .WithOne(ur => ur.User)
+        //     .HasForeignKey(ur => ur.UserId)
+        //     .OnDelete(DeleteBehavior.Cascade)
+        //     .IsRequired(false);
 
 
         // Indexes
@@ -156,9 +157,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         // Configure the navigation with field access, this is required because the navigation is a collection of value objects
         // Configure private field _userRoles as backing field for UserRoles
-        builder.Metadata
-            .FindNavigation(nameof(User.UserRoles))!
-            .SetPropertyAccessMode(PropertyAccessMode.Field);
+        // builder.Metadata
+        //     .FindNavigation(nameof(User.UserRoles))!
+        //     .SetPropertyAccessMode(PropertyAccessMode.Field);
 
         // Soft delete filter
         //builder.HasQueryFilter(u => u.IsActive);

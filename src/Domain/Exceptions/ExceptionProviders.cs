@@ -67,6 +67,15 @@ public class ExceptionProviders
             RoleNotFound,
             "The role was not found in the system."
         );
+
+        /// <summary>
+        /// This exception is thrown when one or more permissions are not found.
+        /// It is used in the AddPermissionWithRoleCommandHandler to check if all permissions exist before adding them to a role.
+        /// </summary>
+        public static BadRequestException OneOrMoreNotFoundException => new(
+            RoleNotFound,
+            "One or more role not found."
+        );
     }
 
     public static class Permission

@@ -15,6 +15,17 @@ public interface IRoleRepository : IRepository
 
     Task<Role?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Get roles by ids.
+    /// </summary>
+    /// <param name="ids"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<IEnumerable<Role>> GetByIdsAsync(
+        IEnumerable<Guid> ids,
+        CancellationToken cancellationToken = default
+    );
+
     Task<List<Role>> GetRolesByUserId(Guid userId, CancellationToken cancellationToken = default);
 
     Task<List<Role>> GetRolesByPermissionId(Guid permissionId, CancellationToken cancellationToken = default);
