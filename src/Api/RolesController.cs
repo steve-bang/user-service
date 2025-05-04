@@ -11,6 +11,7 @@ using Steve.ManagerHero.Application.Features.Permissions.Commands;
 using Steve.ManagerHero.Application.Features.Permissions.Queries;
 using Steve.ManagerHero.Application.Features.Roles.Commands;
 using Steve.ManagerHero.Application.Features.Roles.Queries;
+using Steve.ManagerHero.Application.Features.Users.Queries;
 using Steve.ManagerHero.UserService.Domain.Constants;
 
 [Route("api/v1/roles")]
@@ -44,6 +45,24 @@ public class RolesController : ControllerBase
         var result = await _mediator.Send(new GetRoleByIdQuery(id));
 
         return ApiResponseSuccess<RoleDto>.BuildOKObjectResult(result);
+    }
+
+    [HttpGet("{id}/users")]
+    [Authorize]
+    public async Task<IActionResult> GetUsersByRole(
+        Guid id,
+        [FromQuery] int pageNumber = PaginationConstant.PageNumberDefault,
+        [FromQuery] int pageSize = PaginationConstant.PageSizeDefault
+    )
+    {
+        var users = await _mediator.Send(new GetUsersByRoleIdQuery()
+        {
+            RoleId = id,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        });
+
+        return ApiResponseSuccess<PaginatedList<UserDto>>.BuildOKObjectResult(users);
     }
 
     [HttpGet]

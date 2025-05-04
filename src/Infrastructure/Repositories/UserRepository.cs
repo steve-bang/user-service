@@ -77,9 +77,29 @@ public class UserRepository(
         return (items, totalCount);
     }
 
-    public Task<List<User>> GetUsersByRoleAsync(string roleName, CancellationToken cancellationToken = default)
+    public async Task<(IEnumerable<User> items, int totalCount)> GetUsersByRoleIdAsync(
+        Guid roleId,
+        int pageNumber = PaginationConstant.PageNumberDefault,
+        int pageSize = PaginationConstant.PageSizeDefault,
+        CancellationToken cancellationToken = default
+    )
     {
-        throw new NotImplementedException();
+        var query = _context.Users.AsQueryable();
+
+        query = query.Include(u => u.UserRoles)
+                .Where(
+                    u => u.UserRoles.Any(ur => ur.RoleId == roleId)
+                ).AsSplitQuery();
+
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        var items = await query
+            .OrderBy(u => u.CreatedAt)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+
+        return (items, totalCount);
     }
 
     public Task<bool> IsEmailUniqueAsync(string email, CancellationToken cancellationToken = default)
@@ -97,11 +117,6 @@ public class UserRepository(
     }
 
     public Task<bool> IsUsernameUniqueAsync(string username, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<List<User>> SearchUsersAsync(string searchTerm, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }

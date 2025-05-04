@@ -18,14 +18,21 @@ public interface IUserRepository : IRepository
     Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default);
     Task<bool> IsEmailUniqueAsync(string email, CancellationToken cancellationToken = default);
     Task<bool> IsUsernameUniqueAsync(string username, CancellationToken cancellationToken = default);
-    Task<List<User>> GetUsersByRoleAsync(string roleName, CancellationToken cancellationToken = default);
-    Task<List<User>> SearchUsersAsync(string searchTerm, CancellationToken cancellationToken = default);
-    User Update(User user);
-    bool Delete(User user);
+
     Task<(IEnumerable<User> items, int totalCount)> GetUsersAsync(
         Expression<Func<User, bool>>? filter,
         int pageNumber = PaginationConstant.PageNumberDefault,
         int pageSize = PaginationConstant.PageSizeDefault,
         CancellationToken cancellationToken = default
     );
+
+    Task<(IEnumerable<User> items, int totalCount)> GetUsersByRoleIdAsync(
+        Guid roleId,
+        int pageNumber = PaginationConstant.PageNumberDefault,
+        int pageSize = PaginationConstant.PageSizeDefault,
+        CancellationToken cancellationToken = default
+    );
+
+    User Update(User user);
+    bool Delete(User user);
 }
