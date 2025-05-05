@@ -15,6 +15,7 @@ using Steve.ManagerHero.UserService.Application.Interfaces.Caching;
 using Steve.ManagerHero.UserService.Infrastructure.Caching;
 using Steve.ManagerHero.UserService.Domain.Common;
 using Steve.ManagerHero.Application.Processors;
+using Steve.ManagerHero.Application.Features.Permissions.Commands;
 
 namespace Steve.ManagerHero.UserService.Extensions;
 
@@ -51,10 +52,13 @@ public static class DependencyInjection
 
         // Register validator
         builder.Services.AddValidatorsFromAssemblyContaining<AssignPermissionToRoleCommandValidator>();
-        builder.Services.AddValidatorsFromAssemblyContaining<ChangePasswordCommand>();
+        builder.Services.AddValidatorsFromAssemblyContaining<ChangePasswordCommandValidator>();
+        builder.Services.AddValidatorsFromAssemblyContaining<CreatePermissionCommandValidator>();
+        builder.Services.AddValidatorsFromAssemblyContaining<ResetPasswordCommandValidator>();
+        builder.Services.AddValidatorsFromAssemblyContaining<RemovePermissionsFromRoleCommandValidator>();
         builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserCommandValidator>();
         builder.Services.AddValidatorsFromAssemblyContaining<UpdateUserCommandValidator>();
-        builder.Services.AddValidatorsFromAssemblyContaining<ResetPasswordCommand>();
+        builder.Services.AddValidatorsFromAssemblyContaining<UpdatePermissionCommandValidator>();
 
         // Register smtp setting
         builder.AddSmtpSettings();

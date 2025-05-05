@@ -8,20 +8,20 @@ using FluentValidation;
 
 namespace Steve.ManagerHero.Application.Features.Permissions.Commands;
 
-public class AssignPermissionToRoleCommandValidator : AbstractValidator<AssignPermissionToRoleCommand>
+public class CreatePermissionCommandValidator : AbstractValidator<CreatePermissionCommand>
 {
-    public AssignPermissionToRoleCommandValidator()
+    public CreatePermissionCommandValidator()
     {
 
-        RuleFor(x => x.RoleId)
+        RuleFor(x => x.Code)
             .NotEmpty()
             .WithErrorCode(ExceptionProviders.InputInvalid)
-            .WithMessage("The id of the role is required.");
+            .WithMessage("Code is required.");
 
-        RuleFor(x => x.PermissionIds)
+        RuleFor(x => x.Name)
             .NotEmpty()
             .WithErrorCode(ExceptionProviders.InputInvalid)
-            .WithMessage("At least one permission is required.");
+            .WithMessage("Name is required.");
 
     }
 }

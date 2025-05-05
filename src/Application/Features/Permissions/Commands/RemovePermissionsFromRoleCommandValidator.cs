@@ -8,9 +8,9 @@ using FluentValidation;
 
 namespace Steve.ManagerHero.Application.Features.Permissions.Commands;
 
-public class AssignPermissionToRoleCommandValidator : AbstractValidator<AssignPermissionToRoleCommand>
+public class RemovePermissionsFromRoleCommandValidator : AbstractValidator<RemovePermissionsFromRoleCommand>
 {
-    public AssignPermissionToRoleCommandValidator()
+    public RemovePermissionsFromRoleCommandValidator()
     {
 
         RuleFor(x => x.RoleId)
