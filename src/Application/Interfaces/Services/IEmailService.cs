@@ -13,4 +13,9 @@ public interface IEmailService
     Task SendEmailAsync(string to, string subject, string templateContent, ExpandoObject data);
 
     Task SendRegistrationEmailAsync(string email, string verificationLink);
+
+    Task SendResetPasswordAsync(string email, string resetLink, int expiryMinutes);
+
+    Task SendVerificationEmailAsync(string email, string verificationLink, int expiryMinutes);
+
 }

@@ -20,7 +20,6 @@ public class SessionRepository(
     UserAppContext _context
 ) : ISessionRepository
 {
-    public IUnitOfWork UnitOfWork => _context;
 
     public async Task<Session> CreateAsync(Session session, CancellationToken cancellationToken = default)
     {

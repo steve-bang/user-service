@@ -27,4 +27,9 @@ public class ProjectSettings
     /// The link of the verification action. When the user register a new user, we send the email address for verification their email.
     /// </summary>
     public string VerificationLink { get; set; } = null!;
+
+    /// <summary>
+    /// The link of the reset password action.
+    /// </summary>
+    public string ResetPassword { get; set; } = null!;
 }

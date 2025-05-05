@@ -8,9 +8,12 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steve.ManagerHero.Api.Models;
+using Steve.ManagerHero.Application.Features.Roles.Commands;
+using Steve.ManagerHero.Application.Features.Roles.Queries;
 using Steve.ManagerHero.Application.Features.Users.Commands;
 using Steve.ManagerHero.Application.Features.Users.Queries;
 using Steve.ManagerHero.UserService.Application.Auth;
+using Steve.ManagerHero.UserService.Domain.Constants;
 
 [Route("api/v1/users")]
 public class UsersController : ControllerBase
@@ -42,6 +45,21 @@ public class UsersController : ControllerBase
         return ApiResponseSuccess<UserDto>.BuildOKObjectResult(result);
     }
 
+    [HttpPut("{id}/change-password")]
+    [Authorize]
+    public async Task<IActionResult> ChangePassword(Guid id, [FromBody] ChangePasswordRequest request)
+    {
+
+        var result = await _mediator.Send(new ChangePasswordCommand(
+            UserId: id,
+            CurrentPassword: request.CurrentPassword,
+            NewPassword: request.NewPassword,
+            ConfirmPassword: request.ConfirmPassword
+        ));
+
+        return ApiResponseSuccess<bool>.BuildOKObjectResult(result);
+    }
+
     [HttpPut("{id}")]
     [Authorize]
     public async Task<IActionResult> UpdateById(Guid id, [FromBody] UserUpdateRequest request)
@@ -61,12 +79,73 @@ public class UsersController : ControllerBase
         return ApiResponseSuccess<UserDto>.BuildOKObjectResult(result);
     }
 
-    [HttpDelete("{id}")]
+    [HttpPost("{id}/send-verification-email")]
     [Authorize]
+    public async Task<IActionResult> SendVerificationEmail(Guid id)
+    {
+        await _mediator.Send(new SendVerificationEmailLinkCommand(id));
+        return ApiResponseSuccess<EmailVerificationSendDto>.BuildOKObjectResult(new());
+    }
+
+    [HttpDelete("{id}")]
+    [Authorize(Roles = RoleNames.Admin)]
     public async Task<IActionResult> DeleteById(Guid id)
     {
         await _mediator.Send(new DeleteUserCommand(id));
         return new NoContentResult();
+    }
+
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> GetUsers(
+        [FromQuery] string? filter = null,
+        [FromQuery] int pageNumber = PaginationConstant.PageNumberDefault,
+        [FromQuery] int pageSize = PaginationConstant.PageSizeDefault
+    )
+    {
+        var users = await _mediator.Send(new GetUsersQuery()
+        {
+            Filter = filter,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        });
+
+        return ApiResponseSuccess<PaginatedList<UserDto>>.BuildOKObjectResult(users);
+    }
+
+    [HttpGet("{id}/roles")]
+    [Authorize]
+    public async Task<IActionResult> GetRolesByUserId(Guid id)
+    {
+        var roles = await _mediator.Send(new GetRolesByUserIdQuery(id));
+        return ApiResponseSuccess<IEnumerable<RoleDto>>.BuildOKObjectResult(roles);
+    }
+
+    [HttpPost("{userId}/roles/{roleId}")]
+    [Authorize(Roles = RoleNames.Admin)]
+    public async Task<IActionResult> AssignRoleToUser(Guid userId, Guid roleId)
+    {
+        var result = await _mediator.Send(new AssignUserToRoleCommand(
+            UserId: userId,
+            RoleId: roleId
+        ));
+
+        return ApiResponseSuccess<bool>.BuildOKObjectResult(result);
+    }
+
+    [HttpDelete("{userId}/roles")]
+    [Authorize(Roles = RoleNames.Admin)]
+    public async Task<IActionResult> RemoveRolesFromUser(
+        Guid userId,
+        [FromBody] RemoveRolesFromUserRequest request
+    )
+    {
+        var result = await _mediator.Send(new RemoveRolesFromUserCommand(
+            UserId: userId,
+            RoleIds: request.RoleIds
+        ));
+
+        return ApiResponseSuccess<bool>.BuildOKObjectResult(result);
     }
 
 }

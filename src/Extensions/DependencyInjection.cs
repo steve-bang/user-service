@@ -11,6 +11,11 @@ using FluentValidation;
 using Steve.ManagerHero.Application.Features.Users.Commands;
 using Steve.ManagerHero.UserService.Application.Auth;
 using Steve.ManagerHero.UserService.Infrastructure.Services;
+using Steve.ManagerHero.UserService.Application.Interfaces.Caching;
+using Steve.ManagerHero.UserService.Infrastructure.Caching;
+using Steve.ManagerHero.UserService.Domain.Common;
+using Steve.ManagerHero.Application.Processors;
+using Steve.ManagerHero.Application.Features.Permissions.Commands;
 
 namespace Steve.ManagerHero.UserService.Extensions;
 
@@ -46,20 +51,36 @@ public static class DependencyInjection
         });
 
         // Register validator
+        builder.Services.AddValidatorsFromAssemblyContaining<AssignPermissionToRoleCommandValidator>();
+        builder.Services.AddValidatorsFromAssemblyContaining<ChangePasswordCommandValidator>();
+        builder.Services.AddValidatorsFromAssemblyContaining<CreatePermissionCommandValidator>();
+        builder.Services.AddValidatorsFromAssemblyContaining<ResetPasswordCommandValidator>();
+        builder.Services.AddValidatorsFromAssemblyContaining<RemovePermissionsFromRoleCommandValidator>();
         builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserCommandValidator>();
         builder.Services.AddValidatorsFromAssemblyContaining<UpdateUserCommandValidator>();
+        builder.Services.AddValidatorsFromAssemblyContaining<UpdatePermissionCommandValidator>();
 
         // Register smtp setting
         builder.AddSmtpSettings();
 
+        // Add caching
+        builder.AddCacheServices();
+
         // Register repositories
         builder.AddRepositories();
+
+        // Add SCIM filter processor
+        builder.Services.AddScoped<IScimFilterProcessor<Permission>, ScimFilterProcessor<Permission>>();
+        builder.Services.AddScoped<IScimFilterProcessor<Role>, ScimFilterProcessor<Role>>();
+        builder.Services.AddScoped<IScimFilterProcessor<User>, ScimFilterProcessor<User>>();
 
         return builder;
     }
 
     public static IHostApplicationBuilder AddRepositories(this IHostApplicationBuilder builder)
     {
+        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
         builder.Services.AddScoped<IRoleRepository, RoleRepository>();
         builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -107,5 +128,16 @@ public static class DependencyInjection
 
         return builder;
     }
+
+    public static IHostApplicationBuilder AddCacheServices(this IHostApplicationBuilder builder)
+    {
+        builder.Services.AddMemoryCache();
+
+        // Add caching service
+        builder.Services.AddScoped<ITokenCache, TokenCache>();
+
+        return builder;
+    }
+
 
 }

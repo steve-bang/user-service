@@ -4,15 +4,18 @@
 * - [2025-04-16] - Created by mrsteve.bang@gmail.com
 */
 
+using AutoMapper;
+
 namespace Steve.ManagerHero.Application.Features.Users.Commands;
 
 public class RegisterUserCommandHandler(
-    IUserRepository _userRepository
+    IUnitOfWork _unitOfWork,
+    IMapper _mapper
 ) : IRequestHandler<RegisterUserCommand, UserDto>
 {
     public async Task<UserDto> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
-        bool isExistsEmail = await _userRepository.IsExistEmailAsync(request.EmailAddress, cancellationToken);
+        bool isExistsEmail = await _unitOfWork.Users.IsExistEmailAsync(request.EmailAddress, cancellationToken);
 
         if (isExistsEmail) throw ExceptionProviders.User.EmailAlreadyExistsException;
 
@@ -24,23 +27,10 @@ public class RegisterUserCommandHandler(
             password: request.Password
         );
 
-        User userCreated = await _userRepository.CreateAsync(user, cancellationToken);
+        User userCreated = await _unitOfWork.Users.CreateAsync(user, cancellationToken);
 
-        await _userRepository.UnitOfWork.SaveEntitiesAsync();
+        await _unitOfWork.SaveChangesAsync();
 
-        return new UserDto(
-            Id: userCreated.Id,
-            EmailAddress: userCreated.EmailAddress.Value,
-            FirstName: userCreated.FirstName,
-            LastName: userCreated.LastName,
-            DisplayName: userCreated.DisplayName,
-            SecondaryEmailAddress: userCreated.SecondaryEmailAddress != null ? userCreated.SecondaryEmailAddress.Value : null,
-            PhoneNumber: userCreated.PhoneNumber != null ? userCreated.PhoneNumber.Value : null,
-            LastLogin: userCreated.LastLoginDate,
-            Address: userCreated.Address,
-            IsActive: userCreated.IsActive,
-            IsEmailVerified: userCreated.IsEmailVerified,
-            IsPhoneVerified: userCreated.IsPhoneVerified
-        );
+        return _mapper.Map<UserDto>(userCreated);
     }
 }

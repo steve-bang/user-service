@@ -4,7 +4,6 @@
 * - [2025-04-18] - Created by mrsteve.bang@gmail.com
 */
 
-using System.ComponentModel.DataAnnotations;
 
 namespace Steve.ManagerHero.UserService.Application.DTO;
 

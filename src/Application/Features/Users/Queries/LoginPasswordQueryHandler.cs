@@ -9,15 +9,14 @@ using Steve.ManagerHero.UserService.Application.Auth;
 namespace Steve.ManagerHero.Application.Features.Users.Queries;
 
 public class LoginPasswordQueryHandler(
-    IUserRepository _userRepository,
-    ISessionRepository _sessionRepository,
+    IUnitOfWork _unitOfWork,
     IHttpContextAccessor _httpContextAccessor,
     IJwtHandler _jwtHandler
 ) : IRequestHandler<LoginPasswordQuery, AuthenticationResponseDto>
 {
     public async Task<AuthenticationResponseDto> Handle(LoginPasswordQuery request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByEmailAsync(request.EmailAddress) ?? throw ExceptionProviders.User.LoginPasswordFailed;
+        var user = await _unitOfWork.Users.GetByEmailAsync(request.EmailAddress, cancellationToken) ?? throw ExceptionProviders.User.LoginPasswordFailedException;
 
         // Login with password
         user.LoginPassword(request.Password);
@@ -36,10 +35,10 @@ public class LoginPasswordQueryHandler(
                 expriresIn
             );
 
-            _ = await _sessionRepository.CreateAsync(session, cancellationToken);
+            _ = await _unitOfWork.Sessions.CreateAsync(session, cancellationToken);
         }
 
-        _ = await _userRepository.UnitOfWork.SaveEntitiesAsync();
+        _ = await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return new AuthenticationResponseDto(
             UserId: user.Id,

@@ -4,11 +4,11 @@
 * - [2025-04-18] - Created by mrsteve.bang@gmail.com
 */
 
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Steve.ManagerHero.UserService.Application.Auth;
-using Steve.ManagerHero.UserService.Domain.Exceptions;
 using Steve.ManagerHero.UserService.Infrastructure.Auth;
 
 namespace Steve.ManagerHero.UserService.Extensions;
@@ -47,10 +47,12 @@ public static class AuthenticationExtensions
             .AddJwtBearer(
             options =>
             {
+                // Basic JWT settings
                 options.Authority = jwtSettingsValue.Issuer;
                 options.Audience = jwtSettingsValue.Audience;
                 options.RequireHttpsMetadata = false;
 
+                // Token validation parameters (signature, issuer, lifetime, etc.)
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
@@ -62,12 +64,65 @@ public static class AuthenticationExtensions
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettingsValue.Secret)),
                 };
 
+                // JWT Event Handlers
                 options.Events = new JwtBearerEvents
                 {
+
+                    // 🔒 Handle when authentication fails (e.g. token is expired)
+                    OnAuthenticationFailed = context =>
+                    {
+                        if (context.Exception is SecurityTokenExpiredException)
+                        {
+                            throw new TokenExpiredException();
+                        }
+
+                        return Task.CompletedTask;
+                    },
+
+                    // 🔐 Runs when token is successfully validated (signature, expiry, etc.)
+                    OnTokenValidated = async context =>
+                    {
+
+                        var accessToken = context.Request.Headers["Authorization"]
+                                .FirstOrDefault()?
+                                .Replace("Bearer ", "", StringComparison.OrdinalIgnoreCase);
+
+                        if (string.IsNullOrEmpty(accessToken))
+                        {
+                            context.Fail("Access token is missing.");
+                            return;
+                        }
+
+                        var sessionRepository = context.HttpContext.RequestServices.GetRequiredService<ISessionRepository>();
+
+                        var jwtToken = context.SecurityToken as JwtSecurityToken;
+                        var jti = jwtToken?.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
+                        var userId = jwtToken?.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub)?.Value;
+
+                        var token = await sessionRepository.GetByAccessTokenAsync(accessToken);
+
+                        if (token is null) throw new UnauthorizedException();
+
+                        if ((!string.IsNullOrEmpty(userId) && token.UserId != Guid.Parse(userId)) || !token.IsActive)
+                        {
+                            context.Fail("The session request is invalid.");
+                            return;
+                        }
+
+                        // Optionally: You can attach extra claims or data to HttpContext here
+                    },
+
+                    // 🚫 Triggered when authentication is required but not provided or invalid
                     OnChallenge = context =>
                     {
                         throw new UnauthorizedException();
-                    }
+                    },
+
+                    // Triggered when request resource was access deny.
+                    OnForbidden = context =>
+                    {
+                        throw new ForbiddenException();
+                    },
                 };
             });
 

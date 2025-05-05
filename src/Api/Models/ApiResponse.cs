@@ -6,7 +6,6 @@
 
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using Steve.ManagerHero.UserService.Domain.Exceptions;
 
 namespace Steve.ManagerHero.Api.Models;
 

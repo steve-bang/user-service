@@ -4,11 +4,8 @@
 * - [2025-04-11] - Created by mrsteve.bang@gmail.com
 */
 
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Steve.ManagerHero.UserService.Domain.AggregatesModel;
-using Steve.ManagerHero.UserService.Domain.Common;
 
 
 namespace Steve.ManagerHero.UserService.Infrastructure;
@@ -21,7 +18,7 @@ namespace Steve.ManagerHero.UserService.Infrastructure;
 public class UserAppContext(
     DbContextOptions<UserAppContext> options,
     IMediator _mediator
-) : DbContext(options), IUnitOfWork
+) : DbContext(options)
 {
 
     public DbSet<User> Users { get; set; } = null!;
@@ -50,17 +47,17 @@ public class UserAppContext(
             .ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
     }
 
-    public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         // After executing this line all the changes (from the Command Handler and Domain Event Handlers) 
         // performed through the DbContext will be committed
-        _ = await base.SaveChangesAsync(cancellationToken);
+        var result = await base.SaveChangesAsync(cancellationToken);
 
         if (_mediator != null)
         {
             await _mediator.DispatchDomainEventsAsync(this);
         }
 
-        return true;
+        return result;
     }
 }

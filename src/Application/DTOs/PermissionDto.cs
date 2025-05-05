@@ -11,4 +11,5 @@ public record PermissionDto(
     string Code,
     string Name,
     string Description,
-    DateTime CreatedAt);
+    DateTime CreatedAt
+);

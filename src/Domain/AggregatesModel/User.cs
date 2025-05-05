@@ -7,7 +7,6 @@
 using Steve.ManagerHero.UserService.Domain.Common;
 using Steve.ManagerHero.UserService.Domain.Constants;
 using Steve.ManagerHero.UserService.Domain.Events;
-using Steve.ManagerHero.UserService.Domain.Exceptions;
 using Steve.ManagerHero.UserService.Domain.ValueObjects;
 
 namespace Steve.ManagerHero.UserService.Domain.AggregatesModel;
@@ -57,6 +56,9 @@ public class User : AggregateRoot
 
     private readonly List<Session> _sessions = new();
     public IReadOnlyCollection<Session> Sessions => _sessions.AsReadOnly();
+
+    public string[] RoleNames => _userRoles.Any() ? _userRoles.Select(ur => ur.Role).Select(r => r.Name).ToArray()
+        : [];
 
     //private readonly List<RefreshToken> _refreshTokens = new();
     //public IReadOnlyCollection<RefreshToken> RefreshTokens => _refreshTokens.AsReadOnly();
@@ -167,6 +169,14 @@ public class User : AggregateRoot
         UpdatedAt = DateTime.UtcNow;
     }
 
+    public void ChangePassword(string currentPassword, string newPassword)
+    {
+        if (PasswordHash.Verify(currentPassword) == false)
+            throw ExceptionProviders.User.PasswordIncorrectException;
+
+        UpdatePassword(newPassword);
+    }
+
     public void UpdatePassword(string newPassword)
     {
         var newPasswordHash = PasswordHash.Create(newPassword);
@@ -174,8 +184,8 @@ public class User : AggregateRoot
         PasswordChangedDate = DateTime.UtcNow;
         UpdatedAt = DateTime.UtcNow;
 
-        // Revoke all refresh tokens
-        //_refreshTokens.ForEach(rt => rt.Revoke());
+        // Revoke all session
+        _sessions.Clear();
 
         AddEvent(new UserPasswordChangedEvent(this));
     }
@@ -197,37 +207,53 @@ public class User : AggregateRoot
         UpdatedAt = DateTime.UtcNow;
     }
 
-    // public void AddRole(Role role)
-    // {
-    //     if (_roles.Any(r => r.Id == role.Id))
-    //         return;
+    /// <summary>
+    /// Add a role
+    /// </summary>
+    /// <param name="role">The role object to add</param>
+    /// <exception cref="ExceptionProviders.User.AlreadyHasRoleException">Throw if the user has already has role</exception>
+    public void AddRole(Role role)
+    {
+        if (_userRoles.Any(r => r.RoleId == role.Id))
+            throw ExceptionProviders.User.AlreadyHasRoleException;
 
-    //     _roles.Add(role);
-    //     UpdatedAt = DateTime.UtcNow;
-    // }
+        var userRole = new UserRole(this, role);
+        _userRoles.Add(userRole);
+        UpdatedAt = DateTime.UtcNow;
+    }
 
-    // public void RemoveRole(Role role)
-    // {
-    //     _roles.RemoveAll(r => r.Id == role.Id);
-    //     UpdatedAt = DateTime.UtcNow;
-    // }
+    public void RemoveRole(Role role)
+    {
+        var userRole = _userRoles.FirstOrDefault(ur => ur.RoleId == role.Id);
+        if (userRole == null)
+        {
+            throw new InvalidOperationException("User does not have this role.");
+        }
+
+        _userRoles.Remove(userRole);
+    }
+
+    public void RemoveRoles(IEnumerable<Role> roles)
+    {
+        foreach (var role in roles)
+        {
+            RemoveRole(role);
+        }
+
+        UpdatedAt = DateTime.UtcNow;
+    }
 
     // public bool HasPermission(string permissionCode)
     // {
     //     return _roles.Any(r => r.RolePermissions.Any(p => p.Permission.Code == permissionCode));
     // }
 
-    public void RecordLogin()
-    {
-        LastLoginDate = DateTime.UtcNow;
-    }
-
     public void LoginPassword(string passwordRequest)
     {
         bool isCorrectPassword = PasswordHash.Verify(passwordRequest);
 
         if (!isCorrectPassword)
-            throw ExceptionProviders.User.LoginPasswordFailed;
+            throw ExceptionProviders.User.LoginPasswordFailedException;
 
         LastLoginDate = DateTime.UtcNow;
     }

@@ -4,15 +4,12 @@
 * - [2025-04-11] - Created by mrsteve.bang@gmail.com
 */
 
-using Steve.ManagerHero.UserService.Domain.Common;
-
 namespace Steve.ManagerHero.UserService.Domain.AggregatesModel;
 
 public class Role : AggregateRoot
 {
     public string Name { get; private set; }
     public string Description { get; private set; }
-    public bool IsDefault { get; private set; }
     public DateTime CreatedAt { get; private set; }
 
     // Navigation properties
@@ -24,11 +21,10 @@ public class Role : AggregateRoot
 
     public Role() {}
 
-    public Role(string name, string description, bool isDefault = false)
+    public Role(string name, string description)
     {
         Name = name;
         Description = description ?? string.Empty;
-        IsDefault = isDefault;
         CreatedAt = DateTime.UtcNow;
     }
 
@@ -38,25 +34,26 @@ public class Role : AggregateRoot
         Description = description ?? string.Empty;
     }
 
-    public void MarkAsDefault()
+    public void AddPermissions(IEnumerable<Permission> permissions)
     {
-        IsDefault = true;
-    }
-
-    public void AddPermission(Permission permission)
-    {
-        if (!_rolePermissions.Any(rp => rp.PermissionId == permission.Id))
+        foreach (var permission in permissions)
         {
-            _rolePermissions.Add(new RolePermission(this, permission));
+            if (!_rolePermissions.Any(rp => rp.PermissionId == permission.Id))
+            {
+                _rolePermissions.Add(new RolePermission(this, permission));
+            }
         }
     }
 
-    public void RemovePermission(Permission permission)
+    public void RemovePermissions(IEnumerable<Permission> permissions)
     {
-        var rolePermission = _rolePermissions.FirstOrDefault(rp => rp.PermissionId == permission.Id);
-        if (rolePermission != null)
+        foreach (var permission in permissions)
         {
-            _rolePermissions.Remove(rolePermission);
+            var rolePermission = _rolePermissions.FirstOrDefault(rp => rp.PermissionId == permission.Id);
+            if (rolePermission != null)
+            {
+                _rolePermissions.Remove(rolePermission);
+            }
         }
     }
 

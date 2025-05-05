@@ -8,5 +8,4 @@ namespace Steve.ManagerHero.UserService.Domain.Common;
 
 public interface IRepository
 {
-    IUnitOfWork UnitOfWork { get; }
 }
