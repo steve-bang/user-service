@@ -50,6 +50,7 @@ public static class DependencyInjection
         });
 
         // Register validator
+        builder.Services.AddValidatorsFromAssemblyContaining<AssignPermissionToRoleCommandValidator>();
         builder.Services.AddValidatorsFromAssemblyContaining<ChangePasswordCommand>();
         builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserCommandValidator>();
         builder.Services.AddValidatorsFromAssemblyContaining<UpdateUserCommandValidator>();

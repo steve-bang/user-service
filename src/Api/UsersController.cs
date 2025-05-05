@@ -13,6 +13,7 @@ using Steve.ManagerHero.Application.Features.Roles.Queries;
 using Steve.ManagerHero.Application.Features.Users.Commands;
 using Steve.ManagerHero.Application.Features.Users.Queries;
 using Steve.ManagerHero.UserService.Application.Auth;
+using Steve.ManagerHero.UserService.Domain.Constants;
 
 [Route("api/v1/users")]
 public class UsersController : ControllerBase
@@ -87,7 +88,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize]
+    [Authorize(Roles = RoleNames.Admin)]
     public async Task<IActionResult> DeleteById(Guid id)
     {
         await _mediator.Send(new DeleteUserCommand(id));
@@ -121,7 +122,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("{userId}/roles/{roleId}")]
-    [Authorize]
+    [Authorize(Roles = RoleNames.Admin)]
     public async Task<IActionResult> AssignRoleToUser(Guid userId, Guid roleId)
     {
         var result = await _mediator.Send(new AssignUserToRoleCommand(
@@ -133,7 +134,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpDelete("{userId}/roles")]
-    [Authorize]
+    [Authorize(Roles = RoleNames.Admin)]
     public async Task<IActionResult> RemoveRolesFromUser(
         Guid userId,
         [FromBody] RemoveRolesFromUserRequest request

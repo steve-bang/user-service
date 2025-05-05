@@ -10,6 +10,7 @@ using Steve.ManagerHero.Api.Models;
 using Steve.ManagerHero.Application.Features.Permissions.Commands;
 using Steve.ManagerHero.Application.Features.Permissions.Queries;
 using Steve.ManagerHero.Application.Features.Roles.Queries;
+using Steve.ManagerHero.UserService.Domain.Constants;
 
 [Route("api/v1/permissions")]
 public class PermissionController : ControllerBase
@@ -24,6 +25,7 @@ public class PermissionController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = RoleNames.Admin)]
     public async Task<IActionResult> Create([FromBody] PermissionCommandRequest request)
     {
         var result = await _mediator.Send(new CreatePermissionCommand(
@@ -44,6 +46,7 @@ public class PermissionController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = RoleNames.Admin)]
     public async Task<IActionResult> UpdateById([FromRoute] Guid id, [FromBody] PermissionCommandRequest request)
     {
         var result = await _mediator.Send(new UpdatePermissionCommand(
@@ -57,6 +60,7 @@ public class PermissionController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = RoleNames.Admin)]
     public async Task<IActionResult> DeleteById([FromRoute] Guid id)
     {
         await _mediator.Send(new DeletePermissionCommand(id));

@@ -134,7 +134,6 @@ public class RolesController : ControllerBase
     /// <param name="pagination"></param>
     /// <returns></returns>
     [HttpGet("{roleId}/permissions")]
-    [Authorize(Roles = RoleNames.Admin)]
     public async Task<IActionResult> GetPermissionsByRole(Guid roleId, [FromQuery] PaginationQuery pagination)
     {
         var result = await _mediator.Send(new GetPermissionsByRoleQuery()
