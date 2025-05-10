@@ -126,27 +126,27 @@ public class ApiResponseSuccess<T> : ApiResponse
 
 public class ApiResponseError : ApiResponse
 {
-    public string ErrorCode { get; set; } = null!;
-    public string ErrorTitle { get; set; } = null!;
+    public string Code { get; set; } = null!;
+    public string Summary { get; set; } = null!;
 
     public const string DefaultMessage = "The request was failure.";
 
-    public ApiResponseError(string errorCode, string errorTitle)
+    public ApiResponseError(string code, string summary)
         : base(false, StatusCodes.Status500InternalServerError, DefaultMessage)
     {
-        ErrorCode = errorCode;
-        ErrorTitle = errorTitle;
+        Code = code;
+        Summary = summary;
     }
 
-    public ApiResponseError(string errorCode, string errorTitle, int statusCode)
+    public ApiResponseError(string code, string summary, int statusCode)
         : base(false, statusCode, DefaultMessage)
     {
-        ErrorCode = errorCode;
-        ErrorTitle = errorTitle;
+        Code = code;
+        Summary = summary;
     }
 
-    public ApiResponseError(string errorCode, string errorTitle, HttpStatusCode statusCode)
-        : this(errorCode, errorTitle, (int)statusCode)
+    public ApiResponseError(string code, string summary, HttpStatusCode statusCode)
+        : this(code, summary, (int)statusCode)
     {
 
     }
@@ -154,45 +154,45 @@ public class ApiResponseError : ApiResponse
     /// <summary>
     /// Builds a 400 Bad Request error
     /// </summary>
-    /// <param name="errorCode"></param>
-    /// <param name="errorTitle"></param>
+    /// <param name="code"></param>
+    /// <param name="summary"></param>
     /// <returns></returns>
-    public static ApiResponseError BuildBadRequest(string errorCode, string errorTitle)
+    public static ApiResponseError BuildBadRequest(string code, string summary)
     {
-        return new ApiResponseError(errorCode, errorTitle, HttpStatusCode.BadRequest);
+        return new ApiResponseError(code, summary, HttpStatusCode.BadRequest);
     }
 
     /// <summary>
     /// Builds a 404 Not Found error
     /// </summary>
-    /// <param name="errorCode"></param>
-    /// <param name="errorTitle"></param>
+    /// <param name="code"></param>
+    /// <param name="summary"></param>
     /// <returns></returns>
-    public static ApiResponseError BuildNotFoundResource(string errorCode, string errorTitle)
+    public static ApiResponseError BuildNotFoundResource(string code, string summary)
     {
-        return new ApiResponseError(errorCode, errorTitle, HttpStatusCode.NotFound);
+        return new ApiResponseError(code, summary, HttpStatusCode.NotFound);
     }
 
     /// <summary>
     /// Builds a 401 Unauthorized error
     /// </summary>
-    /// <param name="errorCode"></param>
-    /// <param name="errorTitle"></param>
+    /// <param name="code"></param>
+    /// <param name="summary"></param>
     /// <returns></returns>
-    public static ApiResponseError BuildUnauthorized(string errorCode, string errorTitle)
+    public static ApiResponseError BuildUnauthorized(string code, string summary)
     {
-        return new ApiResponseError(errorCode, errorTitle, HttpStatusCode.Unauthorized);
+        return new ApiResponseError(code, summary, HttpStatusCode.Unauthorized);
     }
 
     /// <summary>
     /// Builds a 500 Internal Server error
     /// </summary>
-    /// <param name="errorCode"></param>
-    /// <param name="errorTitle"></param>
+    /// <param name="code"></param>
+    /// <param name="summary"></param>
     /// <returns></returns>
-    public static ApiResponseError BuildInternalServer(string errorCode, string errorTitle)
+    public static ApiResponseError BuildInternalServer(string code, string summary)
     {
-        return new ApiResponseError(errorCode, errorTitle, HttpStatusCode.InternalServerError);
+        return new ApiResponseError(code, summary, HttpStatusCode.InternalServerError);
     }
 
     /// <summary>
