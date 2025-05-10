@@ -72,7 +72,7 @@ src/
 ### v0.6: Security Enhancements
 - [x] Refresh tokens
 - [ ] Token blacklisting
-- [ ] Rate limiting
+- [x] Rate limiting
 - [ ] Secure cookie settings
 
 ---
