@@ -1,11 +1,14 @@
 /*
 * Author: Steve Bang
+* Description: Middleware to handle exceptions in the API
 * History:
 * - [2025-04-18] - Created by mrsteve.bang@gmail.com
 */
 
 
 using Steve.ManagerHero.Api.Models;
+
+namespace Steve.ManagerHero.Middlewares;
 
 public class ExceptionMiddleware
 {

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
+using Steve.ManagerHero.Middlewares;
 using Steve.ManagerHero.UserService.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,7 +35,10 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 
 app.MapControllers();
 
+// Config Pipeline middlewares
+// We need to add the middlewares in the order of execution
 app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<IpRestrictionMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();

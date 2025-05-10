@@ -49,6 +49,10 @@ public class ExceptionProviders
             UserAlreadyHasRole,
             "User already has this role."
         );
+
+        public static ForbiddenException IpAccessNotAllowed = new(
+            "Access denied. Your IP is not allowed."
+        );
     }
 
     public static class Token
