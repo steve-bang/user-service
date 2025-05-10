@@ -114,10 +114,10 @@ src/
 - [ ] Permission caching
 
 ### v1.2: Advanced Access Control
-- [x] Time-based permissions
-- [ ] IP restriction rules
-- [x] Audit logging
-- [x] Permission revocation
+- [ ] Time-based permissions
+- [x] IP restriction rules
+- [ ] Audit logging
+- [ ] Permission revocation
 
 ---
 
