@@ -71,9 +71,9 @@ src/
 
 ### v0.6: Security Enhancements
 - [x] Refresh tokens
-- [x] Token blacklisting
-- [x] Rate limiting
-- [x] Secure cookie settings
+- [] Token blacklisting
+- [] Rate limiting
+- [] Secure cookie settings
 
 ---
 
@@ -89,13 +89,13 @@ src/
 - [x] Password reset flow
 - [x] Password change endpoint
 - [x] Password strength validation
-- [x] Password history tracking
+- [] Password history tracking
 
 ### v0.9: Admin Features
 - [x] User search/filter
-- [x] Bulk operations
-- [x] Export to CSV/Excel
-- [x] Admin dashboard endpoints
+- [] Bulk operations
+- [] Export to CSV/Excel
+- [] Admin dashboard endpoints
 
 ---
 
@@ -108,14 +108,14 @@ src/
 - [x] Basic role assignment
 
 ### v1.1: Permission Management
-- [x] Permission hierarchy
-- [x] Permission groups
-- [x] Policy-based authorization
-- [x] Permission caching
+- [] Permission hierarchy
+- [] Permission groups
+- [] Policy-based authorization
+- [] Permission caching
 
 ### v1.2: Advanced Access Control
 - [x] Time-based permissions
-- [x] IP restriction rules
+- [] IP restriction rules
 - [x] Audit logging
 - [x] Permission revocation
 
@@ -125,43 +125,43 @@ src/
 
 ### v1.3: Redis Integration
 - [x] Session caching
-- [x] Token blacklist
-- [x] Rate limit counters
-- [x] Cache invalidation
+- [] Token blacklist
+- [] Rate limit counters
+- [] Cache invalidation
 
 ### v1.4: Database Optimization
-- [x] Query optimization
-- [x] Indexing strategy
-- [x] Read replicas setup
-- [x] Connection pooling
+- [] Query optimization
+- [] Indexing strategy
+- [] Read replicas setup
+- [] Connection pooling
 
 ### v1.5: Background Services
-- [x] Email queue (Hangfire)
-- [x] Token cleanup service
-- [x] Usage analytics
-- [x] Scheduled reports
+- [] Email queue (Hangfire)
+- [] Token cleanup service
+- [] Usage analytics
+- [] Scheduled reports
 
 ---
 
 ## Phase 6: Deployment & Monitoring (v1.6 - v2.0)
 
 ### v1.6: Production Readiness
-- [x] Docker containerization
-- [x] Kubernetes manifests
-- [x] Health checks
-- [x] Config transformations
+- [] Docker containerization
+- [] Kubernetes manifests
+- [] Health checks
+- [] Config transformations
 
 ### v1.7: Monitoring
-- [x] Prometheus metrics
-- [x] Grafana dashboard
-- [x] Error tracking (Sentry)
-- [x] Performance alerts
+- [] Prometheus metrics
+- [] Grafana dashboard
+- [] Error tracking (Sentry)
+- [] Performance alerts
 
 ### v2.0: Final Release
-- [x] Stress testing
-- [x] Security audit
-- [x] Documentation complete
-- [x] Training materials
+- [] Stress testing
+- [] Security audit
+- [] Documentation complete
+- [] Training materials
 
 ---
 ## Versioning Strategy
