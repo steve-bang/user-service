@@ -13,7 +13,6 @@ using Steve.ManagerHero.UserService.Application.Auth;
 using Steve.ManagerHero.UserService.Infrastructure.Services;
 using Steve.ManagerHero.UserService.Application.Interfaces.Caching;
 using Steve.ManagerHero.UserService.Infrastructure.Caching;
-using Steve.ManagerHero.UserService.Domain.Common;
 using Steve.ManagerHero.Application.Processors;
 using Steve.ManagerHero.Application.Features.Permissions.Commands;
 
