@@ -37,6 +37,10 @@ try
 
     var app = builder.Build();
 
+    // Logs some information about the app
+    Log.Information("Environment: {Environment}", app.Environment.EnvironmentName);
+    Log.Information("Application Name: {ApplicationName}", app.Environment.ApplicationName);
+
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
     {
