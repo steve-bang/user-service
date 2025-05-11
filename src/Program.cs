@@ -30,9 +30,10 @@ try
     builder.AddRateLimitSettings();
 
     builder.Host.UseSerilog((context, loggerConfiguration) =>
-    {
-        loggerConfiguration.ReadFrom.Configuration(context.Configuration);
-    });
+        loggerConfiguration
+            .ReadFrom.Configuration(context.Configuration)
+            .Enrich.FromLogContext()
+    );
 
     var app = builder.Build();
 
@@ -51,7 +52,28 @@ try
 
     app.MapControllers();
 
-    app.UseSerilogRequestLogging();
+    app.UseSerilogRequestLogging(options =>
+{
+    options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+    {
+        var request = httpContext.Request;
+        var user = httpContext.User?.Identity?.IsAuthenticated == true
+            ? httpContext.User.Identity.Name
+            : "Anonymous";
+
+        var ipAddress = httpContext.Connection.RemoteIpAddress?.ToString();
+        var userAgent = request.Headers["User-Agent"].FirstOrDefault() ?? "Unknown";
+
+        var correlationId = request.Headers["X-Correlation-ID"].FirstOrDefault()
+                         ?? httpContext.Response.Headers["X-Correlation-ID"].FirstOrDefault()
+                         ?? "N/A";
+
+        diagnosticContext.Set("CorrelationId", correlationId);
+        diagnosticContext.Set("IPAddress", ipAddress ?? "Unknown");
+        diagnosticContext.Set("User", user ?? "Anonymous");
+        diagnosticContext.Set("UserAgent", userAgent);
+    };
+});
 
     // Config Pipeline middlewares
     // We need to add the middlewares in the order of execution
