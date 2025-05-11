@@ -29,7 +29,7 @@ public class ExceptionMiddleware
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An unhandled exception has occurred");
+            WriteLogging(ex);
             await HandleExceptionAsync(httpContext, ex);
         }
     }
@@ -44,5 +44,19 @@ public class ExceptionMiddleware
 
         // Write and response
         return context.Response.WriteAsJsonAsync(apiResponse);
+    }
+
+    private void WriteLogging(Exception exception)
+    {
+        ManagerHeroException? managerHeroException = exception as ManagerHeroException;
+
+        if (managerHeroException != null)
+        {
+            _logger.LogError(managerHeroException.Message);
+        }
+        else
+        {
+            _logger.LogError(exception, "Unhandled exception");
+        }
     }
 }
