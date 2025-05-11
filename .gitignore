@@ -496,4 +496,4 @@ $RECYCLE.BIN/
  bin/
 
 src/appsettings.Development.json
-src/_logs
+src/_logs/*
