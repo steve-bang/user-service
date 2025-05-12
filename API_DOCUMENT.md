@@ -15,7 +15,7 @@
 
 ### Base URL
 ```
-https://api.managerhero.com/api/v1
+https://your-domain/api/v1
 ```
 
 ### API Versioning
@@ -66,13 +66,13 @@ Paginated responses include the following metadata:
 
 ```json
 {
-  "items": [...],
-  "pageNumber": 1,
-  "pageSize": 10,
-  "totalCount": 100,
-  "totalPages": 10,
-  "hasPreviousPage": false,
-  "hasNextPage": true
+  "success": true,
+  "statusCode": 200,
+  "message": "The request was success.",
+  "data": {
+    "items": [...],
+    "totalCount": 100
+  }
 }
 ```
 
@@ -83,14 +83,25 @@ All error responses follow this format:
 
 ```json
 {
+  "success": false,
   "statusCode": 400,
-  "message": "Error message",
-  "errors": [
-    {
-      "field": "email",
-      "message": "Invalid email format"
-    }
-  ]
+  "message": "The request was failure.",
+  "code": "User.Email_Address_Already_Exists",
+  "summary": "The email address already exists in the system. Please try another email address."
+}
+```
+
+### Success Response Format
+All success responses follow this format:
+
+```json
+{
+  "success": true,
+  "statusCode": 200,
+  "message": "The request was success.",
+  "data": {
+    // Response data here
+  }
 }
 ```
 
@@ -102,21 +113,21 @@ All error responses follow this format:
 - `401 Unauthorized`: Authentication required
 - `403 Forbidden`: Insufficient permissions
 - `404 Not Found`: Resource not found
-- `409 Conflict`: Resource conflict
-- `422 Unprocessable Entity`: Validation error
-- `429 Too Many Requests`: Rate limit exceeded
 - `500 Internal Server Error`: Server error
 
 ### Common Error Codes
-| Code | Description |
-|------|-------------|
-| `AUTH_001` | Invalid credentials |
-| `AUTH_002` | Token expired |
-| `AUTH_003` | Invalid token |
-| `USER_001` | User not found |
-| `USER_002` | Email already exists |
-| `ROLE_001` | Role not found |
-| `PERM_001` | Permission denied |
+| Code | Description | HTTP Status |
+|------|-------------|-------------|
+| `Input_Invalid` | Invalid input parameters | 400 |
+| `token_invalid` | Token expired or invalid | 400 |
+| `User.Email_Address_Already_Exists` | Email address already exists | 400 |
+| `User.Login_Password_Failed` | Invalid email or password | 400 |
+| `User.Not_Found` | User not found | 404 |
+| `User.Password_Incorrect` | Incorrect password | 400 |
+| `user.already_has_role` | User already has this role | 400 |
+| `User.Email_already_verified` | Email already verified | 400 |
+| `role.not_found` | Role not found | 404 |
+| `permission.not_found` | Permission not found | 404 |
 
 ## Rate Limiting
 
