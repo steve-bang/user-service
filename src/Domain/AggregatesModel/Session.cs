@@ -4,8 +4,6 @@
 * - [2025-04-19] - Created by mrsteve.bang@gmail.com
 */
 
-using Steve.ManagerHero.UserService.Domain.Common;
-
 namespace Steve.ManagerHero.UserService.Domain.AggregatesModel;
 
 public class Session : AggregateRoot

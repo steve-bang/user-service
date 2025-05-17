@@ -5,14 +5,7 @@
 */
 
 
-/*
-* Author: Steve Bang
-* History:
-* - [2025-04-18] - Created by mrsteve.bang@gmail.com
-*/
-
 using Microsoft.EntityFrameworkCore;
-using Steve.ManagerHero.UserService.Domain.Common;
 
 namespace Steve.ManagerHero.UserService.Infrastructure.Repository;
 

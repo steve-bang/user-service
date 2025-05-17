@@ -1,7 +1,8 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Steve.ManagerHero.UserService.Domain.AggregatesModel;
+
+namespace Steve.ManagerHero.UserService.Infrastructure.EntityConfiguration;
 
 public class UserSessionConfiguration : IEntityTypeConfiguration<Session>
 {

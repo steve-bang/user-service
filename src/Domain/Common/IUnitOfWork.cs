@@ -15,6 +15,7 @@ public interface IUnitOfWork : IDisposable
     IRoleRepository Roles { get; }
     ISessionRepository Sessions { get; }
     IPermissionRepository Permissions { get; }
+    ISocialProviderRepository SocialProviders { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 
