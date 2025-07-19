@@ -5,7 +5,6 @@
 */
 
 using Steve.ManagerHero.UserService.Application.Auth;
-using Steve.ManagerHero.UserService.Domain.Exception;
 
 namespace Steve.ManagerHero.Application.Features.Users.Queries;
 
@@ -42,7 +41,6 @@ public class LoginPasswordQueryHandler(
         _ = await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return new AuthenticationResponseDto(
-            UserId: user.Id,
             AccessToken: accessToken,
             RefreshToken: refreshToken,
             ExpiresIn: expriresIn
