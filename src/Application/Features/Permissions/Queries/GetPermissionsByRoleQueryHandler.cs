@@ -16,7 +16,7 @@ public class GetPermissionsByRoleQueryHandler(
     public async Task<PaginatedList<PermissionDto>> Handle(GetPermissionsByRoleQuery request, CancellationToken cancellationToken)
     {
         // Get the role by id
-        var role = await _unitOfWork.Roles.GetByIdAsync(request.RoleId, cancellationToken) ?? throw ExceptionProviders.Role.NotFoundException;
+        var role = await _unitOfWork.Roles.GetByIdAsync(request.RoleId, cancellationToken) ?? throw new RoleNotFoundException();
 
         // List all permissions for the role
         var permissions = await _unitOfWork.Permissions.GetPermissionsByRoleAsync(role, request.PageNumber, request.PageSize, cancellationToken);

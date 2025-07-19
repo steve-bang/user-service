@@ -7,6 +7,7 @@
 
 
 using Steve.ManagerHero.Api.Models;
+using Steve.ManagerHero.SharedKernel.Application.Response;
 
 namespace Steve.ManagerHero.Middlewares;
 
@@ -36,11 +37,14 @@ public class ExceptionMiddleware
 
     private static Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
+        ManagerHeroException? managerHeroException = exception as ManagerHeroException;
+
         // Build api response error custom
-        ApiResponseError apiResponse = ApiResponseError.BuildException(exception);
+        ApiError apiResponse = ApiError.BuildException(exception);
 
         // Build with Exception
-        context.Response.StatusCode = apiResponse.StatusCode;
+        context.Response.StatusCode =
+        (int)(managerHeroException != null ? managerHeroException.HttpCode : System.Net.HttpStatusCode.InternalServerError);
 
         // Write and response
         return context.Response.WriteAsJsonAsync(apiResponse);

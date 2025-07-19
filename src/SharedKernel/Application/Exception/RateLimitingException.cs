@@ -6,7 +6,7 @@
 
 using System.Net;
 
-namespace Steve.ManagerHero.UserService.Domain.Exceptions;
+namespace Steve.ManagerHero.SharedKernel.Application.Exception;
 
 public class RateLimitingException : ManagerHeroException
 {

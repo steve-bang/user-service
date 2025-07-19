@@ -5,7 +5,6 @@
 */
 
 using System.Linq.Expressions;
-using Steve.ManagerHero.UserService.Domain.Common;
 
 namespace Steve.ManagerHero.UserService.Application.Interfaces.Repository;
 

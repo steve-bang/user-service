@@ -12,9 +12,9 @@ public class AssignUserToRoleCommandHandler(
 {
     public async Task<bool> Handle(AssignUserToRoleCommand request, CancellationToken cancellationToken)
     {
-        Role role = await _unitOfWork.Roles.GetByIdAsync(request.RoleId, cancellationToken) ?? throw ExceptionProviders.Role.NotFoundException;
+        Role role = await _unitOfWork.Roles.GetByIdAsync(request.RoleId, cancellationToken) ?? throw new RoleNotFoundException();
 
-        User user = await _unitOfWork.Users.GetByIdAsync(request.UserId, cancellationToken) ?? throw ExceptionProviders.User.NotFoundException;
+        User user = await _unitOfWork.Users.GetByIdAsync(request.UserId, cancellationToken) ?? throw new UserNotFoundException();
 
         user.AddRole(role);
 

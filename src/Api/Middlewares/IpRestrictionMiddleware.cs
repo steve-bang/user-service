@@ -37,7 +37,7 @@ public class IpRestrictionMiddleware
         )
         {
             _logger.LogWarning("IP access not allowed: {Ip}", remoteIp);
-            throw ExceptionProviders.User.IpAccessNotAllowed;
+            throw new IpRestrictException();
         }
 
         await _next(httpContext);

@@ -6,7 +6,6 @@
 
 using Microsoft.EntityFrameworkCore;
 using Steve.ManagerHero.UserService.Infrastructure;
-using Steve.ManagerHero.UserService.Infrastructure.Repositories;
 using Steve.ManagerHero.UserService.Infrastructure.Repository;
 
 public class UnitOfWork( UserAppContext _context ) : IUnitOfWork
@@ -15,13 +14,11 @@ public class UnitOfWork( UserAppContext _context ) : IUnitOfWork
     private IRoleRepository? _roleRepository;
     private ISessionRepository? _sessionRepository;
     private IPermissionRepository? _permissionRepository;
-    private ISocialProviderRepository? _socialProviderRepository;
 
     public IUserRepository Users => _userRepository ??= new UserRepository(_context);
     public IRoleRepository Roles => _roleRepository ??= new RoleRepository(_context);
     public ISessionRepository Sessions => _sessionRepository ??= new SessionRepository(_context);
     public IPermissionRepository Permissions => _permissionRepository ??= new PermissionRepository(_context);
-    public ISocialProviderRepository SocialProviders => _socialProviderRepository ??= new SocialProviderRepository(_context);
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

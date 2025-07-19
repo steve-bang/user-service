@@ -13,7 +13,7 @@ public class DeleteRoleCommandHandler(
 {
     public async Task<bool> Handle(DeleteRoleCommand request, CancellationToken cancellationToken)
     {
-        Role role = await _unitOfWork.Roles.GetByIdAsync(request.Id, cancellationToken) ?? throw ExceptionProviders.Role.NotFoundException;
+        Role role = await _unitOfWork.Roles.GetByIdAsync(request.Id, cancellationToken) ?? throw new RoleNotFoundException();
 
         var result = _unitOfWork.Roles.Delete(role, cancellationToken);
 

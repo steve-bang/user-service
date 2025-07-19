@@ -6,7 +6,8 @@
 
 using System.Net;
 
-namespace Steve.ManagerHero.UserService.Domain.Exceptions;
+namespace Steve.ManagerHero.SharedKernel.Application.Exception;
+
 public class BadRequestException : ManagerHeroException
 {
     public BadRequestException(string code, string messsage) : base( code, messsage)

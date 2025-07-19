@@ -1,6 +1,6 @@
 
 using System.Security.Claims;
-using Steve.ManagerHero.UserService.Domain.Exceptions;
+using Steve.ManagerHero.SharedKernel.Application.Exception;
 
 namespace Steve.ManagerHero.UserService.Application.Auth;
 

@@ -5,6 +5,7 @@
 */
 
 using AutoMapper;
+using Steve.ManagerHero.UserService.Domain.Exception;
 
 namespace Steve.ManagerHero.Application.Features.Users.Commands;
 
@@ -17,7 +18,7 @@ public class RegisterUserCommandHandler(
     {
         bool isExistsEmail = await _unitOfWork.Users.IsExistEmailAsync(request.EmailAddress, cancellationToken);
 
-        if (isExistsEmail) throw ExceptionProviders.User.EmailAlreadyExistsException;
+        if (isExistsEmail) throw new EmailAlreadyExistsException();
 
 
         User user = User.Create(

@@ -27,8 +27,6 @@ public class UserAppContext(
     public DbSet<UserRole> UserRoles { get; set; } = null!;
     public DbSet<RolePermission> RolePermissions { get; set; } = null!;
     public DbSet<Session> Sessions { get; set; } = null!;
-    public DbSet<SocialProvider> SocialProviders { get; set; } = null!;
-    public DbSet<SocialUser> SocialUsers { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

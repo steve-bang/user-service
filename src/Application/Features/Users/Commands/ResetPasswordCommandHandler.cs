@@ -31,7 +31,7 @@ public class ResetPasswordCommandHandler(
 
             if (userDecrypt is not null)
             {
-                User? user = await _unitOfWork.Users.GetByIdAsync(userDecrypt.Id, cancellationToken) ?? throw ExceptionProviders.User.NotFoundException;
+                User? user = await _unitOfWork.Users.GetByIdAsync(userDecrypt.Id, cancellationToken) ?? throw new UserNotFoundException();
 
                 // Update password
                 user.UpdatePassword(request.NewPassword);
@@ -43,6 +43,6 @@ public class ResetPasswordCommandHandler(
                 return true;
             }
         }
-        throw ExceptionProviders.Token.InvalidException;
+        throw new InvalidTokenException();
     }
 }

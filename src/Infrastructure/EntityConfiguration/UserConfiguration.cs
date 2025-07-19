@@ -6,7 +6,6 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Steve.ManagerHero.UserService.Domain.AggregatesModel;
 using Steve.ManagerHero.UserService.Domain.ValueObjects;
 
 namespace Steve.ManagerHero.UserService.Infrastructure.EntityConfiguration;

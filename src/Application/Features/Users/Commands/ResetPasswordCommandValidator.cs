@@ -14,23 +14,23 @@ public class ResetPasswordCommandValidator : AbstractValidator<ResetPasswordComm
     {
         RuleFor(x => x.Token)
             .NotEmpty()
-            .WithErrorCode(ExceptionProviders.InputInvalid)
+            .WithErrorCode(ErrorCodes.InputInvalid)
             .WithMessage("Token reset password is required.");
 
         RuleFor(x => x.NewPassword)
             .NotEmpty()
-            .WithErrorCode(ExceptionProviders.InputInvalid)
+            .WithErrorCode(ErrorCodes.InputInvalid)
             .WithMessage("Password is required.")
             .MinimumLength(6)
-            .WithErrorCode(ExceptionProviders.InputInvalid)
+            .WithErrorCode(ErrorCodes.InputInvalid)
             .WithMessage("Password must be at least 8 characters.")
             .MaximumLength(100)
-            .WithErrorCode(ExceptionProviders.InputInvalid)
+            .WithErrorCode(ErrorCodes.InputInvalid)
             .WithMessage("Password must be less than 100 characters.");
 
         RuleFor(x => x.ConfirmPassword)
             .Equal(x => x.NewPassword)
-            .WithErrorCode(ExceptionProviders.InputInvalid)
+            .WithErrorCode(ErrorCodes.InputInvalid)
             .WithMessage("Passwords do not match.");
     }
 }

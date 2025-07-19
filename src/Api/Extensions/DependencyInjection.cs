@@ -15,7 +15,6 @@ using Steve.ManagerHero.UserService.Application.Interfaces.Caching;
 using Steve.ManagerHero.UserService.Infrastructure.Caching;
 using Steve.ManagerHero.Application.Processors;
 using Steve.ManagerHero.Application.Features.Permissions.Commands;
-using Serilog;
 
 namespace Steve.ManagerHero.UserService.Extensions;
 
@@ -135,6 +134,7 @@ public static class DependencyInjection
 
         // Add caching service
         builder.Services.AddScoped<ITokenCache, TokenCache>();
+        builder.Services.AddScoped<IUserCache, UserCache>();
 
         return builder;
     }

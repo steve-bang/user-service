@@ -13,12 +13,12 @@ public class RemoveRolesFromUserCommandHandler(
 
     public async Task<bool> Handle(RemoveRolesFromUserCommand request, CancellationToken cancellationToken)
     {
-        User user = await _unitOfWork.Users.GetByIdAsync(request.UserId, cancellationToken) ?? throw ExceptionProviders.User.NotFoundException;
+        User user = await _unitOfWork.Users.GetByIdAsync(request.UserId, cancellationToken) ?? throw new UserNotFoundException();
 
         var roles = await _unitOfWork.Roles.GetByIdsAsync(request.RoleIds, cancellationToken);
         if (roles.Count() != request.RoleIds.Length)
         {
-            throw ExceptionProviders.Role.OneOrMoreNotFoundException;
+            throw new RoleNotFoundException();
         }
 
         // Remove roles

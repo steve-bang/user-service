@@ -6,7 +6,8 @@
 
 using System.Net;
 
-namespace Steve.ManagerHero.UserService.Domain.Exceptions;
+namespace Steve.ManagerHero.SharedKernel.Application.Exception;
+
 public class NotFoundDataException : ManagerHeroException
 {
     public NotFoundDataException(string code, string messsage) : base( code, messsage)

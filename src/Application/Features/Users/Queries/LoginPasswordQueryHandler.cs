@@ -5,6 +5,7 @@
 */
 
 using Steve.ManagerHero.UserService.Application.Auth;
+using Steve.ManagerHero.UserService.Domain.Exception;
 
 namespace Steve.ManagerHero.Application.Features.Users.Queries;
 
@@ -16,7 +17,7 @@ public class LoginPasswordQueryHandler(
 {
     public async Task<AuthenticationResponseDto> Handle(LoginPasswordQuery request, CancellationToken cancellationToken)
     {
-        var user = await _unitOfWork.Users.GetByEmailAsync(request.EmailAddress, cancellationToken) ?? throw ExceptionProviders.User.LoginPasswordFailedException;
+        var user = await _unitOfWork.Users.GetByEmailAsync(request.EmailAddress, cancellationToken) ?? throw new InvalidCredentialException();
 
         // Login with password
         user.LoginPassword(request.Password);

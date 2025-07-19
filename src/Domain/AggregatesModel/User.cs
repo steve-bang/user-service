@@ -4,7 +4,6 @@
 * - [2025-04-11] - Created by mrsteve.bang@gmail.com
 */
 
-using Steve.ManagerHero.UserService.Domain.Common;
 using Steve.ManagerHero.UserService.Domain.Constants;
 using Steve.ManagerHero.UserService.Domain.Events;
 using Steve.ManagerHero.UserService.Domain.ValueObjects;
@@ -172,7 +171,7 @@ public class User : AggregateRoot
     public void ChangePassword(string currentPassword, string newPassword)
     {
         if (PasswordHash.Verify(currentPassword) == false)
-            throw ExceptionProviders.User.PasswordIncorrectException;
+            throw new PasswordIncorrectException();
 
         UpdatePassword(newPassword);
     }
@@ -211,11 +210,11 @@ public class User : AggregateRoot
     /// Add a role
     /// </summary>
     /// <param name="role">The role object to add</param>
-    /// <exception cref="ExceptionProviders.User.AlreadyHasRoleException">Throw if the user has already has role</exception>
+    /// <exception cref="UserAlreadyHasRoleException">Throw if the user has already has role</exception>
     public void AddRole(Role role)
     {
         if (_userRoles.Any(r => r.RoleId == role.Id))
-            throw ExceptionProviders.User.AlreadyHasRoleException;
+            throw new UserAlreadyHasRoleException();
 
         var userRole = new UserRole(this, role);
         _userRoles.Add(userRole);
@@ -253,7 +252,7 @@ public class User : AggregateRoot
         bool isCorrectPassword = PasswordHash.Verify(passwordRequest);
 
         if (!isCorrectPassword)
-            throw ExceptionProviders.User.LoginPasswordFailedException;
+            throw new InvalidCredentialException();
 
         LastLoginDate = DateTime.UtcNow;
     }
