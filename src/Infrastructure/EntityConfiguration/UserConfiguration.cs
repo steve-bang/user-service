@@ -81,14 +81,12 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
                 // Configure the Hash property
                 passwordHash.Property(ph => ph.Hash)
                     .HasColumnName("password_hash")
-                    .HasColumnType("text")
-                    .IsRequired();
+                    .HasColumnType("text");
 
                 // Configure the Salt property
                 passwordHash.Property(ph => ph.Salt)
                     .HasColumnName("password_salt")
-                    .HasColumnType("text")
-                    .IsRequired();
+                    .HasColumnType("text");
             });
 
         // Status properties
