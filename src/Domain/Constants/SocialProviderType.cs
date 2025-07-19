@@ -7,42 +7,52 @@
 namespace Steve.ManagerHero.UserService.Domain.Constants;
 
 /// <summary>
-/// Represents the type of social provider
+/// Represents the type of identity provider
 /// </summary>
-public enum SocialProviderType
+public enum IdentityProviderType
 {
+    /// <summary>
+    /// The email provider
+    /// </summary>
+    Email,
+
+    /// <summary>
+    /// The phone provider
+    /// </summary>
+    Phone,
+
     /// <summary>
     /// Google OAuth2 provider
     /// </summary>
-    Google = 1,
+    Google,
 
     /// <summary>
     /// Facebook OAuth2 provider
     /// </summary>
-    Facebook = 2,
+    Facebook,
 
     /// <summary>
     /// GitHub OAuth2 provider
     /// </summary>
-    GitHub = 3,
+    GitHub,
 
     /// <summary>
     /// Microsoft OAuth2 provider
     /// </summary>
-    Microsoft = 4,
+    Microsoft,
 
     /// <summary>
     /// Apple OAuth2 provider
     /// </summary>
-    Apple = 5,
+    Apple,
 
     /// <summary>
     /// Twitter OAuth2 provider
     /// </summary>
-    Twitter = 6,
+    Twitter,
 
     /// <summary>
     /// LinkedIn OAuth2 provider
     /// </summary>
-    LinkedIn = 7
+    LinkedIn
 } 
