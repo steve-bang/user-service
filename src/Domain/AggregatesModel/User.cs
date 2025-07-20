@@ -200,7 +200,7 @@ public class User : AggregateRoot
 
     public void VerifyEmail()
     {
-        if (IsEmailVerified) return;
+        if (IsEmailVerified) throw new EmailAlreadyVerifiedException();
 
         IsEmailVerified = true;
         EmailVerifiedAt = DateTime.UtcNow;

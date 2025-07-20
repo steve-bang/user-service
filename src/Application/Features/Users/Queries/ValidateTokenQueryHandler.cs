@@ -4,6 +4,8 @@
 * - [2025-04-20] - Created by mrsteve.bang@gmail.com
 */
 
+using System.Text.Encodings.Web;
+using System.Web;
 using Steve.ManagerHero.UserService.Application.Interfaces.Caching;
 using Steve.ManagerHero.UserService.Helpers;
 
