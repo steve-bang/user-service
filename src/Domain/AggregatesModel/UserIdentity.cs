@@ -1,7 +1,7 @@
 /*
 * Author: Steve Bang
 * History:
-* - [2025-04-19] - Created by mrsteve.bang@gmail.com
+* - [2025-07-20] - Created by mrsteve.bang@gmail.com
 */
 
 using Steve.ManagerHero.UserService.Domain.Constants;
@@ -13,23 +13,25 @@ public class UserIdentity : AggregateRoot
     /// <summary>
     /// The identity provider.
     /// </summary>
-    public IdentityProviderType Type { get; private set; }
+    public IdentityProvider Provider { get; private set; }
 
     /// <summary>
     /// The id of the user.
     /// </summary>
     public Guid UserId { get; private set; }
 
+    public User User { get; private set; }
+
     /// <summary>
     /// The provider id returned by the provider.
     /// If the provider is an OAuth provider, the id refers to the user's account with the OAuth provider. If the provider is email or phone, the id is the user's id from the User table.
     /// </summary>
-    public string ProviderId { get; private set; }
+    public string ProviderId { get; private set; } = null!;
 
     /// <summary>
     /// The identity metadata. For OAuth and SAML identities, this contains information about the user from the provider.
     /// </summary>
-    public IDictionary<string, object> IdentityData { get; private set; }
+    public IDictionary<string, object>? IdentityData { get; private set; }
 
     /// <summary>
     /// The timestamp that the identity was last used to sign in.
@@ -39,7 +41,7 @@ public class UserIdentity : AggregateRoot
     /// <summary>
     /// The timestamp that the identity was last updated.
     /// </summary>
-    public DateTime? UpdateAt { get; private set; }
+    public DateTime? UpdatedAt { get; private set; }
 
     /// <summary>
     /// The timestamp that the identity was created.
@@ -49,24 +51,25 @@ public class UserIdentity : AggregateRoot
     public UserIdentity() { }
 
     public UserIdentity(
-        IdentityProviderType type,
+        IdentityProvider provider,
         User user,
         string providerId,
         IDictionary<string, object> identityData
     )
     {
-        Type = type;
+        Provider = provider;
         UserId = user.Id;
-        
+        User = user;
+
         // Set provider id by type
-        if (type == IdentityProviderType.Email || type == IdentityProviderType.Phone)
+        if (provider == IdentityProvider.Email || provider == IdentityProvider.Phone)
             ProviderId = user.Id.ToString();
         else
             ProviderId = providerId;
 
         IdentityData = identityData;
 
-        LastLoginAt = DateTime.UtcNow;
+        LastLoginAt = DateTime.UtcNow.ToUniversalTime();
         CreatedAt = DateTime.UtcNow;
     }
 

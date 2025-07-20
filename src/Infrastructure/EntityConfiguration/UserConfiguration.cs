@@ -76,17 +76,20 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         // Password Hash as separate columns
 
+        // When the user auth with OAuth method, the password is null
         builder.OwnsOne(u => u.PasswordHash, passwordHash =>
             {
                 // Configure the Hash property
                 passwordHash.Property(ph => ph.Hash)
                     .HasColumnName("password_hash")
-                    .HasColumnType("text");
+                    .HasColumnType("text")
+                    .IsRequired(false);
 
                 // Configure the Salt property
                 passwordHash.Property(ph => ph.Salt)
                     .HasColumnName("password_salt")
-                    .HasColumnType("text");
+                    .HasColumnType("text")
+                    .IsRequired(false);
             });
 
         // Status properties
@@ -101,10 +104,18 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasDefaultValue(true)
             .HasColumnName("is_active");
 
+        builder.Property(u => u.EmailVerifiedAt)
+            .HasColumnName("email_verified_at")
+            .IsRequired(false);
+
         builder.Property(u => u.IsEmailVerified)
             .IsRequired()
             .HasDefaultValue(false)
             .HasColumnName("is_email_verified");
+
+        builder.Property(u => u.PhoneVerifiedAt)
+            .HasColumnName("phone_verified_at")
+            .IsRequired(false);
 
         builder.Property(u => u.IsPhoneVerified)
             .IsRequired()

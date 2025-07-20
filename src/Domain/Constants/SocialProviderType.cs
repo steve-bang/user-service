@@ -7,9 +7,9 @@
 namespace Steve.ManagerHero.UserService.Domain.Constants;
 
 /// <summary>
-/// Represents the type of identity provider
+/// Represents the identity provider
 /// </summary>
-public enum IdentityProviderType
+public enum IdentityProvider
 {
     /// <summary>
     /// The email provider

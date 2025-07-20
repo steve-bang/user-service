@@ -42,11 +42,13 @@ public class User : AggregateRoot
     public UserStatus Status { get; private set; }
     public bool IsActive { get; private set; }
     public bool IsEmailVerified { get; private set; }
+    public DateTime? EmailVerifiedAt { get; private set; }
     public bool IsPhoneVerified { get; private set; }
+    public DateTime? PhoneVerifiedAt { get; private set; }
 
     // Timestamps
-    public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
+    public DateTime CreatedAt { get; private set; }
 
     // Navigation Properties
     private readonly List<UserRole> _userRoles = new();
@@ -58,6 +60,9 @@ public class User : AggregateRoot
 
     public string[] RoleNames => _userRoles.Any() ? _userRoles.Select(ur => ur.Role).Select(r => r.Name).ToArray()
         : [];
+
+    private readonly List<UserIdentity> _identities = new();
+    public IReadOnlyCollection<UserIdentity> Identities => _identities.AsReadOnly();
 
     //private readonly List<RefreshToken> _refreshTokens = new();
     //public IReadOnlyCollection<RefreshToken> RefreshTokens => _refreshTokens.AsReadOnly();
@@ -194,6 +199,7 @@ public class User : AggregateRoot
         if (IsEmailVerified) return;
 
         IsEmailVerified = true;
+        EmailVerifiedAt = DateTime.UtcNow;
         UpdatedAt = DateTime.UtcNow;
     }
 
@@ -203,6 +209,7 @@ public class User : AggregateRoot
             throw new InvalidOperationException("Phone number not set");
 
         IsPhoneVerified = true;
+        PhoneVerifiedAt = DateTime.UtcNow;
         UpdatedAt = DateTime.UtcNow;
     }
 

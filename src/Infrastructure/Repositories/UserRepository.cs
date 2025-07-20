@@ -72,6 +72,7 @@ public class UserRepository(
             .OrderBy(u => u.CreatedAt)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
+            .AsNoTracking()
             .ToListAsync(cancellationToken);
 
         return (items, totalCount);

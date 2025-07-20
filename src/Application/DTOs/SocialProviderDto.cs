@@ -13,7 +13,7 @@ public class SocialProviderDto
     public Guid Id { get; set; }
     public string Name { get; set; } = null!;
     public string DisplayName { get; set; } = null!;
-    public IdentityProviderType Type { get; set; }
+    public IdentityProvider Type { get; set; }
     public string ClientId { get; set; } = null!;
     public string ClientSecret { get; set; } = null!;
     public string[] Scopes { get; set; } = null!;
@@ -33,7 +33,7 @@ public class CreateSocialProviderDto
 {
     public string Name { get; set; } = null!;
     public string DisplayName { get; set; } = null!;
-    public IdentityProviderType Type { get; set; }
+    public IdentityProvider Type { get; set; }
     public string ClientId { get; set; } = null!;
     public string ClientSecret { get; set; } = null!;
     public string[] Scopes { get; set; } = null!;

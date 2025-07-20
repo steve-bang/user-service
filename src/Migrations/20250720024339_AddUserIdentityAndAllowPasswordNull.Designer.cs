@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Steve.ManagerHero.UserService.Infrastructure;
@@ -11,9 +12,11 @@ using Steve.ManagerHero.UserService.Infrastructure;
 namespace UserService.Migrations
 {
     [DbContext(typeof(UserAppContext))]
-    partial class UserAppContextModelSnapshot : ModelSnapshot
+    [Migration("20250720024339_AddUserIdentityAndAllowPasswordNull")]
+    partial class AddUserIdentityAndAllowPasswordNull
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -206,10 +209,6 @@ namespace UserService.Migrations
                         .HasColumnType("character varying(254)")
                         .HasColumnName("email_address");
 
-                    b.Property<DateTime?>("EmailVerifiedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("email_verified_at");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -252,10 +251,6 @@ namespace UserService.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)")
                         .HasColumnName("phone_number");
-
-                    b.Property<DateTime?>("PhoneVerifiedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("phone_verified_at");
 
                     b.Property<string>("SecondaryEmailAddress")
                         .HasMaxLength(254)
@@ -311,16 +306,14 @@ namespace UserService.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("last_login_at");
 
-                    b.Property<string>("Provider")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("provider");
-
                     b.Property<string>("ProviderId")
                         .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)")
                         .HasColumnName("provider_id");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
@@ -436,10 +429,12 @@ namespace UserService.Migrations
                                 .HasColumnType("uuid");
 
                             b1.Property<string>("Hash")
+                                .IsRequired()
                                 .HasColumnType("text")
                                 .HasColumnName("password_hash");
 
                             b1.Property<string>("Salt")
+                                .IsRequired()
                                 .HasColumnType("text")
                                 .HasColumnName("password_salt");
 
