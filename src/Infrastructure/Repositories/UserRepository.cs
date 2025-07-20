@@ -31,11 +31,9 @@ public class UserRepository(
 
     public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
-        var user = await _context
-            .Users
+        return await _context.Users
+            .Include(u => u.Identities)
             .FirstOrDefaultAsync(x => x.EmailAddress == new EmailAddress(email));
-
-        return user;
     }
 
     public Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
@@ -43,6 +41,7 @@ public class UserRepository(
         return _context.Users
             .Include(u => u.UserRoles)
             .ThenInclude(ur => ur.Role)
+            .Include(u => u.Identities)
             .AsSplitQuery()
             .FirstOrDefaultAsync(u => u.Id == id);
     }

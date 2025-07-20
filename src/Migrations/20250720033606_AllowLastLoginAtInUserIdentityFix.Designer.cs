@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Steve.ManagerHero.UserService.Infrastructure;
@@ -11,9 +12,11 @@ using Steve.ManagerHero.UserService.Infrastructure;
 namespace UserService.Migrations
 {
     [DbContext(typeof(UserAppContext))]
-    partial class UserAppContextModelSnapshot : ModelSnapshot
+    [Migration("20250720033606_AllowLastLoginAtInUserIdentityFix")]
+    partial class AllowLastLoginAtInUserIdentityFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -349,9 +352,6 @@ namespace UserService.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid?>("AssignedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
                     b.HasKey("UserId", "RoleId");

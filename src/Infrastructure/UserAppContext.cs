@@ -6,7 +6,6 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Steve.ManagerHero.UserService.Domain.AggregatesModel;
 
 namespace Steve.ManagerHero.UserService.Infrastructure;
 

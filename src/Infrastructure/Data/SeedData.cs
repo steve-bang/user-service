@@ -47,7 +47,7 @@ public static class SeedData
             var adminRole = context.Roles.First(r => r.Name == "Admin");
             var userRole = context.Roles.First(r => r.Name == "User");
 
-            var adminUser = User.Create(
+            var adminUser = User.Register(
                 "Admin",
                 "User",
                 "admin@example.com",
@@ -55,7 +55,7 @@ public static class SeedData
             );
             adminUser.AddRole(adminRole);
 
-            var regularUser = User.Create(
+            var regularUser = User.Register(
                 "John",
                 "Doe",
                 "john.doe@example.com",

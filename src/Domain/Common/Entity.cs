@@ -14,7 +14,7 @@ public abstract class Entity : IEquatable<Entity>
     /// <summary>
     /// The unique identifier of the entity.
     /// </summary>
-    public Guid Id { get; }
+    public Guid Id { get; protected set; }
 
     /// <summary>
     /// Create a new unique identifier.

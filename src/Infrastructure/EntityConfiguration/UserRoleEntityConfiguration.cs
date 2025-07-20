@@ -15,6 +15,9 @@ public class UserRoleEntityConfiguration : IEntityTypeConfiguration<UserRole>
     {
         builder.ToTable("User_Role");
 
+        // Primary Key
+        builder.HasKey(u => u.Id);
+
         builder.HasKey(ur => new { ur.UserId, ur.RoleId }); // Composite Key
 
         builder

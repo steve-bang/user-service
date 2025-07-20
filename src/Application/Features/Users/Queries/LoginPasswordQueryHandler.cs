@@ -18,6 +18,11 @@ public class LoginPasswordQueryHandler(
     {
         var user = await _unitOfWork.Users.GetByEmailAsync(request.EmailAddress, cancellationToken) ?? throw new InvalidCredentialException();
 
+        // Get iidentity by Email
+        var identity = user.Identities.FirstOrDefault(identity =>
+            identity.Provider == UserService.Domain.Constants.IdentityProvider.Email
+            ) ?? throw new InvalidCredentialException();
+
         // Login with password
         user.LoginPassword(request.Password);
 

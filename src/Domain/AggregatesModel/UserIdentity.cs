@@ -36,7 +36,7 @@ public class UserIdentity : AggregateRoot
     /// <summary>
     /// The timestamp that the identity was last used to sign in.
     /// </summary>
-    public DateTime LastLoginAt { get; private set; }
+    public DateTime? LastLoginAt { get; private set; }
 
     /// <summary>
     /// The timestamp that the identity was last updated.
@@ -53,8 +53,8 @@ public class UserIdentity : AggregateRoot
     public UserIdentity(
         IdentityProvider provider,
         User user,
-        string providerId,
-        IDictionary<string, object> identityData
+        string? providerId = null,
+        IDictionary<string, object>? identityData = null
     )
     {
         Provider = provider;
@@ -65,12 +65,23 @@ public class UserIdentity : AggregateRoot
         if (provider == IdentityProvider.Email || provider == IdentityProvider.Phone)
             ProviderId = user.Id.ToString();
         else
+        {
+            if (string.IsNullOrEmpty(providerId)) throw new NullReferenceException("The providerId is required.");
+
             ProviderId = providerId;
+        }
 
         IdentityData = identityData;
 
-        LastLoginAt = DateTime.UtcNow.ToUniversalTime();
         CreatedAt = DateTime.UtcNow;
+    }
+
+    public static UserIdentity RegisterByEmail(User user)
+    {
+        return new(
+            provider: IdentityProvider.Email,
+            user
+        );
     }
 
 }

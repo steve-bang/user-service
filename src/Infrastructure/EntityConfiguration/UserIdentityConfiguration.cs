@@ -52,7 +52,8 @@ public class UserIdentityConfiguration : IEntityTypeConfiguration<UserIdentity>
         builder.HasIndex(us => us.UserId);
 
         builder.Property(u => u.LastLoginAt)
-            .HasColumnName("last_login_at");
+            .HasColumnName("last_login_at")
+            .IsRequired(false);
 
         builder.Property(u => u.UpdatedAt)
             .HasColumnName("updated_at")

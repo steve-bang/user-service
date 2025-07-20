@@ -67,7 +67,7 @@ public class User : AggregateRoot
     //private readonly List<RefreshToken> _refreshTokens = new();
     //public IReadOnlyCollection<RefreshToken> RefreshTokens => _refreshTokens.AsReadOnly();
 
-    public User() { }
+    public User() : base() { }
 
     // Constructor for new user registration
     private User(
@@ -75,7 +75,7 @@ public class User : AggregateRoot
         string lastName,
         EmailAddress emailAddress,
         PasswordHash passwordHash
-    )
+    ) : this()
     {
         FirstName = firstName;
         LastName = lastName;
@@ -90,7 +90,7 @@ public class User : AggregateRoot
     }
 
     // Factory method for creating new user
-    public static User Create(
+    public static User Register(
         string firstName,
         string lastName,
         string email,
@@ -107,7 +107,11 @@ public class User : AggregateRoot
         var emailAddress = new EmailAddress(email);
         var passwordHash = PasswordHash.Create(password);
 
-        return new User(firstName, lastName, emailAddress, passwordHash);
+        var user = new User(firstName, lastName, emailAddress, passwordHash);
+
+        user._identities.Add(UserIdentity.RegisterByEmail(user));
+
+        return user;
     }
 
     public void Update(

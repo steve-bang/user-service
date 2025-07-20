@@ -10,7 +10,7 @@ namespace Steve.ManagerHero.SharedKernel.Application.Exception;
 
 public class RateLimitingException : ManagerHeroException
 {
-    public RateLimitingException() : base("user.too_many_requests", "Rate limit exceeded. Please try again later.")
+    public RateLimitingException() : base("RateLimitExceeded", "Rate limit exceeded. Please try again later.")
     {
         HttpCode = HttpStatusCode.TooManyRequests;
     }

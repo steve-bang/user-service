@@ -9,7 +9,10 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace Steve.ManagerHero.UserService.Infrastructure;
 
-public class CartAppContextFactory : IDesignTimeDbContextFactory<UserAppContext>
+public class CartAppContextFactory
+(
+    IMediator _meditor
+) : IDesignTimeDbContextFactory<UserAppContext>
 {
     public UserAppContext CreateDbContext(string[] args)
     {
@@ -29,6 +32,6 @@ public class CartAppContextFactory : IDesignTimeDbContextFactory<UserAppContext>
         var optionsBuilder = new DbContextOptionsBuilder<UserAppContext>();
         optionsBuilder.UseNpgsql(connectionString);
 
-        return new UserAppContext(optionsBuilder.Options, null); // Pass null for IMediator since it's not needed for migrations
+        return new UserAppContext(optionsBuilder.Options, _meditor); // Pass null for IMediator since it's not needed for migrations
     }
 }

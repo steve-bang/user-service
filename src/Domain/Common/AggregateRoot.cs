@@ -18,6 +18,11 @@ public abstract class AggregateRoot : Entity
     /// </summary>
     public IReadOnlyList<IDomainEvent> Events => _events.AsReadOnly();
 
+    public AggregateRoot()
+    {
+        Id = CreateNewId();
+    }
+
     /// <summary>
     /// Clear the events that have been applied to the aggregate root.
     /// </summary>
