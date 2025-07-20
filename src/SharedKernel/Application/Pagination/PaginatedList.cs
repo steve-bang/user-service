@@ -4,6 +4,8 @@
 * - [2025-04-24] - Created by mrsteve.bang@gmail.com
 */
 
+namespace Steve.ManagerHero.SharedKernel.Application.Pagination;
+
 public class PaginatedList<T>
 {
     public List<T>? Items { get; init; }

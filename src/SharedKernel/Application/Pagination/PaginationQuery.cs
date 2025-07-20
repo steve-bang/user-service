@@ -4,10 +4,10 @@
 * - [2025-05-02] - Created by mrsteve.bang@gmail.com
 */
 
-namespace Steve.ManagerHero.UserService.Domain.Common;
+namespace Steve.ManagerHero.SharedKernel.Application.Pagination;
 
 public class PaginationQuery
-{   
+{
     /// <summary>
     /// The page number to retrieve.
     /// The default value is 1.

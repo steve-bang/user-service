@@ -4,9 +4,7 @@
 * - [2025-04-11] - Created by mrsteve.bang@gmail.com
 */
 
-using MediatR;
-
-namespace Steve.ManagerHero.UserService.Domain.Common;
+namespace Steve.ManagerHero.SharedKernel.Application.Interface;
 
 /// <summary>
 /// Interface for a domain event.
