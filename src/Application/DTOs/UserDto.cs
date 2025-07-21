@@ -17,12 +17,15 @@ public class UserDto
     public string? DisplayName { get; set; }
     public string? SecondaryEmailAddress { get; set; }
     public string? PhoneNumber { get; set; }
-    public DateTime? LastLogin { get; set; }
+    public DateTime? LastLoginAt { get; set; }
     public Address? Address { get; set; }
-    public bool IsActive { get; set; }
     public bool IsEmailVerified { get; set; }
+    public DateTime? EmailVerifiedAt { get; set; }
     public bool IsPhoneVerified { get; set; }
-
+    public DateTime? PhoneVerifiedAt { get; set; }
+    public bool IsActive { get; set; }
+    
+    public List<IdentityDto> Identities { get; set; }
 
     public UserDto() { }
 

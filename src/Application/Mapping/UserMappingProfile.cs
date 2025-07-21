@@ -15,6 +15,9 @@ public class UserMappingProfile : Profile
             .ForMember(dest => dest.EmailAddress, otp => otp.MapFrom(src => src.EmailAddress.Value))
             .ForMember(dest => dest.SecondaryEmailAddress, otp => otp.MapFrom(src => src.SecondaryEmailAddress != null ? src.SecondaryEmailAddress.Value : null))
             .ForMember(dest => dest.PhoneNumber, otp => otp.MapFrom(src => src.PhoneNumber != null ? src.PhoneNumber.Value : null))
-            .ForMember(dest => dest.LastLogin, otp => otp.MapFrom(src => src.LastLoginDate));
+            .ForMember(dest => dest.LastLoginAt, otp => otp.MapFrom(src => src.LastLoginDate));
+
+        CreateMap<UserIdentity, IdentityDto>()
+            .ForMember(dest => dest.Provider, otp => otp.MapFrom(src => src.Provider.ToString()));
     }
 }
