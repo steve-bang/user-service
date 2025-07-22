@@ -114,6 +114,25 @@ public class User : AggregateRoot
         return user;
     }
 
+    public static User RegisterFromExternal(
+        string displayName,
+        string email
+    )
+    {
+        var user = new User()
+        {
+            EmailAddress = new EmailAddress(email),
+            DisplayName = displayName,
+            FirstName = string.Empty,
+            LastName = string.Empty
+        };
+        user.VerifyEmail();
+
+        user._identities.Add(UserIdentity.RegisterByEmail(user));
+
+        return user;
+    }
+
     public void Update(
         string emailAddress,
         string firstName,
@@ -217,6 +236,14 @@ public class User : AggregateRoot
         UpdatedAt = DateTime.UtcNow;
     }
 
+    public void AddIdentity(UserIdentity identity)
+    {
+        var identityExists = _identities.FirstOrDefault(i => i.Provider == identity.Provider && i.ProviderId == identity.ProviderId);
+        if (identityExists == null)
+            _identities.Add(identity);
+    }
+
+
     /// <summary>
     /// Add a role
     /// </summary>
@@ -264,6 +291,17 @@ public class User : AggregateRoot
 
         if (!isCorrectPassword)
             throw new InvalidCredentialException();
+
+        LastLoginDate = DateTime.UtcNow;
+    }
+
+    public void Login(IdentityProvider provider)
+    {
+        var identityExists = _identities.FirstOrDefault(i => i.Provider == provider);
+        if (identityExists != null)
+        {
+            identityExists.Login();
+        }
 
         LastLoginDate = DateTime.UtcNow;
     }

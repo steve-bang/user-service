@@ -84,4 +84,14 @@ public class UserIdentity : AggregateRoot
         );
     }
 
+    public void Login()
+    {
+        LastLoginAt = DateTime.UtcNow;
+    }
+
+    public void SetUserId(Guid userId)
+    {
+        UserId = userId;
+    }
+
 }

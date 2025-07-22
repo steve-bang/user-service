@@ -8,14 +8,17 @@ using Microsoft.EntityFrameworkCore;
 using Steve.ManagerHero.UserService.Infrastructure;
 using Steve.ManagerHero.UserService.Infrastructure.Repository;
 
-public class UnitOfWork( UserAppContext _context ) : IUnitOfWork
+public class UnitOfWork(UserAppContext _context) : IUnitOfWork
 {
     private IUserRepository? _userRepository;
+    private IIdentityRepository? _identityRepository;
     private IRoleRepository? _roleRepository;
     private ISessionRepository? _sessionRepository;
     private IPermissionRepository? _permissionRepository;
 
+    public UserAppContext Context => _context;
     public IUserRepository Users => _userRepository ??= new UserRepository(_context);
+    public IIdentityRepository Identities => _identityRepository ??= new IdentityRepository(_context);
     public IRoleRepository Roles => _roleRepository ??= new RoleRepository(_context);
     public ISessionRepository Sessions => _sessionRepository ??= new SessionRepository(_context);
     public IPermissionRepository Permissions => _permissionRepository ??= new PermissionRepository(_context);

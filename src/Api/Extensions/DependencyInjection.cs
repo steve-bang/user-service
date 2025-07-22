@@ -15,6 +15,9 @@ using Steve.ManagerHero.UserService.Application.Interfaces.Caching;
 using Steve.ManagerHero.UserService.Infrastructure.Caching;
 using Steve.ManagerHero.Application.Processors;
 using Steve.ManagerHero.Application.Features.Permissions.Commands;
+using Steve.ManagerHero.UserService.Application.Service;
+using Steve.ManagerHero.UserService.Application.Interfaces.Services;
+using Steve.ManagerHero.UserService.Infrastructure.Auth.External;
 
 namespace Steve.ManagerHero.UserService.Extensions;
 
@@ -58,6 +61,9 @@ public static class DependencyInjection
         builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserCommandValidator>();
         builder.Services.AddValidatorsFromAssemblyContaining<UpdateUserCommandValidator>();
         builder.Services.AddValidatorsFromAssemblyContaining<UpdatePermissionCommandValidator>();
+
+        builder.Services.AddScoped<IGoogleAuthService, GoogleAuthService>();
+        builder.Services.AddScoped<ExternalAuthServiceFactory>();
 
         // Register smtp setting
         builder.AddSmtpSettings();

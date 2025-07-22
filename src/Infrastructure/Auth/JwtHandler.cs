@@ -1,7 +1,6 @@
 
 using System.Security.Claims;
 using Steve.ManagerHero.UserService.Application.Auth;
-using Steve.ManagerHero.UserService.Domain.AggregatesModel;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;

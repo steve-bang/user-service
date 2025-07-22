@@ -4,12 +4,15 @@
 * - [2025-04-18] - Created by mrsteve.bang@gmail.com
 */
 
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steve.ManagerHero.Api.Models;
 using Steve.ManagerHero.Application.Features.Users.Commands;
 using Steve.ManagerHero.Application.Features.Users.Queries;
 using Steve.ManagerHero.UserService.Application.Auth;
+using Steve.ManagerHero.UserService.Application.Service;
+using Steve.ManagerHero.UserService.Domain.Constants;
 using Steve.ManagerHero.UserService.Helpers;
 
 [Route("api/v1/auth")]
@@ -18,14 +21,17 @@ public class AuthController : ControllerBase
     private readonly IMediator _mediator;
 
     private readonly IIdentityService _identityService;
+    private readonly ExternalAuthServiceFactory _externalAuthServiceFactory;
 
     public AuthController(
         IMediator mediator,
-        IIdentityService identityService
+        IIdentityService identityService,
+        ExternalAuthServiceFactory externalAuthServiceFactory
     )
     {
         _mediator = mediator;
         _identityService = identityService;
+        _externalAuthServiceFactory = externalAuthServiceFactory;
     }
 
     [HttpPost("register")]
@@ -97,5 +103,27 @@ public class AuthController : ControllerBase
         var result = await _mediator.Send(new LogoutUserCommand(_identityService.GetAccessTokenRequest()));
 
         return ApiResponseSuccess<bool>.BuildOKObjectResult(result);
+    }
+
+
+    [HttpPost("google")]
+    public IActionResult GoogleLoginUrl()
+    {
+        var googleAuthService = _externalAuthServiceFactory.GetService(IdentityProvider.Google);
+
+        string urlLogin = googleAuthService.GetLoginUrl(string.Empty);
+
+        return ApiResponseSuccess<string>.BuildOKObjectResult(urlLogin);
+    }
+
+    [HttpGet("google/callback")]
+    public async Task<IActionResult> GoogleLoginCallback(
+        [FromQuery] string code,
+        [FromQuery] string? state = null
+    )
+    {
+        var result = await _mediator.Send(new AuthExternalCallbackCommand(IdentityProvider.Google, code, state));
+
+        return ApiResponseSuccess<AuthenticationResponseDto>.BuildOKObjectResult(result);
     }
 }

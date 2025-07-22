@@ -15,11 +15,11 @@ public class UnauthorizedException : ManagerHeroException
         HttpCode = HttpStatusCode.Unauthorized;
     }
     
-    public UnauthorizedException() : this("user.unauthorized", "User is not authenticated.")
+    public UnauthorizedException() : this("Unauthorized", "User is not authenticated.")
     {
     }
 
-    public UnauthorizedException(string message) : this("user.unauthorized", message)
+    public UnauthorizedException(string message) : this("Unauthorized", message)
     {
     }
 
