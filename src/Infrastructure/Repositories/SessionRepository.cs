@@ -16,7 +16,7 @@ public class SessionRepository(
 
     public async Task<Session> CreateAsync(Session session, CancellationToken cancellationToken = default)
     {
-        var result = await _context.Sessions.AddAsync(session);
+        var result = await _context.Sessions.AddAsync(session, cancellationToken);
 
         return result.Entity;
     }
@@ -28,14 +28,14 @@ public class SessionRepository(
         return result.State == Microsoft.EntityFrameworkCore.EntityState.Deleted;
     }
 
-    public Task<Session?> GetByAccessTokenAsync(string accessToken, CancellationToken cancellationToken = default)
+    public Task<Session?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return _context.Sessions.FirstOrDefaultAsync(s => s.AccessToken == accessToken);
+        return _context.Sessions.FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
     }
 
     public Task<List<Session>> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
     {
-        return _context.Sessions.Where(s => s.UserId == userId).ToListAsync();
+        return _context.Sessions.Where(s => s.UserId == userId).ToListAsync(cancellationToken);
     }
 
     public void Update(Session session)

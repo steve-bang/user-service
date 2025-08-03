@@ -26,22 +26,23 @@ public class LoginPasswordQueryHandler(
         // Login with password
         user.LoginPassword(request.Password);
 
+        // Intialize session object.
+        var session = new Session(user);
+
         // Generate token
-        _jwtHandler.GenerateToken(user, out string accessToken, out string refreshToken, out DateTime expriresIn);
+        _jwtHandler.GenerateToken(user, session, out string accessToken, out string refreshToken, out DateTime expriresIn);
 
         // Add session
         if (_httpContextAccessor.HttpContext != null)
         {
-            var session = Session.Create(
-                user,
-                accessToken,
+            session.Update(
                 refreshToken,
                 _httpContextAccessor.HttpContext,
                 expriresIn
             );
-
-            _ = await _unitOfWork.Sessions.CreateAsync(session, cancellationToken);
         }
+
+        await _unitOfWork.Sessions.CreateAsync(session, cancellationToken);
 
         _ = await _unitOfWork.SaveChangesAsync(cancellationToken);
 

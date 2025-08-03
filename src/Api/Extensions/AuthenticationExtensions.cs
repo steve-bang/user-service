@@ -8,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Steve.ManagerHero.BuildingBlocks.Authentication;
 using Steve.ManagerHero.UserService.Application.Auth;
 using Steve.ManagerHero.UserService.Infrastructure.Auth;
 
@@ -94,16 +95,15 @@ public static class AuthenticationExtensions
                         }
 
                         var sessionRepository = context.HttpContext.RequestServices.GetRequiredService<ISessionRepository>();
+                        var jwtHandler = context.HttpContext.RequestServices.GetRequiredService<IJwtHandler>();
 
                         var jwtToken = context.SecurityToken as JwtSecurityToken;
-                        var jti = jwtToken?.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
-                        var userId = jwtToken?.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub)?.Value;
+                        var sessionId = jwtHandler.ExtraSessionId(accessToken);
+                        var userId = jwtHandler.ExtraUserId(accessToken);
 
-                        var token = await sessionRepository.GetByAccessTokenAsync(accessToken);
+                        var session = await sessionRepository.GetByIdAsync(sessionId) ?? throw new UnauthorizedException();
 
-                        if (token is null) throw new UnauthorizedException();
-
-                        if ((!string.IsNullOrEmpty(userId) && token.UserId != Guid.Parse(userId)) || !token.IsActive)
+                        if ((session.UserId != userId) || session.IsRevoked)
                         {
                             context.Fail("The session request is invalid.");
                             return;

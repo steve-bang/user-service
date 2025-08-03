@@ -46,7 +46,9 @@ public class AuthExternalCallbackCommandHandler(
             _logger.LogInformation("Create a new user from {provider} with the providerId is {id}", provider, oauthUserResult.Id);
         }
 
-        _jwtHandler.GenerateToken(user, out accessToken, out refreshToken, out expriresIn);
+        Session session = new Session(user);
+
+        _jwtHandler.GenerateToken(user, session, out accessToken, out refreshToken, out expriresIn);
 
         // Add identity
         UserIdentity identity = new UserIdentity(
@@ -73,16 +75,14 @@ public class AuthExternalCallbackCommandHandler(
         // Add session
         if (_httpContextAccessor.HttpContext != null)
         {
-            var session = Session.Create(
-                user,
-                accessToken,
+            session.Update(
                 refreshToken,
                 _httpContextAccessor.HttpContext,
                 expriresIn
             );
-
-            _ = await _unitOfWork.Sessions.CreateAsync(session, cancellationToken);
         }
+
+        _ = await _unitOfWork.Sessions.CreateAsync(session, cancellationToken);
 
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);

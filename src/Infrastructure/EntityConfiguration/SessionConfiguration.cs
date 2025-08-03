@@ -12,11 +12,6 @@ public class UserSessionConfiguration : IEntityTypeConfiguration<Session>
 
         builder.HasKey(us => us.Id);
 
-        builder.Property(us => us.AccessToken)
-            .HasColumnName("access_token")
-            .IsRequired()
-            .HasMaxLength(1000);
-
         builder.Property(us => us.RefreshToken)
             .HasColumnName("refresh_token")
             .IsRequired()
@@ -35,12 +30,21 @@ public class UserSessionConfiguration : IEntityTypeConfiguration<Session>
             .HasColumnName("expires_at")
             .IsRequired();
 
+        builder.Property(us => us.IsRevoked)
+            .HasColumnName("is_revoked")
+            .IsRequired();
+
+        builder.Property(us => us.RevokedAt)
+            .HasColumnName("revoked_at")
+            .IsRequired(false);
+
         builder.Property(us => us.IsActive)
             .HasColumnName("is_active")
             .IsRequired()
             .HasDefaultValue(true);
 
-        builder.Property(us => us.CreatedAt)
+        builder.Property(u => u.CreatedAt)
+            .IsRequired()
             .HasColumnName("created_at")
             .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
@@ -51,9 +55,6 @@ public class UserSessionConfiguration : IEntityTypeConfiguration<Session>
             .WithMany(u => u.Sessions)
             .HasForeignKey(us => us.UserId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasIndex(us => us.AccessToken)
-            .IsUnique();
 
         builder.HasIndex(us => us.RefreshToken)
             .IsUnique();

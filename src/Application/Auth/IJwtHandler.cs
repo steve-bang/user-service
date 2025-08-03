@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Steve.ManagerHero.UserService.Domain.AggregatesModel;
 
 namespace Steve.ManagerHero.UserService.Application.Auth;
+
 public interface IJwtHandler
 {
     /// <summary>
@@ -11,7 +12,7 @@ public interface IJwtHandler
     /// <param name="accessToken">The generated access token.</param>
     /// <param name="refreshToken">The generated refresh token.</param>
     /// <param name="expires">The expiration date of the token.</param>
-    void GenerateToken(User user, out string accessToken, out string refreshToken, out DateTime expires);
+    void GenerateToken(User user, Session session, out string accessToken, out string refreshToken, out DateTime expires);
 
     /// <summary>
     /// Validates a JWT token.
@@ -19,4 +20,13 @@ public interface IJwtHandler
     /// <param name="token">The token to validate.</param>
     /// <returns>The claims from the token.</returns>
     IEnumerable<Claim> ValidateToken(string token);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="accessToken"></param>
+    /// <returns></returns>
+    Guid ExtraSessionId(string accessToken);
+
+    Guid ExtraUserId(string accessToken);
 }

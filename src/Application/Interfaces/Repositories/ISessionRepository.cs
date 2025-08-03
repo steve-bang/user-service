@@ -12,7 +12,7 @@ public interface ISessionRepository : IRepository
 
     Task<List<Session>> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken = default);
 
-    Task<Session?> GetByAccessTokenAsync(string accessToken, CancellationToken cancellationToken = default);
+    Task<Session?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
     void Update(Session session);
 
