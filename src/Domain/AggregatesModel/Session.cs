@@ -67,7 +67,7 @@ public class Session : AggregateRoot
         IsActive = false;
     }
 
-    public void Revoked()
+    public void Revoke()
     {
         IsActive = false;
         IsRevoked = true;

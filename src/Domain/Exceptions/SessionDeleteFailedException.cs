@@ -8,10 +8,9 @@ using Steve.ManagerHero.UserService.Domain.Constants;
 
 namespace Steve.ManagerHero.UserService.Domain.Exception;
 
-public class EmailAlreadyExistsException : ConflictException
+public class SessionDeleteFailedException : ManagerHeroException
 {
-    public EmailAlreadyExistsException(
-    ) : base(UserErrorCodes.EmailAlreadyVerified, UserErrorMessages.EmailAlreadyExistsMessage)
+    public SessionDeleteFailedException() : base(SessionErrorCodes.DeleteFailed, SessionErrorMessages.DeleteFailedMessage)
     {
 
     }

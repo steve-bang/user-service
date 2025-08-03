@@ -10,9 +10,11 @@ using Microsoft.AspNetCore.Mvc;
 using Steve.ManagerHero.Api.Models;
 using Steve.ManagerHero.Application.Features.Roles.Commands;
 using Steve.ManagerHero.Application.Features.Roles.Queries;
+using Steve.ManagerHero.Application.Features.Sessions.Queries;
 using Steve.ManagerHero.Application.Features.Users.Commands;
 using Steve.ManagerHero.Application.Features.Users.Queries;
 using Steve.ManagerHero.UserService.Application.Auth;
+using Steve.ManagerHero.UserService.Application.DTOs;
 using Steve.ManagerHero.UserService.Domain.Constants;
 
 [Route("api/v1/users")]
@@ -145,7 +147,20 @@ public class UsersController : ControllerBase
             RoleIds: request.RoleIds
         ));
 
-        return ApiResponseSuccess<bool>.BuildOKObjectResult(result);
+        return ApiResponseSuccess<bool>.BuildNoContent();
     }
 
+
+    [HttpGet("{userId}/sessions")]
+    [Authorize]
+    public async Task<IActionResult> GetSessionsByUserId(
+        Guid userId
+    )
+    {
+        var result = await _mediator.Send(new GetSessionsByByUserIdQuery(
+            UserId: userId
+        ));
+
+        return ApiResponseSuccess<List<SessionDto>>.BuildOKObjectResult(result);
+    }
 }

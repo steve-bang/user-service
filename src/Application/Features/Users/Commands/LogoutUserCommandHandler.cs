@@ -21,7 +21,7 @@ public class LogoutUserCommandHandler(
 
         if (session is null) return false;
 
-        session.Revoked();
+        session.Revoke();
 
         // Delete session
         _unitOfWork.Sessions.Update(session);

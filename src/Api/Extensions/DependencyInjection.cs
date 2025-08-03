@@ -141,6 +141,7 @@ public static class DependencyInjection
         // Add caching service
         builder.Services.AddScoped<ITokenCache, TokenCache>();
         builder.Services.AddScoped<IUserCache, UserCache>();
+        builder.Services.AddScoped<ISessionCache, SessionCache>();
 
         return builder;
     }

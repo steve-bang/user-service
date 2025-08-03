@@ -8,10 +8,9 @@ using Steve.ManagerHero.UserService.Domain.Constants;
 
 namespace Steve.ManagerHero.UserService.Domain.Exception;
 
-public class EmailAlreadyExistsException : ConflictException
+public class SessionNotFoundException : NotFoundDataException
 {
-    public EmailAlreadyExistsException(
-    ) : base(UserErrorCodes.EmailAlreadyVerified, UserErrorMessages.EmailAlreadyExistsMessage)
+    public SessionNotFoundException() : base(SessionErrorCodes.SessionNotFound, SessionErrorMessages.SessionNotFoundMessages)
     {
 
     }

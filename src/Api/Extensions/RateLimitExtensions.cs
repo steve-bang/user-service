@@ -50,7 +50,7 @@ public static class RateLimitExtensions
                     factory: partition => new FixedWindowRateLimiterOptions
                     {
                         AutoReplenishment = true,
-                        PermitLimit = 3, // Number of requests per window
+                        PermitLimit = 100, // Number of requests per window
                         QueueLimit = 0, // Number of requests that can be queued
                         Window = TimeSpan.FromMinutes(1) // Time window for the rate limit
                     }

@@ -8,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Steve.ManagerHero.Application.Features.Sessions.Queries;
 using Steve.ManagerHero.BuildingBlocks.Authentication;
 using Steve.ManagerHero.UserService.Application.Auth;
 using Steve.ManagerHero.UserService.Infrastructure.Auth;
@@ -96,18 +97,16 @@ public static class AuthenticationExtensions
 
                         var sessionRepository = context.HttpContext.RequestServices.GetRequiredService<ISessionRepository>();
                         var jwtHandler = context.HttpContext.RequestServices.GetRequiredService<IJwtHandler>();
+                        var mediator = context.HttpContext.RequestServices.GetRequiredService<IMediator>();
 
                         var jwtToken = context.SecurityToken as JwtSecurityToken;
                         var sessionId = jwtHandler.ExtraSessionId(accessToken);
                         var userId = jwtHandler.ExtraUserId(accessToken);
 
-                        var session = await sessionRepository.GetByIdAsync(sessionId) ?? throw new UnauthorizedException();
+                        var session = await mediator.Send(new GetSessionByIdQuery(sessionId));
 
-                        if ((session.UserId != userId) || session.IsRevoked)
-                        {
-                            context.Fail("The session request is invalid.");
-                            return;
-                        }
+                        if (session.IsRevoked)
+                            throw new SessionRevokedException();
 
                         // Optionally: You can attach extra claims or data to HttpContext here
                     },

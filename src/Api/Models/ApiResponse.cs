@@ -118,8 +118,8 @@ public class ApiResponseSuccess<T> : ApiResponse
     /// This method returns a response with a status code of 204 (No Content) and no data
     /// </summary>
     /// <returns></returns>
-    public static ApiResponseSuccess<T> BuildNoContent()
+    public static NoContentResult BuildNoContent()
     {
-        return new ApiResponseSuccess<T>(HttpStatusCode.NoContent, default);
+        return new NoContentResult();
     }
 }
