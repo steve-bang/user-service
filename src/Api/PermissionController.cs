@@ -10,6 +10,7 @@ using Steve.ManagerHero.Api.Models;
 using Steve.ManagerHero.Application.Features.Permissions.Commands;
 using Steve.ManagerHero.Application.Features.Permissions.Queries;
 using Steve.ManagerHero.Application.Features.Roles.Queries;
+using Steve.ManagerHero.UserService.Attributes;
 using Steve.ManagerHero.UserService.Domain.Constants;
 
 [Route("api/v1/permissions")]
@@ -25,7 +26,8 @@ public class PermissionController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = RoleNames.Admin)]
+    [Authorize]
+    [HasPermission([Permissions.PermissionManage])]
     public async Task<IActionResult> Create([FromBody] PermissionCommandRequest request)
     {
         var result = await _mediator.Send(new CreatePermissionCommand(
@@ -38,6 +40,8 @@ public class PermissionController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize]
+    [HasPermission([Permissions.PermissionManage, Permissions.PermissionRead])]
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
         var result = await _mediator.Send(new GetPermissionByIdQuery(id));
@@ -46,7 +50,8 @@ public class PermissionController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    [Authorize(Roles = RoleNames.Admin)]
+    [Authorize]
+    [HasPermission([Permissions.PermissionManage])]
     public async Task<IActionResult> UpdateById([FromRoute] Guid id, [FromBody] PermissionCommandRequest request)
     {
         var result = await _mediator.Send(new UpdatePermissionCommand(
@@ -60,7 +65,8 @@ public class PermissionController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Roles = RoleNames.Admin)]
+    [Authorize]
+    [HasPermission([Permissions.PermissionManage])]
     public async Task<IActionResult> DeleteById([FromRoute] Guid id)
     {
         await _mediator.Send(new DeletePermissionCommand(id));
@@ -69,6 +75,8 @@ public class PermissionController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
+    [HasPermission([Permissions.PermissionManage, Permissions.PermissionRead])]
     public async Task<IActionResult> GetPermissions(
         [FromQuery] string? filter = null,
         [FromQuery] int pageNumber = PaginationConstant.PageNumberDefault,
@@ -86,7 +94,13 @@ public class PermissionController : ControllerBase
     }
 
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpGet("{id}/roles")]
+    [HasPermission([Permissions.PermissionManage])]
     public async Task<IActionResult> GetRolesByPermissionId([FromRoute] Guid id)
     {
         var result = await _mediator.Send(new GetRolesByPermissionIdQuery(id));

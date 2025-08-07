@@ -20,7 +20,7 @@ public class VerificationEmailEventHandler(
     {
         var user = notification.User;
 
-        string encryptToken = EncryptionAESHelper.EncryptObject<UserPayloadEncrypt>(
+        string encryptToken = EncryptionAESHelper.EncryptObject(
             new UserPayloadEncrypt(user.Id),
             EncryptionPurpose.VerificationEmailAddress.ToString()
         );

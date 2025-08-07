@@ -10,4 +10,6 @@ public class PermissionErrorMessages
 {
     public const string PermissionNotFoundMessages = "The permission was not found in the system.";
 
+    public const string CodeAlreadyTaken = "The '{0}' permission already taken.";
+
 }

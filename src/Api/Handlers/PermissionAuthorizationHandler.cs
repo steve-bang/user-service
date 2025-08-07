@@ -7,10 +7,12 @@
 
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using Steve.ManagerHero.UserService.Application.Service;
 using Steve.ManagerHero.UserService.Requirements;
 
 namespace Steve.ManagerHero.UserService.Handlers;
 
+[Obsolete]
 public class PermissionAuthorizationHandler : AuthorizationHandler<PermissionRequirement>
 {
     private readonly IPermissionService _permissionService;
@@ -24,13 +26,6 @@ public class PermissionAuthorizationHandler : AuthorizationHandler<PermissionReq
         AuthorizationHandlerContext context,
         PermissionRequirement requirement)
     {
-        if (context.User.Identity?.IsAuthenticated == true)
-        {
-            var userId = Guid.Parse(context.User.FindFirstValue(ClaimTypes.NameIdentifier));
-            if (await _permissionService.UserHasPermissionAsync(userId, requirement.Permission))
-            {
-                context.Succeed(requirement);
-            }
-        }
+
     }
 }

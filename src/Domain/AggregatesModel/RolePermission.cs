@@ -11,19 +11,17 @@ public class RolePermission : AggregateRoot
 {
     public Guid RoleId { get; private set; }
     public Role Role { get; private set; }
-    
     public Guid PermissionId { get; private set; }
     public Permission Permission { get; private set; }
-    
     public DateTime AssignedAt { get; private set; }
 
     // Private constructor for EF Core
-    private RolePermission() { }
+    private RolePermission() : base() { }
 
-    public RolePermission(Role role, Permission permission)
+    public RolePermission(Guid roleId, Guid permissionId) : this()
     {
-        Role = role ?? throw new ArgumentNullException(nameof(role));
-        Permission = permission ?? throw new ArgumentNullException(nameof(permission));
+        RoleId = roleId;
+        PermissionId = permissionId;
         AssignedAt = DateTime.UtcNow;
     }
 }

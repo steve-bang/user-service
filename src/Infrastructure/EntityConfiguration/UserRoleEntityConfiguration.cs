@@ -18,7 +18,16 @@ public class UserRoleEntityConfiguration : IEntityTypeConfiguration<UserRole>
         // Primary Key
         builder.HasKey(u => u.Id);
 
-        builder.HasKey(ur => new { ur.UserId, ur.RoleId }); // Composite Key
+        builder.Property(u => u.Id)
+            .ValueGeneratedNever();
+
+        builder.Property(u => u.UserId)
+            .HasColumnName("user_id");
+
+         builder.Property(u => u.RoleId)
+            .HasColumnName("role_id");
+
+        builder.HasKey(u => new { u.UserId, u.RoleId }); // Composite Key
 
         builder
             .HasOne(ur => ur.User)
@@ -32,7 +41,5 @@ public class UserRoleEntityConfiguration : IEntityTypeConfiguration<UserRole>
 
         builder.Property(ur => ur.AssignedAt)
             .IsRequired();
-
-        builder.HasQueryFilter(ur => ur.User.IsActive);
     }
 }

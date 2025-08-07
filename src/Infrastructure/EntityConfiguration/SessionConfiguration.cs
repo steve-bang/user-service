@@ -12,6 +12,9 @@ public class UserSessionConfiguration : IEntityTypeConfiguration<Session>
 
         builder.HasKey(us => us.Id);
 
+        builder.Property(e => e.Id)
+            .ValueGeneratedNever();
+
         builder.Property(us => us.RefreshToken)
             .HasColumnName("refresh_token")
             .IsRequired()

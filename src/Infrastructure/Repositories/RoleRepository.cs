@@ -32,8 +32,6 @@ public class RoleRepository(
     {
         return _context.Roles
                 .Include(r => r.RolePermissions)
-                .ThenInclude(rp => rp.Permission)
-                .AsSplitQuery()
                 .FirstOrDefaultAsync(r => r.Id == id);
     }
 

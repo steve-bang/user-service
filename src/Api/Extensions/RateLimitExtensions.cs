@@ -28,7 +28,7 @@ public static class RateLimitExtensions
                         partitionKey: $"{httpContext.Connection.RemoteIpAddress}-{path}",
                         factory: _ => new FixedWindowRateLimiterOptions
                         {
-                            PermitLimit = 2,
+                            PermitLimit = 10,
                             Window = TimeSpan.FromMinutes(1)
                         });
                 }
@@ -40,7 +40,7 @@ public static class RateLimitExtensions
                         partitionKey: $"{httpContext.Connection.RemoteIpAddress}-{path}",
                         factory: _ => new FixedWindowRateLimiterOptions
                         {
-                            PermitLimit = 2,
+                            PermitLimit = 10,
                             Window = TimeSpan.FromMinutes(1)
                         });
                 }

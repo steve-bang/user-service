@@ -24,7 +24,7 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
             .NotEmpty()
             .WithErrorCode(ErrorCodes.InputInvalid)
             .WithMessage("Password is required.")
-            .MinimumLength(6)
+            .MinimumLength(8)
             .WithErrorCode(ErrorCodes.InputInvalid)
             .WithMessage("Password must be at least 8 characters.")
             .MaximumLength(100)

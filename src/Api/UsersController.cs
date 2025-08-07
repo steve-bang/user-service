@@ -15,6 +15,7 @@ using Steve.ManagerHero.Application.Features.Users.Commands;
 using Steve.ManagerHero.Application.Features.Users.Queries;
 using Steve.ManagerHero.UserService.Application.Auth;
 using Steve.ManagerHero.UserService.Application.DTOs;
+using Steve.ManagerHero.UserService.Attributes;
 using Steve.ManagerHero.UserService.Domain.Constants;
 
 [Route("api/v1/users")]
@@ -49,6 +50,7 @@ public class UsersController : ControllerBase
 
     [HttpPut("{id}/change-password")]
     [Authorize]
+    [HasPermission("user.manager")]
     public async Task<IActionResult> ChangePassword(Guid id, [FromBody] ChangePasswordRequest request)
     {
 
@@ -62,8 +64,45 @@ public class UsersController : ControllerBase
         return ApiResponseSuccess<bool>.BuildOKObjectResult(result);
     }
 
+    [HttpPut("me/change-password")]
+    [Authorize]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+    {
+        string userId = _identityService.GetUserIdRequest().ToString();
+
+        var result = await _mediator.Send(new ChangePasswordCommand(
+            UserId: Guid.Parse(userId),
+            CurrentPassword: request.CurrentPassword,
+            NewPassword: request.NewPassword,
+            ConfirmPassword: request.ConfirmPassword
+        ));
+
+        return ApiResponseSuccess<bool>.BuildOKObjectResult(result);
+    }
+
+    [HttpPut("me")]
+    [Authorize]
+    public async Task<IActionResult> UpdateById([FromBody] UserUpdateRequest request)
+    {
+        string userId = _identityService.GetUserIdRequest().ToString();
+
+        var result = await _mediator.Send(new UpdateUserCommand(
+            Id: Guid.Parse(userId),
+            EmailAddress: request.EmailAddress,
+            SecondaryEmailAddress: request.SecondaryEmailAddress,
+            FirstName: request.FirstName,
+            LastName: request.LastName,
+            DisplayName: request.DisplayName,
+            PhoneNumber: request.PhoneNumber,
+            Address: request.Address
+        ));
+
+        return ApiResponseSuccess<UserDto>.BuildOKObjectResult(result);
+    }
+
     [HttpPut("{id}")]
     [Authorize]
+    [HasPermission(Permissions.UserManage)]
     public async Task<IActionResult> UpdateById(Guid id, [FromBody] UserUpdateRequest request)
     {
 
@@ -83,6 +122,7 @@ public class UsersController : ControllerBase
 
     [HttpPost("{id}/send-verification-email")]
     [Authorize]
+    [HasPermission(Permissions.UserManage)]
     public async Task<IActionResult> SendVerificationEmail(Guid id)
     {
         await _mediator.Send(new SendVerificationEmailLinkCommand(id));
@@ -90,7 +130,8 @@ public class UsersController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Roles = RoleNames.Admin)]
+    [Authorize]
+    [HasPermission(Permissions.UserManage)]
     public async Task<IActionResult> DeleteById(Guid id)
     {
         await _mediator.Send(new DeleteUserCommand(id));
@@ -99,6 +140,7 @@ public class UsersController : ControllerBase
 
     [HttpGet]
     [Authorize]
+    [HasPermission([Permissions.UserManage, Permissions.UserRead])]
     public async Task<IActionResult> GetUsers(
         [FromQuery] string? filter = null,
         [FromQuery] int pageNumber = PaginationConstant.PageNumberDefault,
@@ -124,7 +166,8 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("{userId}/roles/{roleId}")]
-    [Authorize(Roles = RoleNames.Admin)]
+    [Authorize]
+    [HasPermission(Permissions.UserManage)]
     public async Task<IActionResult> AssignRoleToUser(Guid userId, Guid roleId)
     {
         var result = await _mediator.Send(new AssignUserToRoleCommand(
@@ -136,13 +179,14 @@ public class UsersController : ControllerBase
     }
 
     [HttpDelete("{userId}/roles")]
-    [Authorize(Roles = RoleNames.Admin)]
+    [Authorize]
+    [HasPermission(Permissions.UserManage)]
     public async Task<IActionResult> RemoveRolesFromUser(
         Guid userId,
         [FromBody] RemoveRolesFromUserRequest request
     )
     {
-        var result = await _mediator.Send(new RemoveRolesFromUserCommand(
+        await _mediator.Send(new RemoveRolesFromUserCommand(
             UserId: userId,
             RoleIds: request.RoleIds
         ));
@@ -153,6 +197,7 @@ public class UsersController : ControllerBase
 
     [HttpGet("{userId}/sessions")]
     [Authorize]
+    [HasPermission(Permissions.UserManage)]
     public async Task<IActionResult> GetSessionsByUserId(
         Guid userId
     )

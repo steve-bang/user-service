@@ -32,11 +32,6 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
             .HasColumnName("created_at")
             .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-        // builder
-        //     .HasMany(r => r.UserRoles)
-        //     .WithOne(ur => ur.Role)
-        //     .HasForeignKey(ur => ur.RoleId);
-
         builder.HasIndex(r => r.Name)
             .IsUnique();
     }

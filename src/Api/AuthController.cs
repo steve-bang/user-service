@@ -4,7 +4,6 @@
 * - [2025-04-18] - Created by mrsteve.bang@gmail.com
 */
 
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steve.ManagerHero.Api.Models;

@@ -15,8 +15,7 @@ public class Permission : AggregateRoot
     public DateTime CreatedAt { get; private set; }
     
     // Navigation property
-    private readonly List<RolePermission> _rolePermissions = new();
-    public IReadOnlyCollection<RolePermission> RolePermissions => _rolePermissions.AsReadOnly();
+    public ICollection<RolePermission> RolePermissions { get; private set; }
 
     // Private constructor for EF Core
     private Permission() { }

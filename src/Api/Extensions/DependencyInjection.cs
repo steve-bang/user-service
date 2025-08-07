@@ -34,6 +34,8 @@ public static class DependencyInjection
 
         builder.Services.AddDbContext<UserAppContext>(options =>
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+                .EnableSensitiveDataLogging()
+                .LogTo(Console.WriteLine, LogLevel.Information)
         );
 
         builder.EnrichNpgsqlDbContext<UserAppContext>();
@@ -64,6 +66,7 @@ public static class DependencyInjection
 
         builder.Services.AddScoped<IGoogleAuthService, GoogleAuthService>();
         builder.Services.AddScoped<ExternalAuthServiceFactory>();
+        builder.Services.AddScoped<IPermissionService, PermissionService>();
 
         // Register smtp setting
         builder.AddSmtpSettings();
@@ -142,6 +145,7 @@ public static class DependencyInjection
         builder.Services.AddScoped<ITokenCache, TokenCache>();
         builder.Services.AddScoped<IUserCache, UserCache>();
         builder.Services.AddScoped<ISessionCache, SessionCache>();
+        builder.Services.AddScoped<IPermissionCache, PermissionCache>();
 
         return builder;
     }

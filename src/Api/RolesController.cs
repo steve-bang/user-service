@@ -12,6 +12,7 @@ using Steve.ManagerHero.Application.Features.Permissions.Queries;
 using Steve.ManagerHero.Application.Features.Roles.Commands;
 using Steve.ManagerHero.Application.Features.Roles.Queries;
 using Steve.ManagerHero.Application.Features.Users.Queries;
+using Steve.ManagerHero.UserService.Attributes;
 using Steve.ManagerHero.UserService.Domain.Constants;
 
 [Route("api/v1/roles")]
@@ -27,7 +28,8 @@ public class RolesController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = RoleNames.Admin)]
+    [Authorize]
+    [HasPermission([Permissions.RoleManage])]
     public async Task<IActionResult> Create([FromBody] RoleCommandRequest request)
     {
         var result = await _mediator.Send(new CreateRoleCommand(
@@ -40,6 +42,7 @@ public class RolesController : ControllerBase
 
     [HttpGet("{id}")]
     [Authorize]
+    [HasPermission([Permissions.RoleManage])]
     public async Task<IActionResult> GetById(Guid id)
     {
         var result = await _mediator.Send(new GetRoleByIdQuery(id));
@@ -49,6 +52,7 @@ public class RolesController : ControllerBase
 
     [HttpGet("{id}/users")]
     [Authorize]
+    [HasPermission([Permissions.RoleManage, Permissions.RoleRead])]
     public async Task<IActionResult> GetUsersByRole(
         Guid id,
         [FromQuery] int pageNumber = PaginationConstant.PageNumberDefault,
@@ -67,6 +71,7 @@ public class RolesController : ControllerBase
 
     [HttpGet]
     [Authorize]
+    [HasPermission([Permissions.RoleManage, Permissions.RoleRead])]
     public async Task<IActionResult> GetRoles(
         [FromQuery] string? filter = null,
         [FromQuery] int pageNumber = PaginationConstant.PageNumberDefault,
@@ -84,7 +89,8 @@ public class RolesController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    [Authorize(Roles = RoleNames.Admin)]
+    [Authorize]
+    [HasPermission([Permissions.RoleManage])]
     public async Task<IActionResult> UpdateById(Guid id, [FromBody] RoleCommandRequest request)
     {
         var result = await _mediator.Send(new UpdateRoleCommand(id, request.Name, request.Description));
@@ -93,7 +99,8 @@ public class RolesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Roles = RoleNames.Admin)]
+    [Authorize]
+    [HasPermission([Permissions.RoleManage])]
     public async Task<IActionResult> DeleteById(Guid id)
     {
         await _mediator.Send(new DeleteRoleCommand(id));
@@ -101,7 +108,8 @@ public class RolesController : ControllerBase
     }
 
     [HttpPost("{roleId}/users/{userId}")]
-    [Authorize(Roles = RoleNames.Admin)]
+    [Authorize]
+    [HasPermission([Permissions.RoleManage])]
     public async Task<IActionResult> AssignUserToRole(Guid roleId, Guid userId)
     {
         var result = await _mediator.Send(new AssignUserToRoleCommand(roleId, userId));
@@ -116,7 +124,8 @@ public class RolesController : ControllerBase
     /// <param name="request">The request body containing the list of permission IDs to be assigned.</param>
     /// <returns></returns>
     [HttpPost("{roleId}/permissions")]
-    [Authorize(Roles = RoleNames.Admin)]
+    [Authorize]
+    [HasPermission([Permissions.RoleManage])]
     public async Task<IActionResult> AssignPermissionsToRole(
         Guid roleId,
         [FromBody] AssignPermissionsToRoleRequest request
@@ -134,6 +143,7 @@ public class RolesController : ControllerBase
     /// <param name="pagination"></param>
     /// <returns></returns>
     [HttpGet("{roleId}/permissions")]
+    [HasPermission([Permissions.RoleManage, Permissions.RoleRead])]
     public async Task<IActionResult> GetPermissionsByRole(Guid roleId, [FromQuery] PaginationQuery pagination)
     {
         var result = await _mediator.Send(new GetPermissionsByRoleQuery()
@@ -154,7 +164,8 @@ public class RolesController : ControllerBase
     /// <param name="request">The request body containing the list of permission IDs to be assigned.</param>
     /// <returns></returns>
     [HttpDelete("{roleId}/permissions")]
-    [Authorize(Roles = RoleNames.Admin)]
+    [Authorize]
+    [HasPermission([Permissions.RoleManage])]
     public async Task<IActionResult> RemovePermissionsFromRole(
         Guid roleId,
         [FromBody] AssignPermissionsToRoleRequest request
