@@ -15,12 +15,12 @@ public class RemovePermissionsFromRoleCommandValidator : AbstractValidator<Remov
 
         RuleFor(x => x.RoleId)
             .NotEmpty()
-            .WithErrorCode(ExceptionProviders.InputInvalid)
+            .WithErrorCode(ErrorCodes.InputInvalid)
             .WithMessage("The id of the role is required.");
 
         RuleFor(x => x.PermissionIds)
             .NotEmpty()
-            .WithErrorCode(ExceptionProviders.InputInvalid)
+            .WithErrorCode(ErrorCodes.InputInvalid)
             .WithMessage("At least one permission is required.");
 
     }

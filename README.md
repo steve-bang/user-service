@@ -1,7 +1,13 @@
 # Manager Zero User Service
 
+
+
 ![.NET Core](https://img.shields.io/badge/.NET-9.0-blue)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+---
+Manager Zero User Service is an open-source, modular user management microservice built with .NET 9. It is designed to help developers quickly and easily integrate secure authentication, user and role management, and fine-grained permission controls into their applications. With a focus on developer experience, the project provides clear documentation, simple setup, and support for modern deployment environments like Docker and Kubernetes. Whether for SaaS, enterprise, or personal projects, this service accelerates development and ensures robust security and flexibility.
+
 
 ## Table of Contents
 - [Manager Zero User Service](#manager-zero-user-service)

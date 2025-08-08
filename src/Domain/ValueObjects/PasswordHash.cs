@@ -6,7 +6,6 @@
 
 using System.Security.Cryptography;
 using PasswordTheBest;
-using Steve.ManagerHero.UserService.Domain.Common;
 namespace Steve.ManagerHero.UserService.Domain.ValueObjects;
 
 public sealed class PasswordHash : ValueObject

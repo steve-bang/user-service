@@ -13,7 +13,7 @@ public class DeletePermissionCommandHandler(
 {
     public async Task<bool> Handle(DeletePermissionCommand request, CancellationToken cancellationToken)
     {
-        Permission permission = await _unitOfWork.Permissions.GetByIdAsync(request.Id) ?? throw ExceptionProviders.Permission.NotFoundException;
+        Permission permission = await _unitOfWork.Permissions.GetByIdAsync(request.Id) ?? throw new PermissionNotFoundException();
 
         var resultDelete = _unitOfWork.Permissions.Delete(permission);
 

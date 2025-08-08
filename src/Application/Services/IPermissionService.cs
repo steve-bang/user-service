@@ -1,4 +1,4 @@
-using Steve.ManagerHero.UserService.Domain.AggregatesModel;
+
 
 public interface IPermissionService
 {

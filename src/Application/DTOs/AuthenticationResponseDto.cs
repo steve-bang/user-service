@@ -7,7 +7,6 @@
 namespace Steve.ManagerHero.UserService.Application.DTO;
 
 public record AuthenticationResponseDto(
-    Guid UserId,
     string AccessToken,
     string RefreshToken,
     DateTime ExpiresIn

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace Steve.ManagerHero.UserService.Infrastructure;
 
-public class CartAppContextFactory : IDesignTimeDbContextFactory<UserAppContext>
+public class AppContextFactory : IDesignTimeDbContextFactory<UserAppContext>
 {
     public UserAppContext CreateDbContext(string[] args)
     {

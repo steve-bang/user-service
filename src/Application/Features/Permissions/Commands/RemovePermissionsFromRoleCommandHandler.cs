@@ -13,12 +13,12 @@ public class RemovePermissionsFromRoleCommandHandler(
 
     public async Task<bool> Handle(RemovePermissionsFromRoleCommand request, CancellationToken cancellationToken)
     {
-        Role role = await _unitOfWork.Roles.GetByIdAsync(request.RoleId, cancellationToken) ?? throw ExceptionProviders.Role.NotFoundException;
+        Role role = await _unitOfWork.Roles.GetByIdAsync(request.RoleId, cancellationToken) ?? throw new RoleNotFoundException();
 
         var permissions = await _unitOfWork.Permissions.GetByIdsAsync(request.PermissionIds, cancellationToken);
         if (permissions.Count() != request.PermissionIds.Length)
         {
-            throw ExceptionProviders.Permission.OneOrMoreNotFoundException;
+            throw new PermissionNotFoundException();
         }
 
         // Add permissions to the role

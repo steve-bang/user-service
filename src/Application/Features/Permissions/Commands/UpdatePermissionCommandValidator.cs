@@ -15,12 +15,12 @@ public class UpdatePermissionCommandValidator : AbstractValidator<UpdatePermissi
 
         RuleFor(x => x.Code)
             .NotEmpty()
-            .WithErrorCode(ExceptionProviders.InputInvalid)
+            .WithErrorCode(ErrorCodes.InputInvalid)
             .WithMessage("Code is required.");
 
         RuleFor(x => x.Name)
             .NotEmpty()
-            .WithErrorCode(ExceptionProviders.InputInvalid)
+            .WithErrorCode(ErrorCodes.InputInvalid)
             .WithMessage("Name is required.");
 
     }

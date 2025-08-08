@@ -124,12 +124,6 @@ namespace UserService.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("AccessToken")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)")
-                        .HasColumnName("access_token");
-
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -152,11 +146,19 @@ namespace UserService.Migrations
                         .HasDefaultValue(true)
                         .HasColumnName("is_active");
 
+                    b.Property<bool>("IsRevoked")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_revoked");
+
                     b.Property<string>("RefreshToken")
                         .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)")
                         .HasColumnName("refresh_token");
+
+                    b.Property<DateTime?>("RevokedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("revoked_at");
 
                     b.Property<string>("UserAgent")
                         .IsRequired()
@@ -169,9 +171,6 @@ namespace UserService.Migrations
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AccessToken")
-                        .IsUnique();
 
                     b.HasIndex("RefreshToken")
                         .IsUnique();
@@ -205,6 +204,10 @@ namespace UserService.Migrations
                         .HasMaxLength(254)
                         .HasColumnType("character varying(254)")
                         .HasColumnName("email_address");
+
+                    b.Property<DateTime?>("EmailVerifiedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("email_verified_at");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -249,6 +252,10 @@ namespace UserService.Migrations
                         .HasColumnType("character varying(20)")
                         .HasColumnName("phone_number");
 
+                    b.Property<DateTime?>("PhoneVerifiedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("phone_verified_at");
+
                     b.Property<string>("SecondaryEmailAddress")
                         .HasMaxLength(254)
                         .HasColumnType("character varying(254)")
@@ -283,6 +290,52 @@ namespace UserService.Migrations
                     b.ToTable("User", "YOUR_SCHEMA");
                 });
 
+            modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.UserIdentity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("IdentityData")
+                        .HasColumnType("text")
+                        .HasColumnName("identity_data");
+
+                    b.Property<DateTime?>("LastLoginAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_login_at");
+
+                    b.Property<string>("Provider")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("provider");
+
+                    b.Property<string>("ProviderId")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("provider_id");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("User_Identity", "YOUR_SCHEMA");
+                });
+
             modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.UserRole", b =>
                 {
                     b.Property<Guid>("UserId")
@@ -295,6 +348,9 @@ namespace UserService.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid?>("AssignedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
                     b.HasKey("UserId", "RoleId");
@@ -382,12 +438,10 @@ namespace UserService.Migrations
                                 .HasColumnType("uuid");
 
                             b1.Property<string>("Hash")
-                                .IsRequired()
                                 .HasColumnType("text")
                                 .HasColumnName("password_hash");
 
                             b1.Property<string>("Salt")
-                                .IsRequired()
                                 .HasColumnType("text")
                                 .HasColumnName("password_salt");
 
@@ -403,6 +457,17 @@ namespace UserService.Migrations
 
                     b.Navigation("PasswordHash")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.UserIdentity", b =>
+                {
+                    b.HasOne("Steve.ManagerHero.UserService.Domain.AggregatesModel.User", "User")
+                        .WithMany("Identities")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.UserRole", b =>
@@ -438,6 +503,8 @@ namespace UserService.Migrations
 
             modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.User", b =>
                 {
+                    b.Navigation("Identities");
+
                     b.Navigation("Sessions");
 
                     b.Navigation("UserRoles");

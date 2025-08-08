@@ -4,13 +4,15 @@
 * - [2025-04-20] - Created by mrsteve.bang@gmail.com
 */
 
+using Steve.ManagerHero.UserService.Application.Interfaces.Caching;
 using Steve.ManagerHero.UserService.Helpers;
 
 namespace Steve.ManagerHero.Application.Features.Users.Commands;
 
 public class VerificationEmailAddressCommandHandler(
     IUnitOfWork _unitOfWork,
-    IMediator _mediator
+    IMediator _mediator,
+    IUserCache _userCache
 ) : IRequestHandler<VerificationEmailAddressCommand, bool>
 {
     public async Task<bool> Handle(VerificationEmailAddressCommand request, CancellationToken cancellationToken)
@@ -22,22 +24,25 @@ public class VerificationEmailAddressCommandHandler(
 
         // Checks if the valid result is true
         if (validResult.Valid == false)
-            throw ExceptionProviders.Token.InvalidException;
+            throw new InvalidTokenException();
 
         UserPayloadEncrypt? userDecrypt = EncryptionAESHelper.DecryptObject<UserPayloadEncrypt>(
             token,
             EncryptionPurpose.VerificationEmailAddress.ToString()
         );
 
-        if (userDecrypt is null) throw ExceptionProviders.Token.InvalidException;
+        if (userDecrypt is null) throw new InvalidTokenException();
 
-        User? user = await _unitOfWork.Users.GetByIdAsync(userDecrypt.Id, cancellationToken) ?? throw ExceptionProviders.User.NotFoundException;
+        User? user = await _unitOfWork.Users.GetByIdAsync(userDecrypt.Id, cancellationToken) ?? throw new UserNotFoundException();
 
         user.VerifyEmail();
 
         _unitOfWork.Users.Update(user);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        // Clear user from cache
+        _userCache.ClearUserById(user.Id);
 
         return true;
 

@@ -13,7 +13,7 @@ public class GetRoleByIdQueryHandler(
 {
     public async Task<RoleDto> Handle(GetRoleByIdQuery request, CancellationToken cancellationToken)
     {
-        Role role = await _unitOfWork.Roles.GetByIdAsync(request.Id) ?? throw ExceptionProviders.Role.NotFoundException;
+        Role role = await _unitOfWork.Roles.GetByIdAsync(request.Id) ?? throw new RoleNotFoundException();
 
         return new RoleDto(role.Id, role.Name, role.Description, role.CreatedAt);
     }

@@ -1,14 +1,16 @@
 
 using System.Security.Claims;
 using Steve.ManagerHero.UserService.Application.Auth;
-using Steve.ManagerHero.UserService.Domain.AggregatesModel;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Steve.ManagerHero.BuildingBlocks.Authentication;
 
 namespace Steve.ManagerHero.UserService.Infrastructure.Auth;
+
 public class JwtHandler : IJwtHandler
 {
+
     private readonly JwtSettings _jwtSettings;
 
     public JwtHandler(JwtSettings jwtSettings)
@@ -16,16 +18,52 @@ public class JwtHandler : IJwtHandler
         _jwtSettings = jwtSettings;
     }
 
-    public void GenerateToken(User user, out string accessToken, out string refreshToken, out DateTime expires)
+    public Guid ExtraSessionId(string accessToken)
+    {
+        string sessionIdClaim = ExtraByKey(accessToken, JwtClaimKeys.SessionId);
+
+        if (!Guid.TryParse(sessionIdClaim, out var sessionId))
+        {
+            throw new SecurityTokenException("Invalid SessionId format in token.");
+        }
+
+        return sessionId;
+    }
+
+    public Guid ExtraUserId(string accessToken)
+    {
+        string userIdClaim = ExtraByKey(accessToken, JwtClaimKeys.UserId);
+
+        if (!Guid.TryParse(userIdClaim, out var userId))
+        {
+            throw new SecurityTokenException("Invalid UserId format in token.");
+        }
+
+        return userId;
+    }
+
+    public string ExtraByKey(string accessToken, string key)
+    {
+        var claims = ValidateToken(accessToken);
+
+        var keyClaim = claims.FirstOrDefault(c => c.Type == key);
+        if (keyClaim == null)
+        {
+            throw new SecurityTokenException($"{key} claim not found in the token.");
+        }
+
+        return keyClaim.Value;
+    }
+
+
+    public void GenerateToken(User user, Session session, out string accessToken, out string refreshToken, out DateTime expires)
     {
         var claims = new List<Claim>
         {
-            new (JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new (JwtClaimKeys.UserId, user.Id.ToString()),
             new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new (JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()),
-            new (ClaimTypes.NameIdentifier, user.DisplayName),
-            new (ClaimTypes.Email, user.EmailAddress.Value),
-            new (ClaimTypes.Role, string.Join(",", user.RoleNames))
+            new (JwtClaimKeys.SessionId, session.Id.ToString()),
         };
 
         var signingCredentials = new SigningCredentials(

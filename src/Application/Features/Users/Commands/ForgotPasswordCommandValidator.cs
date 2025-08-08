@@ -14,10 +14,10 @@ public class ForgotPasswordCommandValidator : AbstractValidator<ForgotPasswordCo
     {
         RuleFor(x => x.EmailAddress)
             .NotEmpty()
-            .WithErrorCode(ExceptionProviders.InputInvalid)
+            .WithErrorCode(ErrorCodes.InputInvalid)
             .WithMessage("Email is required.")
             .EmailAddress()
-            .WithErrorCode(ExceptionProviders.InputInvalid)
+            .WithErrorCode(ErrorCodes.InputInvalid)
             .WithMessage("A valid email is required.");
     }
 }

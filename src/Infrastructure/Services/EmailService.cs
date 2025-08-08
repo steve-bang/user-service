@@ -16,35 +16,49 @@ public class EmailService : IEmailService
     private readonly SmtpSettings _smtpSettings;
     private readonly ProjectSettings _projectSettings;
 
+    private readonly ILogger<EmailService> _logger;
+
     public EmailService(
         SmtpSettings smtpSettings,
-        ProjectSettings projectSettings
+        ProjectSettings projectSettings,
+        ILogger<EmailService> logger
     )
     {
         _smtpSettings = smtpSettings;
         _projectSettings = projectSettings;
+        _logger = logger;
     }
 
     public async Task SendEmailAsync(string to, string subject, string templateContent, ExpandoObject data)
     {
-        var body = ReplaceTemplatePlaceholders(templateContent, data);
-
-        using var client = new SmtpClient(_smtpSettings.Host, _smtpSettings.Port)
+        try
         {
-            Credentials = new NetworkCredential(_smtpSettings.Username, _smtpSettings.Password),
-            EnableSsl = _smtpSettings.EnableSsl
-        };
+            var body = ReplaceTemplatePlaceholders(templateContent, data);
 
-        var mailMessage = new MailMessage
+            using var client = new SmtpClient(_smtpSettings.Host, _smtpSettings.Port)
+            {
+                Credentials = new NetworkCredential(_smtpSettings.Username, _smtpSettings.Password),
+                EnableSsl = _smtpSettings.EnableSsl
+            };
+
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress(_smtpSettings.FromEmail, _smtpSettings.FromName),
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = true
+            };
+            mailMessage.To.Add(to);
+
+            _logger.LogInformation("Start sending an email {to} with the subject is {subject}", to, subject);
+
+            await client.SendMailAsync(mailMessage);
+        }
+        catch (Exception ex)
         {
-            From = new MailAddress(_smtpSettings.FromEmail, _smtpSettings.FromName),
-            Subject = subject,
-            Body = body,
-            IsBodyHtml = true
-        };
-        mailMessage.To.Add(to);
-
-        await client.SendMailAsync(mailMessage);
+            _logger.LogWarning("Error while trying to send an email to {to} with the subject is {subject}", to, subject);
+            _logger.LogWarning(ex, "Error while trying to send an email detail");
+        }
     }
 
     private string ReplaceTemplatePlaceholders(string template, ExpandoObject data)
@@ -63,19 +77,26 @@ public class EmailService : IEmailService
 
     public async Task SendRegistrationEmailAsync(string email, string verificationLink)
     {
-        var template = await File.ReadAllTextAsync("resources/EmailTemplates/registration.html");
+        try
+        {
+            var template = await File.ReadAllTextAsync("Api/resources/EmailTemplates/registration.html");
 
-        dynamic data = new ExpandoObject();
-        data.VerificationLink = verificationLink;
-        data.ProjectName = _projectSettings.Name;
-        string title = $"{_projectSettings.Name} - Verify Your Email Address";
+            dynamic data = new ExpandoObject();
+            data.VerificationLink = verificationLink;
+            data.ProjectName = _projectSettings.Name;
+            string title = $"{_projectSettings.Name} - Verify Your Email Address";
 
-        await SendEmailAsync(
-            email,
-            title,
-            template,
-            data
-        );
+            await SendEmailAsync(
+                email,
+                title,
+                template,
+                data
+            );
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Error while trying to send registration email async");
+        }
     }
 
     public async Task SendResetPasswordAsync(string email, string resetLink, int expiryMinutes)

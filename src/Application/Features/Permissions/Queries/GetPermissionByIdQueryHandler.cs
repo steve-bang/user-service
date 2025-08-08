@@ -16,7 +16,7 @@ public class GetPermissionByIdQueryHandler(
 {
     public async Task<PermissionDto> Handle(GetPermissionByIdQuery request, CancellationToken cancellationToken)
     {
-        Permission Permission = await _unitOfWork.Permissions.GetByIdAsync(request.Id) ?? throw ExceptionProviders.Permission.NotFoundException;
+        Permission Permission = await _unitOfWork.Permissions.GetByIdAsync(request.Id) ?? throw new PermissionNotFoundException();
 
         return _mapper.Map<PermissionDto>(Permission);
     }

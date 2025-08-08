@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Your Email Address</title>
+    <style>
+        /* Base Styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            background-color: #f5f7fa;
+        }
+        
+        /* Email Container */
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Modern Card */
+        .email-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        }
+        
+        /* Header */
+        .email-header {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+        }
+        
+        .email-header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        
+        /* Content */
+        .email-content {
+            padding: 30px;
+        }
+        
+        .email-content h2 {
+            margin-top: 0;
+            color: #212529;
+            font-size: 20px;
+        }
+        
+        .email-content p {
+            margin-bottom: 20px;
+            color: #495057;
+            font-size: 15px;
+        }
+        
+        /* Button */
+        .verify-button {
+            display: inline-block;
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white !important;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        /* Footer */
+        .email-footer {
+            padding: 20px;
+            text-align: center;
+            font-size: 13px;
+            color: #6c757d;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        /* Responsive */
+        @media only screen and (max-width: 600px) {
+            .email-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="email-card">
+            <div class="email-header">
+                <h1>Complete Your Registration</h1>
+            </div>
+            
+            <div class="email-content">
+                <p>Hi there,</p>
+                
+                <p>Thank you for registering with {{ProjectName}}! We're excited to have you on board.</p>
+                
+                <p>To complete your registration, please verify your email address by clicking the button below:</p>
+                
+                <div style="text-align: center;">
+                    <a href="{{VerificationLink}}" class="verify-button">Verify Email Address</a>
+                </div>
+                
+                <p>If you didn't request this registration, please ignore this email or contact support.</p>
+                
+                <p>Best regards,<br>The Team</p>
+            </div>
+            
+            <div class="email-footer">
+                <p><a href="https://steve-bang.com" style="color: #4361ee; text-decoration: none;">Power by Steve Bang</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

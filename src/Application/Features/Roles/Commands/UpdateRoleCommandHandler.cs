@@ -13,7 +13,7 @@ public class UpdateRoleCommandHandler(
 {
     public async Task<RoleDto> Handle(UpdateRoleCommand request, CancellationToken cancellationToken)
     {
-        Role role = await _unitOfWork.Roles.GetByIdAsync(request.Id, cancellationToken) ?? throw ExceptionProviders.Role.NotFoundException;
+        Role role = await _unitOfWork.Roles.GetByIdAsync(request.Id, cancellationToken) ?? throw new RoleNotFoundException();
 
         role.Update(request.Name, request.Description);
 

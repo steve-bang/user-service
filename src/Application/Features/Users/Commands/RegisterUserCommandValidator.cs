@@ -14,42 +14,42 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
     {
         RuleFor(x => x.EmailAddress)
             .NotEmpty()
-            .WithErrorCode(ExceptionProviders.InputInvalid)
+            .WithErrorCode(ErrorCodes.InputInvalid)
             .WithMessage("Email is required.")
             .EmailAddress()
-            .WithErrorCode(ExceptionProviders.InputInvalid)
+            .WithErrorCode(ErrorCodes.InputInvalid)
             .WithMessage("A valid email is required.");
 
         RuleFor(x => x.Password)
             .NotEmpty()
-            .WithErrorCode(ExceptionProviders.InputInvalid)
+            .WithErrorCode(ErrorCodes.InputInvalid)
             .WithMessage("Password is required.")
             .MinimumLength(6)
-            .WithErrorCode(ExceptionProviders.InputInvalid)
+            .WithErrorCode(ErrorCodes.InputInvalid)
             .WithMessage("Password must be at least 8 characters.")
             .MaximumLength(100)
-            .WithErrorCode(ExceptionProviders.InputInvalid)
+            .WithErrorCode(ErrorCodes.InputInvalid)
             .WithMessage("Password must be less than 100 characters.");
 
         RuleFor(x => x.ConfirmPassword)
             .Equal(x => x.Password)
-            .WithErrorCode(ExceptionProviders.InputInvalid)
+            .WithErrorCode(ErrorCodes.InputInvalid)
             .WithMessage("Passwords do not match.");
 
         RuleFor(x => x.FirstName)
             .NotEmpty()
-            .WithErrorCode(ExceptionProviders.InputInvalid)
+            .WithErrorCode(ErrorCodes.InputInvalid)
             .WithMessage("First name is required.")
             .MaximumLength(50)
-            .WithErrorCode(ExceptionProviders.InputInvalid)
+            .WithErrorCode(ErrorCodes.InputInvalid)
             .WithMessage("First name must be less than 50 characters.");
 
         RuleFor(x => x.LastName)
             .NotEmpty()
-            .WithErrorCode(ExceptionProviders.InputInvalid)
+            .WithErrorCode(ErrorCodes.InputInvalid)
             .WithMessage("Last name is required.")
             .MaximumLength(50)
-            .WithErrorCode(ExceptionProviders.InputInvalid)
+            .WithErrorCode(ErrorCodes.InputInvalid)
             .WithMessage("Last name must be less than 50 characters.");
     }
 }

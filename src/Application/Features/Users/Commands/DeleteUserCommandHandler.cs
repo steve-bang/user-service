@@ -5,19 +5,25 @@
 */
 
 
+using Steve.ManagerHero.UserService.Application.Interfaces.Caching;
+
 namespace Steve.ManagerHero.Application.Features.Users.Commands;
 
 public class DeleteUserCommandHandler(
-    IUnitOfWork _unitOfWork
+    IUnitOfWork _unitOfWork,
+    IUserCache _userCache
 ) : IRequestHandler<DeleteUserCommand, bool>
 {
     public async Task<bool> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
-        User user = await _unitOfWork.Users.GetByIdAsync(request.UserId, cancellationToken) ?? throw ExceptionProviders.User.NotFoundException;
+        User user = await _unitOfWork.Users.GetByIdAsync(request.UserId, cancellationToken) ?? throw new UserNotFoundException();
 
         bool result = _unitOfWork.Users.Delete(user);
 
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        // Clear user from cache
+        _userCache.ClearUserById(user.Id);
 
         return result;
     }

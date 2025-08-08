@@ -12,15 +12,13 @@ public class ChangePasswordCommandHandler(
 {
     public async Task<bool> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
     {
-        User user = await _unitOfWork.Users.GetByIdAsync(request.UserId, cancellationToken) ?? throw ExceptionProviders.User.NotFoundException;
+        User user = await _unitOfWork.Users.GetByIdAsync(request.UserId, cancellationToken) ?? throw new UserNotFoundException();
 
         // Update password
         user.ChangePassword(request.CurrentPassword, request.NewPassword);
 
         // Update data in state
-        _unitOfWork.Users.Update(user);
-
-        // Clear session
+        _unitOfWork.Users.Update(user, cancellationToken);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

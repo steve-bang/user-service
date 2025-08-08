@@ -8,11 +8,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Steve.ManagerHero.UserService.Infrastructure.EntityConfiguration;
+
 public class UserRoleEntityConfiguration : IEntityTypeConfiguration<UserRole>
 {
     public void Configure(EntityTypeBuilder<UserRole> builder)
     {
         builder.ToTable("User_Role");
+
+        // Primary Key
+        builder.HasKey(u => u.Id);
 
         builder.HasKey(ur => new { ur.UserId, ur.RoleId }); // Composite Key
 

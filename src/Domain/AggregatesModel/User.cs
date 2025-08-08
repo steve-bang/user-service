@@ -4,7 +4,6 @@
 * - [2025-04-11] - Created by mrsteve.bang@gmail.com
 */
 
-using Steve.ManagerHero.UserService.Domain.Common;
 using Steve.ManagerHero.UserService.Domain.Constants;
 using Steve.ManagerHero.UserService.Domain.Events;
 using Steve.ManagerHero.UserService.Domain.ValueObjects;
@@ -43,11 +42,13 @@ public class User : AggregateRoot
     public UserStatus Status { get; private set; }
     public bool IsActive { get; private set; }
     public bool IsEmailVerified { get; private set; }
+    public DateTime? EmailVerifiedAt { get; private set; }
     public bool IsPhoneVerified { get; private set; }
+    public DateTime? PhoneVerifiedAt { get; private set; }
 
     // Timestamps
-    public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
+    public DateTime CreatedAt { get; private set; }
 
     // Navigation Properties
     private readonly List<UserRole> _userRoles = new();
@@ -60,10 +61,13 @@ public class User : AggregateRoot
     public string[] RoleNames => _userRoles.Any() ? _userRoles.Select(ur => ur.Role).Select(r => r.Name).ToArray()
         : [];
 
+    private readonly List<UserIdentity> _identities = new();
+    public IReadOnlyCollection<UserIdentity> Identities => _identities.AsReadOnly();
+
     //private readonly List<RefreshToken> _refreshTokens = new();
     //public IReadOnlyCollection<RefreshToken> RefreshTokens => _refreshTokens.AsReadOnly();
 
-    public User() { }
+    public User() : base() { }
 
     // Constructor for new user registration
     private User(
@@ -71,7 +75,7 @@ public class User : AggregateRoot
         string lastName,
         EmailAddress emailAddress,
         PasswordHash passwordHash
-    )
+    ) : this()
     {
         FirstName = firstName;
         LastName = lastName;
@@ -86,7 +90,7 @@ public class User : AggregateRoot
     }
 
     // Factory method for creating new user
-    public static User Create(
+    public static User Register(
         string firstName,
         string lastName,
         string email,
@@ -103,7 +107,30 @@ public class User : AggregateRoot
         var emailAddress = new EmailAddress(email);
         var passwordHash = PasswordHash.Create(password);
 
-        return new User(firstName, lastName, emailAddress, passwordHash);
+        var user = new User(firstName, lastName, emailAddress, passwordHash);
+
+        user._identities.Add(UserIdentity.RegisterByEmail(user));
+
+        return user;
+    }
+
+    public static User RegisterFromExternal(
+        string displayName,
+        string email
+    )
+    {
+        var user = new User()
+        {
+            EmailAddress = new EmailAddress(email),
+            DisplayName = displayName,
+            FirstName = string.Empty,
+            LastName = string.Empty
+        };
+        user.VerifyEmail();
+
+        user._identities.Add(UserIdentity.RegisterByEmail(user));
+
+        return user;
     }
 
     public void Update(
@@ -172,7 +199,7 @@ public class User : AggregateRoot
     public void ChangePassword(string currentPassword, string newPassword)
     {
         if (PasswordHash.Verify(currentPassword) == false)
-            throw ExceptionProviders.User.PasswordIncorrectException;
+            throw new PasswordIncorrectException();
 
         UpdatePassword(newPassword);
     }
@@ -192,9 +219,10 @@ public class User : AggregateRoot
 
     public void VerifyEmail()
     {
-        if (IsEmailVerified) return;
+        if (IsEmailVerified) throw new EmailAlreadyVerifiedException();
 
         IsEmailVerified = true;
+        EmailVerifiedAt = DateTime.UtcNow;
         UpdatedAt = DateTime.UtcNow;
     }
 
@@ -204,18 +232,27 @@ public class User : AggregateRoot
             throw new InvalidOperationException("Phone number not set");
 
         IsPhoneVerified = true;
+        PhoneVerifiedAt = DateTime.UtcNow;
         UpdatedAt = DateTime.UtcNow;
     }
+
+    public void AddIdentity(UserIdentity identity)
+    {
+        var identityExists = _identities.FirstOrDefault(i => i.Provider == identity.Provider && i.ProviderId == identity.ProviderId);
+        if (identityExists == null)
+            _identities.Add(identity);
+    }
+
 
     /// <summary>
     /// Add a role
     /// </summary>
     /// <param name="role">The role object to add</param>
-    /// <exception cref="ExceptionProviders.User.AlreadyHasRoleException">Throw if the user has already has role</exception>
+    /// <exception cref="UserAlreadyHasRoleException">Throw if the user has already has role</exception>
     public void AddRole(Role role)
     {
         if (_userRoles.Any(r => r.RoleId == role.Id))
-            throw ExceptionProviders.User.AlreadyHasRoleException;
+            throw new UserAlreadyHasRoleException();
 
         var userRole = new UserRole(this, role);
         _userRoles.Add(userRole);
@@ -253,7 +290,18 @@ public class User : AggregateRoot
         bool isCorrectPassword = PasswordHash.Verify(passwordRequest);
 
         if (!isCorrectPassword)
-            throw ExceptionProviders.User.LoginPasswordFailedException;
+            throw new InvalidCredentialException();
+
+        LastLoginDate = DateTime.UtcNow;
+    }
+
+    public void Login(IdentityProvider provider)
+    {
+        var identityExists = _identities.FirstOrDefault(i => i.Provider == provider);
+        if (identityExists != null)
+        {
+            identityExists.Login();
+        }
 
         LastLoginDate = DateTime.UtcNow;
     }
