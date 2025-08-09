@@ -15,7 +15,7 @@ public class HasPermissionAttribute(
 
     public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
     {
-                var userId = context.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userId = context.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         if (string.IsNullOrEmpty(userId))
         {

@@ -29,6 +29,7 @@ public class UserAppContext(
     public DbSet<RolePermission> RolePermissions { get; set; } = null!;
     public DbSet<Session> Sessions { get; set; } = null!;
     public DbSet<PasswordHistoryEntity> PasswordHistories { get; set; } = null!;
+    public DbSet<SystemLogEntity> SystemLogs { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

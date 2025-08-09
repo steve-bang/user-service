@@ -13,7 +13,6 @@ public class CorrelationIdMiddleware
 {
     private readonly RequestDelegate _next;
 
-    private const string CorrelationIdHeader = "X-Correlation-ID";
 
     public CorrelationIdMiddleware(
         RequestDelegate next
@@ -24,10 +23,10 @@ public class CorrelationIdMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
-        var correlationId = context.Request.Headers[CorrelationIdHeader].FirstOrDefault() ?? Guid.NewGuid().ToString();
+        var correlationId = context.Request.Headers[ContextKeys.CorrelationId].FirstOrDefault() ?? Guid.NewGuid().ToString();
 
         // Set it in the response header for clients
-        context.Response.Headers[CorrelationIdHeader] = correlationId;
+        context.Response.Headers[ContextKeys.CorrelationId] = correlationId;
 
         // Push to Serilog context
         LogContext.PushProperty("CorrelationId", correlationId);
