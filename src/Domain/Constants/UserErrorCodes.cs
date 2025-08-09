@@ -18,5 +18,7 @@ public class UserErrorCodes
 
     public const string PasswordIncorrect = nameof(PasswordIncorrect);
 
+    public const string PasswordUsed = nameof(PasswordUsed);
+
     public const string UserAlreadyHasRole = nameof(UserAlreadyHasRole);
 }

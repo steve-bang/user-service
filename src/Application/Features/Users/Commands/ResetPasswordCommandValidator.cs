@@ -5,13 +5,20 @@
 */
 
 using FluentValidation;
+using Steve.ManagerHero.UserService.Domain.Constants;
+using Steve.ManagerHero.UserService.Domain.Services;
 
 namespace Steve.ManagerHero.Application.Features.Users.Commands;
 
 public class ResetPasswordCommandValidator : AbstractValidator<ResetPasswordCommand>
 {
-    public ResetPasswordCommandValidator()
+    private readonly IPasswordPolicy _passwordPolicy;
+
+
+    public ResetPasswordCommandValidator(IPasswordPolicy passwordPolicy)
     {
+        _passwordPolicy = passwordPolicy;
+
         RuleFor(x => x.Token)
             .NotEmpty()
             .WithErrorCode(ErrorCodes.InputInvalid)
@@ -21,16 +28,29 @@ public class ResetPasswordCommandValidator : AbstractValidator<ResetPasswordComm
             .NotEmpty()
             .WithErrorCode(ErrorCodes.InputInvalid)
             .WithMessage("Password is required.")
-            .MinimumLength(6)
-            .WithErrorCode(ErrorCodes.InputInvalid)
-            .WithMessage("Password must be at least 8 characters.")
-            .MaximumLength(100)
-            .WithErrorCode(ErrorCodes.InputInvalid)
-            .WithMessage("Password must be less than 100 characters.");
+            .Must(
+                BeValidPassword
+            ).WithErrorCode(UserErrorCodes.PasswordIncorrect)
+            .WithMessage(x => GetPasswordPolicyMessage(x.NewPassword));
 
         RuleFor(x => x.ConfirmPassword)
             .Equal(x => x.NewPassword)
             .WithErrorCode(ErrorCodes.InputInvalid)
             .WithMessage("Passwords do not match.");
+    }
+
+
+    private bool BeValidPassword(string password)
+    {
+        var result = _passwordPolicy.Validate(password);
+        return result.IsValid;
+    }
+
+    private string? GetPasswordPolicyMessage(string password)
+    {
+        var result = _passwordPolicy.Validate(password);
+        return result.IsValid
+            ? string.Empty
+            : result.Message;
     }
 }

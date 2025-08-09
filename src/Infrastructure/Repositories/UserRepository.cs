@@ -33,6 +33,7 @@ public class UserRepository(
     {
         return await _context.Users
             .Include(u => u.Identities)
+            .Include(u => u.PasswordHistories)
             .FirstOrDefaultAsync(x => x.EmailAddress == new EmailAddress(email));
     }
 
@@ -42,6 +43,7 @@ public class UserRepository(
             .Include(u => u.UserRoles)
             .ThenInclude(ur => ur.Role)
             .Include(u => u.Identities)
+            .Include(u => u.PasswordHistories)
             .AsSplitQuery()
             .FirstOrDefaultAsync(u => u.Id == id);
     }

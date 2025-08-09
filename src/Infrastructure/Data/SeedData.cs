@@ -47,24 +47,24 @@ public static class SeedData
             var adminRole = context.Roles.First(r => r.Name == "Admin");
             var userRole = context.Roles.First(r => r.Name == "User");
 
-            var adminUser = User.Register(
-                "Admin",
-                "User",
-                "admin@example.com",
-                "Admin123!"
-            );
-            adminUser.AddRole(adminRole);
+            // var adminUser = User.Register(
+            //     "Admin",
+            //     "User",
+            //     "admin@example.com",
+            //     "Admin123!"
+            // );
+            // adminUser.AddRole(adminRole);
 
-            var regularUser = User.Register(
-                "John",
-                "Doe",
-                "john.doe@example.com",
-                "User123!"
-            );
-            regularUser.AddRole(userRole);
+            // var regularUser = User.Register(
+            //     "John",
+            //     "Doe",
+            //     "john.doe@example.com",
+            //     "User123!"
+            // );
+            // regularUser.AddRole(userRole);
 
-            context.Users.AddRange(adminUser, regularUser);
-            context.SaveChanges();
+            // context.Users.AddRange(adminUser, regularUser);
+            // context.SaveChanges();
         }
 
 

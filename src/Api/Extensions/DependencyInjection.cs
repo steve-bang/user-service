@@ -18,6 +18,8 @@ using Steve.ManagerHero.Application.Features.Permissions.Commands;
 using Steve.ManagerHero.UserService.Application.Service;
 using Steve.ManagerHero.UserService.Application.Interfaces.Services;
 using Steve.ManagerHero.UserService.Infrastructure.Auth.External;
+using Steve.ManagerHero.UserService.Infrastructure.Security;
+using Steve.ManagerHero.UserService.Domain.Services;
 
 namespace Steve.ManagerHero.UserService.Extensions;
 
@@ -67,6 +69,11 @@ public static class DependencyInjection
         builder.Services.AddScoped<IGoogleAuthService, GoogleAuthService>();
         builder.Services.AddScoped<ExternalAuthServiceFactory>();
         builder.Services.AddScoped<IPermissionService, PermissionService>();
+
+
+        builder.Services.AddScoped<IPasswordHasher, Pbkdf2PasswordHasher>();
+        builder.Services.AddScoped<IPasswordPolicy, PasswordPolicy>();
+        builder.Services.AddScoped<IPasswordHistoryPolicyService, PasswordHistoryPolicyService>();
 
         // Register smtp setting
         builder.AddSmtpSettings();

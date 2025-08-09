@@ -5,13 +5,19 @@
 */
 
 using FluentValidation;
+using Steve.ManagerHero.UserService.Domain.Constants;
+using Steve.ManagerHero.UserService.Domain.Services;
 
 namespace Steve.ManagerHero.Application.Features.Users.Commands;
 
 public class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
 {
-    public RegisterUserCommandValidator()
+    private readonly IPasswordPolicy _passwordPolicy;
+
+    public RegisterUserCommandValidator(IPasswordPolicy passwordPolicy)
     {
+        _passwordPolicy = passwordPolicy;
+
         RuleFor(x => x.EmailAddress)
             .NotEmpty()
             .WithErrorCode(ErrorCodes.InputInvalid)
@@ -24,12 +30,10 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
             .NotEmpty()
             .WithErrorCode(ErrorCodes.InputInvalid)
             .WithMessage("Password is required.")
-            .MinimumLength(8)
-            .WithErrorCode(ErrorCodes.InputInvalid)
-            .WithMessage("Password must be at least 8 characters.")
-            .MaximumLength(100)
-            .WithErrorCode(ErrorCodes.InputInvalid)
-            .WithMessage("Password must be less than 100 characters.");
+            .Must(
+                BeValidPassword
+            ).WithErrorCode(UserErrorCodes.PasswordIncorrect)
+            .WithMessage(x => GetPasswordPolicyMessage(x.Password));
 
         RuleFor(x => x.ConfirmPassword)
             .Equal(x => x.Password)
@@ -51,5 +55,19 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
             .MaximumLength(50)
             .WithErrorCode(ErrorCodes.InputInvalid)
             .WithMessage("Last name must be less than 50 characters.");
+    }
+
+    private bool BeValidPassword(string password)
+    {
+        var result = _passwordPolicy.Validate(password);
+        return result.IsValid;
+    }
+
+    private string? GetPasswordPolicyMessage(string password)
+    {
+        var result = _passwordPolicy.Validate(password);
+        return result.IsValid
+            ? string.Empty
+            : result.Message;
     }
 }

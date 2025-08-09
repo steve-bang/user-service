@@ -75,22 +75,16 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         });
 
         // Password Hash as separate columns
+        builder.Property(ph => ph.PasswordHash)
+            .HasColumnName("password_hash")
+            .HasColumnType("text")
+            .IsRequired(false);
 
-        // When the user auth with OAuth method, the password is null
-        builder.OwnsOne(u => u.PasswordHash, passwordHash =>
-            {
-                // Configure the Hash property
-                passwordHash.Property(ph => ph.Hash)
-                    .HasColumnName("password_hash")
-                    .HasColumnType("text")
-                    .IsRequired(false);
-
-                // Configure the Salt property
-                passwordHash.Property(ph => ph.Salt)
-                    .HasColumnName("password_salt")
-                    .HasColumnType("text")
-                    .IsRequired(false);
-            });
+        // Configure the Salt property
+        builder.Property(ph => ph.PasswordSalt)
+            .HasColumnName("password_salt")
+            .HasColumnType("text")
+            .IsRequired(false);
 
         // Status properties
         builder.Property(u => u.Status)

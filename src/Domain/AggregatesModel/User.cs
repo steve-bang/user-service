@@ -5,8 +5,11 @@
 */
 
 using Steve.ManagerHero.UserService.Domain.Constants;
+using Steve.ManagerHero.UserService.Domain.Entities;
 using Steve.ManagerHero.UserService.Domain.Events;
+using Steve.ManagerHero.UserService.Domain.Services;
 using Steve.ManagerHero.UserService.Domain.ValueObjects;
+using Steve.ManagerHero.UserService.Infrastructure.Security;
 
 namespace Steve.ManagerHero.UserService.Domain.AggregatesModel;
 
@@ -31,7 +34,8 @@ public class User : AggregateRoot
     public PhoneNumber? PhoneNumber { get; private set; }
 
     // Authentication
-    public PasswordHash PasswordHash { get; private set; }
+    public string PasswordHash { get; private set; } = default!;
+    public string PasswordSalt { get; private set; } = default!;
     public DateTime? PasswordChangedDate { get; private set; }
     public DateTime? LastLoginDate { get; private set; }
 
@@ -58,14 +62,11 @@ public class User : AggregateRoot
     private readonly List<Session> _sessions = new();
     public IReadOnlyCollection<Session> Sessions => _sessions.AsReadOnly();
 
-    public string[] RoleNames => _userRoles.Any() ? _userRoles.Select(ur => ur.Role).Select(r => r.Name).ToArray()
-        : [];
-
     private readonly List<UserIdentity> _identities = new();
     public IReadOnlyCollection<UserIdentity> Identities => _identities.AsReadOnly();
 
-    //private readonly List<RefreshToken> _refreshTokens = new();
-    //public IReadOnlyCollection<RefreshToken> RefreshTokens => _refreshTokens.AsReadOnly();
+    private readonly List<PasswordHistoryEntity> _passwordHistories = new();
+    public IReadOnlyCollection<PasswordHistoryEntity> PasswordHistories => _passwordHistories.AsReadOnly();
 
     public User() : base() { }
 
@@ -74,13 +75,15 @@ public class User : AggregateRoot
         string firstName,
         string lastName,
         EmailAddress emailAddress,
-        PasswordHash passwordHash
+        string passwordHash,
+        string passwordSalt
     ) : this()
     {
         FirstName = firstName;
         LastName = lastName;
         EmailAddress = emailAddress;
         PasswordHash = passwordHash;
+        PasswordSalt = passwordSalt;
         DisplayName = $"{firstName} {lastName}";
         Status = UserStatus.Active;
         IsActive = true;
@@ -94,7 +97,8 @@ public class User : AggregateRoot
         string firstName,
         string lastName,
         string email,
-        string password
+        string passwordHash,
+        string passwordSalt
     )
     {
         // Validate inputs
@@ -105,9 +109,8 @@ public class User : AggregateRoot
             throw new InvalidOperationException("Last name cannot be empty");
 
         var emailAddress = new EmailAddress(email);
-        var passwordHash = PasswordHash.Create(password);
 
-        var user = new User(firstName, lastName, emailAddress, passwordHash);
+        var user = new User(firstName, lastName, emailAddress, passwordHash, passwordSalt);
 
         user._identities.Add(UserIdentity.RegisterByEmail(user));
 
@@ -196,26 +199,45 @@ public class User : AggregateRoot
         UpdatedAt = DateTime.UtcNow;
     }
 
-    public void ChangePassword(string currentPassword, string newPassword)
+    public void ChangePassword(string currentPassword, string newPassword, IPasswordHasher passwordHasher, IPasswordHistoryPolicyService? policy = null)
     {
-        if (PasswordHash.Verify(currentPassword) == false)
+        // Verify password
+        if (passwordHasher.Verify(currentPassword, PasswordHash, PasswordSalt) == false)
             throw new PasswordIncorrectException();
 
-        UpdatePassword(newPassword);
+        // Reset password
+        ResetPassword(newPassword, passwordHasher, policy);
     }
 
-    public void UpdatePassword(string newPassword)
+    public void ResetPassword(string newPassword, IPasswordHasher passwordHasher, IPasswordHistoryPolicyService? policy = null)
     {
-        var newPasswordHash = PasswordHash.Create(newPassword);
-        PasswordHash = newPasswordHash;
+        // Hash new password
+        (string passwordHash, string passwordSalt) = passwordHasher.Hash(newPassword);
+
+        if (policy != null)
+        {
+            // policy will check reuse
+            if (policy.IsPasswordUsed(this, newPassword))
+                throw new ConflictException(UserErrorCodes.PasswordUsed, UserErrorMessages.PasswordUsedMessage);
+
+
+            // add the current password to history BEFORE updating (or keep ordering consistent with your policy)
+            _passwordHistories.Add(new PasswordHistoryEntity(Id, passwordHash, passwordSalt));
+
+            if (_passwordHistories.Count != 1)
+                // trim to policy count
+                _passwordHistories.RemoveRange(policy.MaxHistoryCount, Math.Max(0, _passwordHistories.Count - policy.MaxHistoryCount));
+        }
+
+        PasswordHash = passwordHash;
+        PasswordSalt = passwordSalt;
+
         PasswordChangedDate = DateTime.UtcNow;
         UpdatedAt = DateTime.UtcNow;
 
-        // Revoke all session
-        _sessions.Clear();
-
         AddEvent(new UserPasswordChangedEvent(this));
     }
+
 
     public void VerifyEmail()
     {
@@ -280,18 +302,8 @@ public class User : AggregateRoot
         UpdatedAt = DateTime.UtcNow;
     }
 
-    // public bool HasPermission(string permissionCode)
-    // {
-    //     return _roles.Any(r => r.RolePermissions.Any(p => p.Permission.Code == permissionCode));
-    // }
-
     public void LoginPassword(string passwordRequest)
     {
-        bool isCorrectPassword = PasswordHash.Verify(passwordRequest);
-
-        if (!isCorrectPassword)
-            throw new InvalidCredentialException();
-
         LastLoginDate = DateTime.UtcNow;
     }
 

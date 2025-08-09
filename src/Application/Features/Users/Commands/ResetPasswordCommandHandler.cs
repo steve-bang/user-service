@@ -5,13 +5,17 @@
 */
 
 
+using Steve.ManagerHero.UserService.Domain.Services;
 using Steve.ManagerHero.UserService.Helpers;
+using Steve.ManagerHero.UserService.Infrastructure.Security;
 
 namespace Steve.ManagerHero.Application.Features.Users.Commands;
 
 public class ResetPasswordCommandHandler(
     IUnitOfWork _unitOfWork,
-    IMediator _mediator
+    IMediator _mediator,
+    IPasswordHasher _passwordHasher,
+    IPasswordHistoryPolicyService _passwordHistoryPolicy
 ) : IRequestHandler<ResetPasswordCommand, bool>
 {
     public async Task<bool> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
@@ -34,7 +38,7 @@ public class ResetPasswordCommandHandler(
                 User? user = await _unitOfWork.Users.GetByIdAsync(userDecrypt.Id, cancellationToken) ?? throw new UserNotFoundException();
 
                 // Update password
-                user.UpdatePassword(request.NewPassword);
+                user.ResetPassword(request.NewPassword, _passwordHasher, _passwordHistoryPolicy);
 
                 _unitOfWork.Users.Update(user);
 

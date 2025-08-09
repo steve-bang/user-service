@@ -50,7 +50,7 @@ public class UsersController : ControllerBase
 
     [HttpPut("{id}/change-password")]
     [Authorize]
-    [HasPermission("user.manager")]
+    [HasPermission(Permissions.UserManage)]
     public async Task<IActionResult> ChangePassword(Guid id, [FromBody] ChangePasswordRequest request)
     {
 
