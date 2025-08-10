@@ -1,11 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Secure Login Link</title>
+    <style type="text/css">
+        /* Base styles - matching your existing template */
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             line-height: 1.6;
+            color: #333333;
+            background-color: #f7f7f7;
         }
 
         .container {
@@ -14,33 +23,149 @@
             padding: 20px;
         }
 
-        .button {
-            background-color: #6f42c1;
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 4px;
-            display: inline-block;
+        .card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
         }
 
-        .footer {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #777;
+        .header {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .content h2 {
+            margin-top: 0;
+            color: #2d3748;
+            font-size: 20px;
+        }
+
+        .content p {
+            margin-bottom: 25px;
+            font-size: 16px;
+            color: #4a5568;
+        }
+
+        /* Magic Link specific styles */
+        .magic-link-container {
+            text-align: center;
+            margin: 30px 0;
+            padding: 25px;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            border: 1px dashed #cbd5e0;
+        }
+
+        .magic-link-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 15px;
+            background-color: #ebf4ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white !important;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        /* Footer */
+        .email-footer {
+            padding: 20px;
+            text-align: center;
+            font-size: 13px;
+            color: #6c757d;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .security-note {
+            font-size: 14px;
+            color: #718096;
+            padding: 15px;
+            background-color: #f8fafc;
+            border-radius: 6px;
+            margin: 25px 0;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .content {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h2>Your Magic Login Link</h2>
-        <p>Dear {{UserName}},</p>
-        <p>Click the button below to log in to your account:</p>
-        <a href="{{MagicLink}}" class="button">Login Now</a>
-        <p>This link will expire in {{ExpiryMinutes}} minutes.</p>
-        <p>If you didn't request this, please ignore this email.</p>
-        <div class="footer">
-            <p>Best regards,<br>The Support Team</p>
+        <div class="card">
+            <div class="header">
+                <h1>Your Secure Login Link</h1>
+            </div>
+
+            <div class="content">
+                <h2>Hi,</h2>
+
+                <p>We've received a request to log in to your {{tenant.name}} account. Click the button below to sign in
+                    instantly:</p>
+
+                <div class="magic-link-container">
+                    <div class="magic-link-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3Z"
+                                fill="#4C6EF5" />
+                            <path
+                                d="M12 16C11.4477 16 11 15.5523 11 15C11 14.4477 11.4477 14 12 14C12.5523 14 13 14.4477 13 15C13 15.5523 12.5523 16 12 16Z"
+                                fill="white" />
+                            <path
+                                d="M12 13C11.4477 13 11 12.5523 11 12V8C11 7.44772 11.4477 7 12 7C12.5523 7 13 7.44772 13 8V12C13 12.5523 12.5523 13 12 13Z"
+                                fill="white" />
+                        </svg>
+                    </div>
+                    <a href="{{MagicLink}}" class="button">Sign In Instantly</a>
+                    <p style="font-size: 14px; margin-top: 10px;">This link expires in [15] minutes</p>
+                </div>
+                <p>Alternatively, copy and paste this link into your browser:</p>
+                <p
+                    style="word-break: break-all; font-size: 14px; color: #4a6cf7; background-color: #f0f4ff; padding: 12px; border-radius: 6px;">
+                    {{MagicLink}}
+                </p>
+                
+                <p>Best regards,<br>The Team</p>
+            </div>
+
+            <div class="email-footer">
+                <p><a href="https://steve-bang.com" style="color: #4361ee; text-decoration: none;">Power by Steve
+                        Bang</a></p>
+            </div>
         </div>
     </div>
 </body>

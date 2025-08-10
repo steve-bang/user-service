@@ -20,6 +20,7 @@ using Steve.ManagerHero.UserService.Application.Interfaces.Services;
 using Steve.ManagerHero.UserService.Infrastructure.Auth.External;
 using Steve.ManagerHero.UserService.Infrastructure.Security;
 using Steve.ManagerHero.UserService.Domain.Services;
+using Steve.ManagerHero.BuildingBlocks.Email;
 
 namespace Steve.ManagerHero.UserService.Extensions;
 
@@ -75,8 +76,10 @@ public static class DependencyInjection
         builder.Services.AddScoped<IPasswordPolicy, PasswordPolicy>();
         builder.Services.AddScoped<IPasswordHistoryPolicyService, PasswordHistoryPolicyService>();
 
+        builder.Services.AddScoped<IEmailService, EmailService>();
+
         // Register smtp setting
-        builder.AddSmtpSettings();
+        builder.AddEmailService();
 
         // Add caching
         builder.AddCacheServices();
@@ -100,27 +103,6 @@ public static class DependencyInjection
         builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<ISessionRepository, SessionRepository>();
-
-        return builder;
-    }
-
-    public static IHostApplicationBuilder AddSmtpSettings(this IHostApplicationBuilder builder)
-    {
-        var smtpSetting = builder.Configuration.GetSection("SMTP");
-        if (!smtpSetting.Exists())
-        {
-            throw new NotImplementedException("smtp section is missing in the appsettings.json file.");
-        }
-
-        var smtpSettingValue = smtpSetting.Get<SmtpSettings>();
-
-        if (smtpSettingValue == null)
-        {
-            throw new NotImplementedException("smtp section is missing in the appsettings.json file.");
-        }
-        builder.Services.AddSingleton(smtpSettingValue);
-
-        builder.Services.AddScoped<IEmailService, EmailService>();
 
         return builder;
     }

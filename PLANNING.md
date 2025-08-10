@@ -89,7 +89,7 @@ src/
 - [x] Password reset flow
 - [x] Password change endpoint
 - [x] Password strength validation
-- [ ] Password history tracking
+- [x] Password history tracking
 
 ### v0.9: Admin Features
 - [x] User search/filter
@@ -111,7 +111,7 @@ src/
 - [ ] Permission hierarchy
 - [ ] Permission groups
 - [ ] Policy-based authorization
-- [ ] Permission caching
+- [x] Permission caching
 
 ### v1.2: Advanced Access Control
 - [ ] Time-based permissions

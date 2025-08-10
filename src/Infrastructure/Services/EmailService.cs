@@ -5,61 +5,28 @@
 */
 
 using System.Dynamic;
-using System.Net;
-using System.Net.Mail;
 using System.Text;
+using Steve.ManagerHero.BuildingBlocks.Email;
 
 namespace Steve.ManagerHero.UserService.Infrastructure.Services;
 
 public class EmailService : IEmailService
 {
-    private readonly SmtpSettings _smtpSettings;
+    private readonly IEmailSender _emailSender;
     private readonly ProjectSettings _projectSettings;
-
     private readonly ILogger<EmailService> _logger;
 
     public EmailService(
-        SmtpSettings smtpSettings,
+        IEmailSender emailSender,
         ProjectSettings projectSettings,
         ILogger<EmailService> logger
     )
     {
-        _smtpSettings = smtpSettings;
+        _emailSender = emailSender;
         _projectSettings = projectSettings;
         _logger = logger;
     }
 
-    public async Task SendEmailAsync(string to, string subject, string templateContent, ExpandoObject data)
-    {
-        try
-        {
-            var body = ReplaceTemplatePlaceholders(templateContent, data);
-
-            using var client = new SmtpClient(_smtpSettings.Host, _smtpSettings.Port)
-            {
-                Credentials = new NetworkCredential(_smtpSettings.Username, _smtpSettings.Password),
-                EnableSsl = _smtpSettings.EnableSsl
-            };
-
-            var mailMessage = new MailMessage
-            {
-                From = new MailAddress(_smtpSettings.FromEmail, _smtpSettings.FromName),
-                Subject = subject,
-                Body = body,
-                IsBodyHtml = true
-            };
-            mailMessage.To.Add(to);
-
-            _logger.LogInformation("Start sending an email {to} with the subject is {subject}", to, subject);
-
-            await client.SendMailAsync(mailMessage);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogWarning("Error while trying to send an email to {to} with the subject is {subject}", to, subject);
-            _logger.LogWarning(ex, "Error while trying to send an email detail");
-        }
-    }
 
     private string ReplaceTemplatePlaceholders(string template, ExpandoObject data)
     {
@@ -84,13 +51,13 @@ public class EmailService : IEmailService
             dynamic data = new ExpandoObject();
             data.VerificationLink = verificationLink;
             data.ProjectName = _projectSettings.Name;
-            string title = $"{_projectSettings.Name} - Verify Your Email Address";
+            string subject = $"{_projectSettings.Name} - Verify Your Email Address";
 
-            await SendEmailAsync(
-                email,
-                title,
-                template,
-                data
+            await SendAsync(
+                emailTo: email,
+                subject: subject,
+                data: data,
+                template: template
             );
         }
         catch (Exception ex)
@@ -106,13 +73,13 @@ public class EmailService : IEmailService
         dynamic data = new ExpandoObject();
         data.ResetLink = resetLink;
         data.ExpiryMinutes = expiryMinutes;
-        string title = $"{_projectSettings.Name} - Password Reset";
+        string subject = $"{_projectSettings.Name} - Password Reset";
 
-        await SendEmailAsync(
-            email,
-            title,
-            template,
-            data
+        await SendAsync(
+            emailTo: email,
+            subject: subject,
+            data: data,
+            template: template
         );
     }
 
@@ -123,13 +90,31 @@ public class EmailService : IEmailService
         dynamic data = new ExpandoObject();
         data.VertificationLink = verificationLink;
         data.ExpiryMinutes = expiryMinutes;
-        string title = $"{_projectSettings.Name} - Verify Your Email";
+        string subject = $"{_projectSettings.Name} - Verify Your Email";
 
-        await SendEmailAsync(
-            email,
-            title,
-            template,
-            data
+        await SendAsync(
+            emailTo: email,
+            subject: subject,
+            data: data,
+            template: template
+        );
+    }
+
+    private async Task SendAsync(
+        string emailTo,
+        string subject,
+        ExpandoObject data,
+        string template
+    )
+    {
+        var body = ReplaceTemplatePlaceholders(template, data);
+
+        await _emailSender.SendAsync(
+            new BuildingBlocks.Email.Options.EmailRecipientOptions(
+                emailTo: emailTo,
+                subject: subject,
+                body: body
+            )
         );
     }
 }
