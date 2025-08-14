@@ -1,18 +1,15 @@
 using System.Security.Claims;
-using Steve.ManagerHero.UserService.Domain.AggregatesModel;
 
-namespace Steve.ManagerHero.UserService.Application.Auth;
+namespace Steve.ManagerHero.BuildingBlocks.Security.Jwt;
 
 public interface IJwtHandler
 {
     /// <summary>
     /// Generates a JWT token for a user.
     /// </summary>
-    /// <param name="user">The user to generate the token for.</param>
-    /// <param name="accessToken">The generated access token.</param>
-    /// <param name="refreshToken">The generated refresh token.</param>
-    /// <param name="expires">The expiration date of the token.</param>
-    void GenerateToken(User user, Session session, out string accessToken, out string refreshToken, out DateTime expires);
+    /// <param name="userId">The id of the user to generate the token for.</param>
+    /// <param name="sessionId">The id of the session generated access token.</param>
+    (string accessToken, string refreshToken, DateTime expires) GenerateToken(Guid userId, Guid sessionId);
 
     /// <summary>
     /// Validates a JWT token.

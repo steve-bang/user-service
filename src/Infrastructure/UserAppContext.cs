@@ -30,6 +30,7 @@ public class UserAppContext(
     public DbSet<Session> Sessions { get; set; } = null!;
     public DbSet<PasswordHistoryEntity> PasswordHistories { get; set; } = null!;
     public DbSet<SystemLogEntity> SystemLogs { get; set; } = null!;
+    public DbSet<Otp> Otps { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

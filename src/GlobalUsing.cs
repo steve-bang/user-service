@@ -10,3 +10,4 @@ global using Steve.ManagerHero.SharedKernel.Application.Interface;
 global using Steve.ManagerHero.SharedKernel.Application.Constants;
 global using Steve.ManagerHero.SharedKernel.Application.Pagination;
 global using Steve.ManagerHero.SharedKernel.Application.Exception;
+global using Steve.ManagerHero.UserService.Infrastructure.Security;

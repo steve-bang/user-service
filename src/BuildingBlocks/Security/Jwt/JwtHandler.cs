@@ -1,21 +1,20 @@
 
 using System.Security.Claims;
-using Steve.ManagerHero.UserService.Application.Auth;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Steve.ManagerHero.BuildingBlocks.Authentication;
 
-namespace Steve.ManagerHero.UserService.Infrastructure.Auth;
+namespace Steve.ManagerHero.BuildingBlocks.Security.Jwt;
 
 public class JwtHandler : IJwtHandler
 {
 
-    private readonly JwtSettings _jwtSettings;
+    private readonly JwtOptions _jwtOptions;
 
-    public JwtHandler(JwtSettings jwtSettings)
+    public JwtHandler(JwtOptions jwtOptions)
     {
-        _jwtSettings = jwtSettings;
+        _jwtOptions = jwtOptions;
     }
 
     public Guid ExtraSessionId(string accessToken)
@@ -56,46 +55,48 @@ public class JwtHandler : IJwtHandler
     }
 
 
-    public void GenerateToken(User user, Session session, out string accessToken, out string refreshToken, out DateTime expires)
+    public (string accessToken, string refreshToken, DateTime expires) GenerateToken(Guid userId, Guid sessionId)
     {
         var claims = new List<Claim>
         {
-            new (JwtClaimKeys.UserId, user.Id.ToString()),
+            new (JwtClaimKeys.UserId, userId.ToString()),
             new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new (JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()),
-            new (JwtClaimKeys.SessionId, session.Id.ToString()),
+            new (JwtClaimKeys.SessionId, sessionId.ToString()),
         };
 
         var signingCredentials = new SigningCredentials(
-            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret)),
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Secret)),
             SecurityAlgorithms.HmacSha256
         );
 
-        expires = DateTime.Now.AddHours(_jwtSettings.AccessTokenExpiryHours);
+        DateTime expires = DateTime.Now.AddHours(_jwtOptions.AccessTokenExpiryHours);
 
         // Generate the tokens
-        accessToken = new JwtSecurityTokenHandler().WriteToken(new JwtSecurityToken(
-            issuer: _jwtSettings.Issuer,
+        string accessToken = new JwtSecurityTokenHandler().WriteToken(new JwtSecurityToken(
+            issuer: _jwtOptions.Issuer,
             claims: claims,
             expires: expires,
-            audience: _jwtSettings.Audience,
+            audience: _jwtOptions.Audience,
             signingCredentials: signingCredentials
         ));
 
         // Generate the refresh token
-        refreshToken = new JwtSecurityTokenHandler().WriteToken(new JwtSecurityToken(
-            issuer: _jwtSettings.Issuer,
+        string refreshToken = new JwtSecurityTokenHandler().WriteToken(new JwtSecurityToken(
+            issuer: _jwtOptions.Issuer,
             claims: claims,
-            expires: DateTime.Now.AddHours(_jwtSettings.RefreshTokenExpiryHours),
-            audience: _jwtSettings.Audience,
+            expires: DateTime.Now.AddHours(_jwtOptions.RefreshTokenExpiryHours),
+            audience: _jwtOptions.Audience,
             signingCredentials: signingCredentials
         ));
+
+        return (accessToken, refreshToken, expires);
     }
 
     public IEnumerable<Claim> ValidateToken(string token)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
+        var key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
 
         try
         {
@@ -105,8 +106,8 @@ public class JwtHandler : IJwtHandler
                 IssuerSigningKey = new SymmetricSecurityKey(key),
                 ValidateIssuer = true,
                 ValidateAudience = true,
-                ValidIssuer = _jwtSettings.Issuer,
-                ValidAudience = _jwtSettings.Audience,
+                ValidIssuer = _jwtOptions.Issuer,
+                ValidAudience = _jwtOptions.Audience,
                 ValidateLifetime = true
             }, out var validatedToken);
 

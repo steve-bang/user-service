@@ -21,4 +21,6 @@ public class UserErrorMessages
     public const string PasswordUsedMessage = "Password has been used recently.";
 
     public const string UserAlreadyHasRoleMessage = "User already has this role.";
+
+    public const string PhoneNumberInvalidMessage = "The phone number is invalid. Phone number must be in E.164 format";
 }

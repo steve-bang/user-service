@@ -1,43 +1,34 @@
-/*
-* Author: Steve Bang
-* History:
-* - [2025-04-18] - Created by mrsteve.bang@gmail.com
-*/
-
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Steve.ManagerHero.Application.Features.Sessions.Queries;
-using Steve.ManagerHero.BuildingBlocks.Authentication;
-using Steve.ManagerHero.UserService.Application.Auth;
-using Steve.ManagerHero.UserService.Infrastructure.Auth;
 
-namespace Steve.ManagerHero.UserService.Extensions;
+namespace Steve.ManagerHero.BuildingBlocks.Security.Jwt;
 
-public static class AuthenticationExtensions
+public static class DependencyInjection
 {
     /// <summary>
     /// Add the authentication method to the application
     /// </summary>
     /// <param name="builder">The host builder</param>
     /// <exception cref="NotImplementedException"></exception>
-    public static void AddAuthenticationService(this IHostApplicationBuilder builder)
+    public static void AddJwtAuthService(this IHostApplicationBuilder builder)
     {
         // Add the JWT settings
-        var jwtSettings = builder.Configuration.GetSection("Jwt");
-        if (!jwtSettings.Exists())
+        var jwtOptions = builder.Configuration.GetSection("Jwt");
+        if (!jwtOptions.Exists())
         {
             throw new NotImplementedException("JwtSettings section is missing in the appsettings.json file.");
         }
 
-        var jwtSettingsValue = jwtSettings.Get<JwtSettings>();
+        var jwtOptionsValue = jwtOptions.Get<JwtOptions>();
 
-        if (jwtSettingsValue == null)
+        if (jwtOptionsValue == null)
         {
             throw new NotImplementedException("JwtSettings section is missing in the appsettings.json file.");
         }
-        builder.Services.AddSingleton(jwtSettingsValue);
+        builder.Services.AddSingleton(jwtOptionsValue);
 
         // Add the JWT handler
         builder.Services.AddScoped<IJwtHandler, JwtHandler>();
@@ -50,8 +41,8 @@ public static class AuthenticationExtensions
             options =>
             {
                 // Basic JWT settings
-                options.Authority = jwtSettingsValue.Issuer;
-                options.Audience = jwtSettingsValue.Audience;
+                options.Authority = jwtOptionsValue.Issuer;
+                options.Audience = jwtOptionsValue.Audience;
                 options.RequireHttpsMetadata = false;
 
                 // Token validation parameters (signature, issuer, lifetime, etc.)
@@ -61,9 +52,9 @@ public static class AuthenticationExtensions
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtSettingsValue.Issuer,
-                    ValidAudience = jwtSettingsValue.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettingsValue.Secret)),
+                    ValidIssuer = jwtOptionsValue.Issuer,
+                    ValidAudience = jwtOptionsValue.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptionsValue.Secret)),
                 };
 
                 // JWT Event Handlers

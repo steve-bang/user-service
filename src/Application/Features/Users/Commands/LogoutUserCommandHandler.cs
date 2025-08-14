@@ -4,7 +4,7 @@
 * - [2025-04-19] - Created by mrsteve.bang@gmail.com
 */
 
-using Steve.ManagerHero.UserService.Application.Auth;
+using Steve.ManagerHero.BuildingBlocks.Security.Jwt;
 
 namespace Steve.ManagerHero.Application.Features.Users.Commands;
 

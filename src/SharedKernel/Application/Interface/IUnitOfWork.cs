@@ -20,6 +20,7 @@ public interface IUnitOfWork : IDisposable
     IPermissionRepository Permissions { get; }
     IIdentityRepository Identities { get; }
     ISystemLogRepository SystemLogs { get; }
+    IOtpRepository Otps { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 

@@ -23,6 +23,67 @@ namespace UserService.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.Otp", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("ConsumedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("consumed_at");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<DateTime>("ExpirationTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expiration_time");
+
+                    b.Property<bool>("IsUsed")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_used");
+
+                    b.Property<string>("OtpHash")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("otp_hash");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("phone_number");
+
+                    b.Property<int>("RetryCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0)
+                        .HasColumnName("retry_count");
+
+                    b.Property<string>("Salt")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("salt");
+
+                    b.Property<short>("Type")
+                        .HasColumnType("smallint")
+                        .HasColumnName("type");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Otp", "YOUR_SCHEMA");
+                });
+
             modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.Permission", b =>
                 {
                     b.Property<Guid>("Id")
@@ -470,6 +531,16 @@ namespace UserService.Migrations
                     b.ToTable("System_Log", "YOUR_SCHEMA");
                 });
 
+            modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.Otp", b =>
+                {
+                    b.HasOne("Steve.ManagerHero.UserService.Domain.AggregatesModel.User", "User")
+                        .WithMany("Otps")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.RolePermission", b =>
                 {
                     b.HasOne("Steve.ManagerHero.UserService.Domain.AggregatesModel.Permission", "Permission")
@@ -601,6 +672,8 @@ namespace UserService.Migrations
             modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.User", b =>
                 {
                     b.Navigation("Identities");
+
+                    b.Navigation("Otps");
 
                     b.Navigation("PasswordHistories");
 

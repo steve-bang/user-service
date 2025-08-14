@@ -68,6 +68,9 @@ public class User : AggregateRoot
     private readonly List<PasswordHistoryEntity> _passwordHistories = new();
     public IReadOnlyCollection<PasswordHistoryEntity> PasswordHistories => _passwordHistories.AsReadOnly();
 
+    private readonly List<Otp> _otps = new();
+    public IReadOnlyCollection<Otp> Otps => _otps.AsReadOnly();
+
     public User() : base() { }
 
     // Constructor for new user registration
@@ -302,7 +305,7 @@ public class User : AggregateRoot
         UpdatedAt = DateTime.UtcNow;
     }
 
-    public void LoginPassword(string passwordRequest)
+    public void LoginPassword()
     {
         LastLoginDate = DateTime.UtcNow;
     }

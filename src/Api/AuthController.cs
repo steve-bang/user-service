@@ -58,6 +58,27 @@ public class AuthController : ControllerBase
         return ApiResponseSuccess<AuthenticationResponseDto>.BuildOKObjectResult(result);
     }
 
+    [HttpPost("passwordless/sms/otp")]
+    public async Task<IActionResult> LoginPhoneOTPRequest([FromBody] LoginPhoneOTPStartRequest loginPhoneOTPStartRequest)
+    {
+        var resultMessage = await _mediator.Send(new LoginPhoneOtpRequestQuery(
+            PhoneNumber: loginPhoneOTPStartRequest.PhoneNumber
+        ));
+
+        return ApiResponseSuccess<string>.BuildOKObjectResult(resultMessage);
+    }
+
+    [HttpPost("passwordless/sms/verify-otp-login")]
+    public async Task<IActionResult> VerifyLoginOTPCode([FromBody] LoginPhoneOTPCompleteRequest request)
+    {
+        var result = await _mediator.Send(new LoginPhoneOtpVerifyQuery(
+            PhoneNumber: request.PhoneNumber,
+            OtpCode: request.OtpCode
+        ));
+
+        return ApiResponseSuccess<AuthenticationResponseDto>.BuildOKObjectResult(result);
+    }
+
     [HttpPost("forgot-password")]
     public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
     {

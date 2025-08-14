@@ -21,6 +21,7 @@ using Steve.ManagerHero.UserService.Infrastructure.Auth.External;
 using Steve.ManagerHero.UserService.Infrastructure.Security;
 using Steve.ManagerHero.UserService.Domain.Services;
 using Steve.ManagerHero.BuildingBlocks.Email;
+using Steve.ManagerHero.BuildingBlocks.SMS;
 
 namespace Steve.ManagerHero.UserService.Extensions;
 
@@ -80,6 +81,7 @@ public static class DependencyInjection
 
         // Register smtp setting
         builder.AddEmailService();
+        builder.AddSmsService();
 
         // Add caching
         builder.AddCacheServices();

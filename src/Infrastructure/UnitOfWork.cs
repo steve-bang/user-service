@@ -16,6 +16,7 @@ public class UnitOfWork(UserAppContext _context) : IUnitOfWork
     private ISessionRepository? _sessionRepository;
     private IPermissionRepository? _permissionRepository;
     private ISystemLogRepository? _systemLogRepository;
+    private IOtpRepository? _otpRepository;
 
     public UserAppContext Context => _context;
     public IUserRepository Users => _userRepository ??= new UserRepository(_context);
@@ -24,6 +25,7 @@ public class UnitOfWork(UserAppContext _context) : IUnitOfWork
     public ISessionRepository Sessions => _sessionRepository ??= new SessionRepository(_context);
     public IPermissionRepository Permissions => _permissionRepository ??= new PermissionRepository(_context);
     public ISystemLogRepository SystemLogs => _systemLogRepository ??= new SystemLogRepository(_context);
+    public IOtpRepository Otps => _otpRepository ??= new OtpRepository(_context);
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

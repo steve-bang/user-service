@@ -7,7 +7,6 @@
 using AutoMapper;
 using Steve.ManagerHero.UserService.Domain.Constants;
 using Steve.ManagerHero.UserService.Domain.Services;
-using Steve.ManagerHero.UserService.Infrastructure.Security;
 
 namespace Steve.ManagerHero.Application.Features.Users.Commands;
 

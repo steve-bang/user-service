@@ -4,12 +4,13 @@
 * - [2025-04-18] - Created by mrsteve.bang@gmail.com
 */
 
-using Steve.ManagerHero.UserService.Application.Auth;
+using Steve.ManagerHero.BuildingBlocks.Security.Jwt;
 
 namespace Steve.ManagerHero.Application.Features.Users.Queries;
 
 public class LoginPasswordQueryHandler(
     IUnitOfWork _unitOfWork,
+    IPasswordHasher _passwordHasher,
     IHttpContextAccessor _httpContextAccessor,
     IJwtHandler _jwtHandler
 ) : IRequestHandler<LoginPasswordQuery, AuthenticationResponseDto>
@@ -23,14 +24,17 @@ public class LoginPasswordQueryHandler(
             identity.Provider == UserService.Domain.Constants.IdentityProvider.Email
             ) ?? throw new InvalidCredentialException();
 
+        if (!_passwordHasher.Verify(request.Password, user.PasswordHash, user.PasswordSalt))
+            throw new InvalidCredentialException();
+
         // Login with password
-        user.LoginPassword(request.Password);
+        user.LoginPassword();
 
         // Intialize session object.
         var session = new Session(user);
 
         // Generate token
-        _jwtHandler.GenerateToken(user, session, out string accessToken, out string refreshToken, out DateTime expriresIn);
+        (string accessToken, string refreshToken, DateTime expires) = _jwtHandler.GenerateToken(user.Id, session.Id);
 
         // Add session
         if (_httpContextAccessor.HttpContext != null)
@@ -38,7 +42,7 @@ public class LoginPasswordQueryHandler(
             session.Update(
                 refreshToken,
                 _httpContextAccessor.HttpContext,
-                expriresIn
+                expires
             );
         }
 
@@ -49,7 +53,7 @@ public class LoginPasswordQueryHandler(
         return new AuthenticationResponseDto(
             AccessToken: accessToken,
             RefreshToken: refreshToken,
-            ExpiresIn: expriresIn
+            ExpiresIn: expires
         );
     }
 }

@@ -1,6 +1,4 @@
 
-using Steve.ManagerHero.UserService.Infrastructure.Security;
-
 namespace Steve.ManagerHero.UserService.Domain.Services;
 
 public interface IPasswordPolicy

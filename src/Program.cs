@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using Steve.ManagerHero.BuildingBlocks.Security.Jwt;
+using Steve.ManagerHero.BuildingBlocks.Security.Otp;
 using Steve.ManagerHero.UserService.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,8 +20,11 @@ try
     builder.Services.AddControllers();
 
     builder.Services.AddAutoMapper(typeof(Program));
-    builder.AddCoreServices()
-            .AddAuthenticationService();
+
+    builder
+        .AddCoreServices()
+        .AddPolicyService()
+        .AddJwtAuthService();
 
     builder.Services.Configure<ApiBehaviorOptions>(options =>
     {

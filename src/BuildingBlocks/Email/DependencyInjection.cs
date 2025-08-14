@@ -8,8 +8,8 @@ public static class DependencyInjection
 {
     public static IHostApplicationBuilder AddEmailService(this IHostApplicationBuilder builder)
     {
-        var smtpSetting = builder.Configuration.GetSection(nameof(EmailOptions));
-        if (!smtpSetting.Exists())
+        var smtpOptions = builder.Configuration.GetSection(nameof(EmailOptions));
+        if (!smtpOptions.Exists())
         {
             throw new NotImplementedException($"{nameof(EmailOptions)} section is missing in the appsettings.json file.");
         }
@@ -17,7 +17,7 @@ public static class DependencyInjection
         builder.Services.TryAddSingleton<IEmailSender, MailkitEmailSender>();
 
         builder.Services.AddOptions<MailkitOptions>()
-            .Bind(smtpSetting)
+            .Bind(smtpOptions)
             .ValidateOnStart();
 
         return builder;

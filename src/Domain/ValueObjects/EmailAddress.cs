@@ -4,8 +4,6 @@
 * - [2025-04-11] - Created by mrsteve.bang@gmail.com
 */
 
-using System.Text.RegularExpressions;
-
 namespace Steve.ManagerHero.UserService.Domain.ValueObjects;
 
 public sealed class EmailAddress : ValueObject
@@ -17,7 +15,7 @@ public sealed class EmailAddress : ValueObject
         if (string.IsNullOrWhiteSpace(value))
             throw new InvalidOperationException("Email cannot be empty");
             
-        if (!Regex.IsMatch(value, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+        if (!System.Text.RegularExpressions.Regex.IsMatch(value, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
             throw new InvalidOperationException("Email is invalid");
             
         Value = value.ToLowerInvariant().Trim();

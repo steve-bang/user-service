@@ -29,9 +29,9 @@ public class UserRepository(
         return userDeleted.State == EntityState.Deleted;
     }
 
-    public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
+    public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
-        return await _context.Users
+        return _context.Users
             .Include(u => u.Identities)
             .Include(u => u.PasswordHistories)
             .FirstOrDefaultAsync(x => x.EmailAddress == new EmailAddress(email));
@@ -46,6 +46,14 @@ public class UserRepository(
             .Include(u => u.PasswordHistories)
             .AsSplitQuery()
             .FirstOrDefaultAsync(u => u.Id == id);
+    }
+
+    public Task<User?> GetByPhoneNumberAsync(string phoneNumber, CancellationToken cancellationToken = default)
+    {
+        return _context.Users
+            .Include(u => u.Identities)
+            .Include(u => u.PasswordHistories)
+            .FirstOrDefaultAsync(x => x.PhoneNumber == new PhoneNumber(phoneNumber));
     }
 
     public Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default)
