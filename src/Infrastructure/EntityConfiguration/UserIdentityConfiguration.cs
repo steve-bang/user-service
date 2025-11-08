@@ -10,7 +10,7 @@ public class UserIdentityConfiguration : IEntityTypeConfiguration<UserIdentity>
 {
     public void Configure(EntityTypeBuilder<UserIdentity> builder)
     {
-        builder.ToTable("User_Identity");
+        builder.ToTable("user_identity");
 
         builder.HasKey(us => us.Id);
 

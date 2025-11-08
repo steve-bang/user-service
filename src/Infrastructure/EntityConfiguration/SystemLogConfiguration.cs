@@ -9,7 +9,7 @@ public class SystemLogConfiguration : IEntityTypeConfiguration<SystemLogEntity>
 {
     public void Configure(EntityTypeBuilder<SystemLogEntity> builder)
     {
-        builder.ToTable("System_Log");
+        builder.ToTable("system_log");
 
         builder.HasKey(us => us.Id);
 

@@ -9,7 +9,7 @@ public class PasswordHistoryConfiguration : IEntityTypeConfiguration<PasswordHis
 {
     public void Configure(EntityTypeBuilder<PasswordHistoryEntity> builder)
     {
-        builder.ToTable("Password_History");
+        builder.ToTable("password_history");
 
         builder.HasKey(us => us.Id);
 
@@ -23,7 +23,7 @@ public class PasswordHistoryConfiguration : IEntityTypeConfiguration<PasswordHis
             .IsRequired();
 
         // Configure the Salt property
-        builder.Property(ph => ph.PasswordHash)
+        builder.Property(ph => ph.Salt)
             .HasColumnName("password_salt")
             .HasColumnType("text")
             .IsRequired();

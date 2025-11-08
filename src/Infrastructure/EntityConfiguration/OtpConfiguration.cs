@@ -9,7 +9,7 @@ public class OtpConfiguration : IEntityTypeConfiguration<Otp>
 {
     public void Configure(EntityTypeBuilder<Otp> builder)
     {
-        builder.ToTable("Otp");
+        builder.ToTable("otp");
 
         builder.HasKey(us => us.Id);
 

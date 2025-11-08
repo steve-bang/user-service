@@ -15,12 +15,15 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     public void Configure(EntityTypeBuilder<User> builder)
     {
         // Table name
-        builder.ToTable("User"); // PostgreSQL convention: lowercase
+        builder.ToTable("user"); // PostgreSQL convention: lowercase
 
         // Primary Key
         builder.HasKey(u => u.Id)
             .HasName("pk_users");
 
+        // builder.Property(x => x.TenantId)
+        //     .HasColumnName("tenant_id")
+        //     .IsRequired();
         // Property configurations
         builder.Property(u => u.FirstName)
             .IsRequired()
@@ -144,12 +147,16 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
 
         // Indexes
+
+        builder.HasIndex(u => u.TenantId)
+            .HasDatabaseName("ix_users_tenant_id");
+
         builder.HasIndex(u => u.EmailAddress)
             .IsUnique()
             .HasDatabaseName("ix_users_email");
 
-        builder.HasIndex(u => u.DisplayName)
-            .HasDatabaseName("ix_users_display_name");
+        builder.HasIndex(u => u.PhoneNumber)
+            .HasDatabaseName("ix_users_phone_number");
 
         builder.HasIndex(u => u.IsActive)
             .HasDatabaseName("ix_users_is_active");
