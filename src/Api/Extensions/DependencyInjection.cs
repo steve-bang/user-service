@@ -18,7 +18,6 @@ using Steve.ManagerHero.Application.Features.Permissions.Commands;
 using Steve.ManagerHero.UserService.Application.Service;
 using Steve.ManagerHero.UserService.Application.Interfaces.Services;
 using Steve.ManagerHero.UserService.Infrastructure.Auth.External;
-using Steve.ManagerHero.UserService.Infrastructure.Security;
 using Steve.ManagerHero.UserService.Domain.Services;
 using Steve.ManagerHero.BuildingBlocks.Email;
 using Steve.ManagerHero.BuildingBlocks.SMS;
@@ -105,6 +104,8 @@ public static class DependencyInjection
         builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<ISessionRepository, SessionRepository>();
+
+        //builder.Services.AddScoped<ITenantRepository, TenantRepository>();
 
         return builder;
     }
