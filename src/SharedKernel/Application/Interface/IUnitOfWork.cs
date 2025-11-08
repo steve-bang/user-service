@@ -4,6 +4,7 @@
 * - [2025-04-11] - Created by mrsteve.bang@gmail.com
 */
 
+using Steve.ManagerHero.TenantService.Application.Interfaces.Repositories;
 using Steve.ManagerHero.UserService.Infrastructure;
 
 namespace Steve.ManagerHero.SharedKernel.Application.Interface;
@@ -14,6 +15,9 @@ namespace Steve.ManagerHero.SharedKernel.Application.Interface;
 public interface IUnitOfWork : IDisposable
 {
     UserAppContext Context { get; }
+
+    // ITenantRepository Tenants { get; }
+
     IUserRepository Users { get; }
     IRoleRepository Roles { get; }
     ISessionRepository Sessions { get; }

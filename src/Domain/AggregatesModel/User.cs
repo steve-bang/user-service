@@ -9,7 +9,6 @@ using Steve.ManagerHero.UserService.Domain.Entities;
 using Steve.ManagerHero.UserService.Domain.Events;
 using Steve.ManagerHero.UserService.Domain.Services;
 using Steve.ManagerHero.UserService.Domain.ValueObjects;
-using Steve.ManagerHero.UserService.Infrastructure.Security;
 
 namespace Steve.ManagerHero.UserService.Domain.AggregatesModel;
 
@@ -22,6 +21,8 @@ public class User : AggregateRoot
     /// The key of the user current logged
     /// </summary>
     public const string CurrentUserKey = "me";
+
+    public Guid TenantId { get; private set; }
 
     // Personal Information
     public string FirstName { get; private set; }

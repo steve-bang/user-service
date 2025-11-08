@@ -10,6 +10,11 @@ using Steve.ManagerHero.UserService.Infrastructure.Repository;
 
 public class UnitOfWork(UserAppContext _context) : IUnitOfWork
 {
+    public UserAppContext Context => _context;
+
+    // private ITenantRepository? _tenantRepository;
+    // public ITenantRepository Tenants => _tenantRepository ??= new TenantRepository(_context);
+
     private IUserRepository? _userRepository;
     private IIdentityRepository? _identityRepository;
     private IRoleRepository? _roleRepository;
@@ -18,7 +23,6 @@ public class UnitOfWork(UserAppContext _context) : IUnitOfWork
     private ISystemLogRepository? _systemLogRepository;
     private IOtpRepository? _otpRepository;
 
-    public UserAppContext Context => _context;
     public IUserRepository Users => _userRepository ??= new UserRepository(_context);
     public IIdentityRepository Identities => _identityRepository ??= new IdentityRepository(_context);
     public IRoleRepository Roles => _roleRepository ??= new RoleRepository(_context);
