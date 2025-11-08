@@ -13,13 +13,12 @@ public class Role : AggregateRoot
     public DateTime CreatedAt { get; private set; }
 
     // Navigation properties
-    private readonly List<RolePermission> _rolePermissions = new();
-    public IReadOnlyCollection<RolePermission> RolePermissions => _rolePermissions.AsReadOnly();
+    public ICollection<RolePermission> RolePermissions { get; private set; } = new List<RolePermission>();
 
     private readonly List<UserRole> _userRoles = new();
     public IReadOnlyCollection<UserRole> UserRoles => _userRoles.AsReadOnly();
 
-    public Role() {}
+    public Role() { }
 
     public Role(string name, string description)
     {
@@ -38,9 +37,9 @@ public class Role : AggregateRoot
     {
         foreach (var permission in permissions)
         {
-            if (!_rolePermissions.Any(rp => rp.PermissionId == permission.Id))
+            if (!RolePermissions.Any(rp => rp.PermissionId == permission.Id))
             {
-                _rolePermissions.Add(new RolePermission(this, permission));
+                RolePermissions.Add(new RolePermission(Id, permission.Id));
             }
         }
     }
@@ -49,17 +48,11 @@ public class Role : AggregateRoot
     {
         foreach (var permission in permissions)
         {
-            var rolePermission = _rolePermissions.FirstOrDefault(rp => rp.PermissionId == permission.Id);
+            var rolePermission = RolePermissions.FirstOrDefault(rp => rp.PermissionId == permission.Id);
             if (rolePermission != null)
             {
-                _rolePermissions.Remove(rolePermission);
+                RolePermissions.Remove(rolePermission);
             }
         }
-    }
-
-    public bool HasPermission(string permissionName)
-    {
-        return _rolePermissions.Any(rp =>
-            string.Equals(rp.Permission.Name, permissionName, StringComparison.OrdinalIgnoreCase));
     }
 }

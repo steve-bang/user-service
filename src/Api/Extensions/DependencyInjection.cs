@@ -18,6 +18,9 @@ using Steve.ManagerHero.Application.Features.Permissions.Commands;
 using Steve.ManagerHero.UserService.Application.Service;
 using Steve.ManagerHero.UserService.Application.Interfaces.Services;
 using Steve.ManagerHero.UserService.Infrastructure.Auth.External;
+using Steve.ManagerHero.UserService.Domain.Services;
+using Steve.ManagerHero.BuildingBlocks.Email;
+using Steve.ManagerHero.BuildingBlocks.SMS;
 
 namespace Steve.ManagerHero.UserService.Extensions;
 
@@ -34,6 +37,8 @@ public static class DependencyInjection
 
         builder.Services.AddDbContext<UserAppContext>(options =>
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+                .EnableSensitiveDataLogging()
+                .LogTo(Console.WriteLine, LogLevel.Information)
         );
 
         builder.EnrichNpgsqlDbContext<UserAppContext>();
@@ -64,9 +69,18 @@ public static class DependencyInjection
 
         builder.Services.AddScoped<IGoogleAuthService, GoogleAuthService>();
         builder.Services.AddScoped<ExternalAuthServiceFactory>();
+        builder.Services.AddScoped<IPermissionService, PermissionService>();
+
+
+        builder.Services.AddScoped<IPasswordHasher, Pbkdf2PasswordHasher>();
+        builder.Services.AddScoped<IPasswordPolicy, PasswordPolicy>();
+        builder.Services.AddScoped<IPasswordHistoryPolicyService, PasswordHistoryPolicyService>();
+
+        builder.Services.AddScoped<IEmailService, EmailService>();
 
         // Register smtp setting
-        builder.AddSmtpSettings();
+        builder.AddEmailService();
+        builder.AddSmsService();
 
         // Add caching
         builder.AddCacheServices();
@@ -91,26 +105,7 @@ public static class DependencyInjection
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<ISessionRepository, SessionRepository>();
 
-        return builder;
-    }
-
-    public static IHostApplicationBuilder AddSmtpSettings(this IHostApplicationBuilder builder)
-    {
-        var smtpSetting = builder.Configuration.GetSection("SMTP");
-        if (!smtpSetting.Exists())
-        {
-            throw new NotImplementedException("smtp section is missing in the appsettings.json file.");
-        }
-
-        var smtpSettingValue = smtpSetting.Get<SmtpSettings>();
-
-        if (smtpSettingValue == null)
-        {
-            throw new NotImplementedException("smtp section is missing in the appsettings.json file.");
-        }
-        builder.Services.AddSingleton(smtpSettingValue);
-
-        builder.Services.AddScoped<IEmailService, EmailService>();
+        //builder.Services.AddScoped<ITenantRepository, TenantRepository>();
 
         return builder;
     }
@@ -142,6 +137,7 @@ public static class DependencyInjection
         builder.Services.AddScoped<ITokenCache, TokenCache>();
         builder.Services.AddScoped<IUserCache, UserCache>();
         builder.Services.AddScoped<ISessionCache, SessionCache>();
+        builder.Services.AddScoped<IPermissionCache, PermissionCache>();
 
         return builder;
     }

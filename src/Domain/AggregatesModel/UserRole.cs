@@ -18,9 +18,9 @@ public class UserRole : AggregateRoot
     public Guid? AssignedBy { get; private set; }
 
     // Private constructor for EF Core
-    private UserRole() { }
+    private UserRole() : base() { }
 
-    public UserRole(User user, Role role, Guid? assignedBy = null)
+    public UserRole(User user, Role role, Guid? assignedBy = null) : this()
     {
         User = user ?? throw new ArgumentNullException(nameof(user));
         Role = role ?? throw new ArgumentNullException(nameof(role));

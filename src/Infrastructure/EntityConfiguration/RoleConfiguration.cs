@@ -13,7 +13,7 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
 {
     public void Configure(EntityTypeBuilder<Role> builder)
     {
-        builder.ToTable("Role");
+        builder.ToTable("role");
 
         builder.HasKey(r => r.Id);
 
@@ -31,11 +31,6 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
             .IsRequired()
             .HasColumnName("created_at")
             .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-        // builder
-        //     .HasMany(r => r.UserRoles)
-        //     .WithOne(ur => ur.Role)
-        //     .HasForeignKey(ur => ur.RoleId);
 
         builder.HasIndex(r => r.Name)
             .IsUnique();

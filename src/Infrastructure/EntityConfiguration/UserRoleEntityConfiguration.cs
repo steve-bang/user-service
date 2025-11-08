@@ -13,12 +13,29 @@ public class UserRoleEntityConfiguration : IEntityTypeConfiguration<UserRole>
 {
     public void Configure(EntityTypeBuilder<UserRole> builder)
     {
-        builder.ToTable("User_Role");
+        builder.ToTable("user_role");
 
         // Primary Key
         builder.HasKey(u => u.Id);
 
-        builder.HasKey(ur => new { ur.UserId, ur.RoleId }); // Composite Key
+        builder.Property(u => u.Id)
+            .ValueGeneratedNever();
+
+        builder.Property(u => u.UserId)
+            .HasColumnName("user_id");
+
+        builder.Property(u => u.RoleId)
+            .HasColumnName("role_id");
+
+        builder.Property(u => u.AssignedAt)
+            .HasColumnName("assigned_at")
+            .IsRequired();
+
+        builder.Property(u => u.AssignedBy)
+            .HasColumnName("assigned_by")
+            .IsRequired(false);
+
+        builder.HasKey(u => new { u.UserId, u.RoleId }); // Composite Key
 
         builder
             .HasOne(ur => ur.User)
@@ -29,10 +46,5 @@ public class UserRoleEntityConfiguration : IEntityTypeConfiguration<UserRole>
             .HasOne(ur => ur.Role)
             .WithMany(r => r.UserRoles)
             .HasForeignKey(ur => ur.RoleId);
-
-        builder.Property(ur => ur.AssignedAt)
-            .IsRequired();
-
-        builder.HasQueryFilter(ur => ur.User.IsActive);
     }
 }

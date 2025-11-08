@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="HeroAuth0 — The next generation Identity-as-a-Service (IDaaS) for multi-tenant applications. Secure, scalable, and developer-friendly."/>
+  <meta name="keywords" content="HeroAuth0, Auth0 alternative, multi-tenant identity, SaaS authentication, identity as a service"/>
+  <meta name="author" content="HeroAuth0 Team"/>
+  <title>HeroAuth0 — Multi-Tenant Identity as a Service</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <style>
+    /* Smooth gradient animation */
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .animated-bg {
+      background: linear-gradient(270deg, #2563eb, #9333ea, #06b6d4);
+      background-size: 600% 600%;
+      animation: gradientShift 12s ease infinite;
+    }
+    html { scroll-behavior: smooth; }
+  </style>
+</head>
+<body class="text-slate-800 bg-slate-50 antialiased">
+
+  <!-- HEADER -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-gradient-to-tr from-sky-500 to-indigo-600 rounded flex items-center justify-center text-white font-bold">H</div>
+        <span class="font-semibold text-lg">HeroAuth0</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-6 text-sm">
+        <a href="#features" class="hover:text-sky-600">Features</a>
+        <a href="#pricing" class="hover:text-sky-600">Pricing</a>
+        <a href="#about" class="hover:text-sky-600">About</a>
+        <a href="#contact" class="hover:text-sky-600">Contact</a>
+      </nav>
+      <div class="flex items-center gap-3">
+        <a href="#launch" class="px-4 py-2 text-sm font-medium text-sky-600 border border-sky-600 rounded hover:bg-sky-50">Sign In</a>
+        <a href="#launch" class="px-4 py-2 text-sm font-medium text-white bg-sky-600 rounded hover:bg-sky-700">Get Started</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="animated-bg text-white pt-32 pb-24">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row items-center gap-12">
+      <div class="flex-1">
+        <h1 class="text-4xl lg:text-6xl font-bold leading-tight">HeroAuth0 — The Next Generation of Identity as a Service</h1>
+        <p class="mt-6 text-lg text-slate-100">Secure, scalable, and multi-tenant ready. Designed for developers, loved by businesses. Your modern alternative to Auth0.</p>
+        <div class="mt-8 flex gap-4">
+          <a href="#launch" class="px-6 py-3 bg-white text-sky-600 rounded-lg font-medium hover:bg-slate-100">
+            <i class="fa-solid fa-rocket"></i> Launch Project
+          </a>
+          <a href="#features" class="px-6 py-3 bg-sky-800 rounded-lg font-medium hover:bg-sky-900">
+            Learn More <i class="fa-solid fa-arrow-down ml-2"></i>
+          </a>
+        </div>
+      </div>
+      <div class="flex-1">
+        <img src="https://cdn.dribbble.com/users/331579/screenshots/18181039/media/fc85327a139dfb1d86adbe6f4ccf3086.png" alt="HeroAuth0 Dashboard" class="rounded-xl shadow-2xl border border-white/10"/>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features" class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      <h2 class="text-3xl font-bold">Why Choose HeroAuth0?</h2>
+      <p class="mt-4 text-slate-600">Everything you need to authenticate, authorize, and manage users for multi-tenant applications.</p>
+      <div class="mt-12 grid md:grid-cols-3 gap-8">
+        <div class="p-6 bg-slate-50 rounded-lg border hover:shadow-lg transition">
+          <i class="fa-solid fa-users-gear text-3xl text-sky-600"></i>
+          <h3 class="mt-4 font-semibold text-lg">Multi-Tenant Support</h3>
+          <p class="mt-2 text-sm text-slate-600">Easily manage identities across multiple organizations with isolated and secure tenant spaces.</p>
+        </div>
+        <div class="p-6 bg-slate-50 rounded-lg border hover:shadow-lg transition">
+          <i class="fa-solid fa-lock text-3xl text-indigo-600"></i>
+          <h3 class="mt-4 font-semibold text-lg">Enterprise-Grade Security</h3>
+          <p class="mt-2 text-sm text-slate-600">Built-in best practices with OAuth 2.0, OpenID Connect, and modern encryption standards.</p>
+        </div>
+        <div class="p-6 bg-slate-50 rounded-lg border hover:shadow-lg transition">
+          <i class="fa-solid fa-code text-3xl text-emerald-600"></i>
+          <h3 class="mt-4 font-semibold text-lg">Developer Friendly</h3>
+          <p class="mt-2 text-sm text-slate-600">SDKs, APIs, and quickstart templates to integrate authentication in minutes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing" class="py-24 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      <h2 class="text-3xl font-bold">Simple, Transparent Pricing</h2>
+      <p class="mt-4 text-slate-600">Choose the plan that fits your needs. No hidden fees.</p>
+      <div class="mt-12 grid md:grid-cols-3 gap-8">
+        <div class="p-6 bg-white rounded-lg border hover:shadow-lg transition">
+          <h3 class="font-semibold text-lg">Free</h3>
+          <p class="mt-2 text-3xl font-bold">$0<span class="text-sm font-medium text-slate-500">/mo</span></p>
+          <ul class="mt-4 text-sm text-slate-600 text-left space-y-2">
+            <li><i class="fa-solid fa-check text-emerald-500"></i> Up to 100 users</li>
+            <li><i class="fa-solid fa-check text-emerald-500"></i> Basic authentication</li>
+            <li><i class="fa-solid fa-check text-emerald-500"></i> Community support</li>
+          </ul>
+        </div>
+        <div class="p-6 bg-white rounded-lg border-2 border-sky-600 shadow-lg scale-105">
+          <h3 class="font-semibold text-lg text-sky-600">Pro</h3>
+          <p class="mt-2 text-3xl font-bold">$49<span class="text-sm font-medium text-slate-500">/mo</span></p>
+          <ul class="mt-4 text-sm text-slate-600 text-left space-y-2">
+            <li><i class="fa-solid fa-check text-emerald-500"></i> Up to 10,000 users</li>
+            <li><i class="fa-solid fa-check text-emerald-500"></i> Multi-tenant support</li>
+            <li><i class="fa-solid fa-check text-emerald-500"></i> Email & chat support</li>
+          </ul>
+        </div>
+        <div class="p-6 bg-white rounded-lg border hover:shadow-lg transition">
+          <h3 class="font-semibold text-lg">Enterprise</h3>
+          <p class="mt-2 text-3xl font-bold">Custom</p>
+          <ul class="mt-4 text-sm text-slate-600 text-left space-y-2">
+            <li><i class="fa-solid fa-check text-emerald-500"></i> Unlimited users</li>
+            <li><i class="fa-solid fa-check text-emerald-500"></i> Dedicated infrastructure</li>
+            <li><i class="fa-solid fa-check text-emerald-500"></i> 24/7 priority support</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="py-24 bg-white">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <h2 class="text-3xl font-bold">About HeroAuth0</h2>
+      <p class="mt-4 text-slate-600">Born from the need for a modern, cost-effective, and flexible identity platform, HeroAuth0 is built to serve startups, enterprises, and everything in between. Our mission is to empower developers with tools that make authentication and user management easy without compromising security or scalability.</p>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="py-24 bg-slate-50">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <h2 class="text-3xl font-bold">Contact Us</h2>
+      <p class="mt-4 text-slate-600">Have questions? We’d love to hear from you.</p>
+      <form class="mt-8 grid gap-4 md:grid-cols-2 text-left">
+        <input type="text" placeholder="Your Name" class="p-3 border rounded focus:outline-none focus:ring focus:ring-sky-200"/>
+        <input type="email" placeholder="Your Email" class="p-3 border rounded focus:outline-none focus:ring focus:ring-sky-200"/>
+        <textarea placeholder="Your Message" class="p-3 border rounded focus:outline-none focus:ring focus:ring-sky-200 md:col-span-2"></textarea>
+        <button type="submit" class="px-6 py-3 bg-sky-600 text-white rounded hover:bg-sky-700 md:col-span-2">
+          <i class="fa-solid fa-paper-plane"></i> Send Message
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t py-6 text-center text-sm text-slate-500">
+    © 2025 HeroAuth0 — All rights reserved.
+  </footer>
+
+</body>
+</html>

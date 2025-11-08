@@ -10,4 +10,6 @@ public class PermissionErrorCodes
 {
     public const string PermissionNotFound = nameof(PermissionNotFound);
 
+    public const string CodeAlreadyTaken = "PermissionCodeAlreadyTaken";
+
 }

@@ -5,6 +5,7 @@
 */
 
 using FluentValidation;
+using Steve.ManagerHero.UserService.Domain.Constants;
 namespace Steve.ManagerHero.Application.Features.Users.Commands;
 
 public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
@@ -50,10 +51,12 @@ public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
             .WithMessage("Display name must be less than 100 characters.");
 
         RuleFor(x => x.PhoneNumber)
-            .Matches(@"^\d{10,15}$")
+            .Matches(Regex.PhoneNumberRegex)
             .When(x => !string.IsNullOrWhiteSpace(x.PhoneNumber))
-            .WithErrorCode(ErrorCodes.InputInvalid)
-            .WithMessage("Phone number must be in E.164 format (e.g., 1234567890).");
+            .WithErrorCode(UserErrorCodes.PhoneNumberInvalid)
+            .WithMessage(UserErrorMessages.PhoneNumberInvalidMessage);
+
+        
 
         When(x => x.Address is not null, () =>
         {

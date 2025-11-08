@@ -6,6 +6,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Steve.ManagerHero.BuildingBlocks.Extensions;
+using Steve.ManagerHero.BuildingBlocks.Security.Jwt;
 using Steve.ManagerHero.UserService.Application.Auth;
 using Steve.ManagerHero.UserService.Application.Service;
 using Steve.ManagerHero.UserService.Domain.Constants;
@@ -48,7 +49,7 @@ public class AuthExternalCallbackCommandHandler(
 
         Session session = new Session(user);
 
-        _jwtHandler.GenerateToken(user, session, out accessToken, out refreshToken, out expriresIn);
+        (accessToken, refreshToken, expriresIn) = _jwtHandler.GenerateToken(user.Id, session.Id);
 
         // Add identity
         UserIdentity identity = new UserIdentity(

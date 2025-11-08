@@ -23,10 +23,323 @@ namespace UserService.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Steve.ManagerHero.TenantService.Domain.AggregatesModel.CustomDomain", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("Domain")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("domain");
+
+                    b.Property<bool>("IsPrimary")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_primary");
+
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_verified");
+
+                    b.Property<string>("SslCertificateId")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("ssl_certificate_id");
+
+                    b.Property<DateTime?>("SslExpiredAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("ssl_expired_at");
+
+                    b.Property<short>("SslStatus")
+                        .HasColumnType("smallint")
+                        .HasColumnName("ssl_status");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tenant_id");
+
+                    b.Property<string>("VerificationMethod")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("verification_method");
+
+                    b.Property<string>("VerificationRecord")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("verification_record");
+
+                    b.Property<string>("VerificationToken")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("verification_token");
+
+                    b.Property<DateTime?>("VerifiedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("verified_at");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("custom_domain", "YOUR_SCHEMA");
+                });
+
+            modelBuilder.Entity("Steve.ManagerHero.TenantService.Domain.AggregatesModel.Tenant", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Branding")
+                        .HasColumnType("text")
+                        .HasColumnName("branding");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
+                    b.Property<string>("Domain")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("domain");
+
+                    b.Property<string>("Metadata")
+                        .HasColumnType("text")
+                        .HasColumnName("metadata");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<short>("Status")
+                        .HasColumnType("smallint")
+                        .HasColumnName("status");
+
+                    b.Property<DateTime?>("SubscriptionEndAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("subscription_end_at");
+
+                    b.Property<DateTime?>("TrialsEndAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("trials_end_at");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Domain")
+                        .HasDatabaseName("ix_domain");
+
+                    b.ToTable("tenant", "YOUR_SCHEMA");
+                });
+
+            modelBuilder.Entity("Steve.ManagerHero.TenantService.Domain.AggregatesModel.TenantPolicy", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("Metadata")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("metadata");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tenant_id");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("type");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("tenant_policy", "YOUR_SCHEMA");
+                });
+
+            modelBuilder.Entity("Steve.ManagerHero.TenantService.Domain.Entities.TenantAddressEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("city");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("country");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("Line1")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("line_1");
+
+                    b.Property<string>("Line2")
+                        .HasColumnType("text")
+                        .HasColumnName("line_2");
+
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("postal_code");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("state");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tenant_id");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("tenant_address", "YOUR_SCHEMA");
+                });
+
+            modelBuilder.Entity("Steve.ManagerHero.TenantService.Domain.Entities.TenantSettingEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("FriendlyName")
+                        .HasColumnType("text")
+                        .HasColumnName("friendly_name");
+
+                    b.Property<string>("LogoUrl")
+                        .HasColumnType("text")
+                        .HasColumnName("logo_url");
+
+                    b.Property<string>("SupportEmail")
+                        .HasColumnType("text")
+                        .HasColumnName("support_email");
+
+                    b.Property<string>("SupportUrl")
+                        .HasColumnType("text")
+                        .HasColumnName("support_url");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tenant_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId")
+                        .IsUnique();
+
+                    b.ToTable("tenant_setting", "YOUR_SCHEMA");
+                });
+
+            modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.Otp", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("ConsumedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("consumed_at");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<DateTime>("ExpirationTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expiration_time");
+
+                    b.Property<bool>("IsUsed")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_used");
+
+                    b.Property<string>("OtpHash")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("otp_hash");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("phone_number");
+
+                    b.Property<int>("RetryCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0)
+                        .HasColumnName("retry_count");
+
+                    b.Property<string>("Salt")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("salt");
+
+                    b.Property<short>("Type")
+                        .HasColumnType("smallint")
+                        .HasColumnName("type");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("otp", "YOUR_SCHEMA");
+                });
+
             modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.Permission", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("Code")
@@ -58,7 +371,7 @@ namespace UserService.Migrations
                     b.HasIndex("Code")
                         .IsUnique();
 
-                    b.ToTable("Permission", "YOUR_SCHEMA");
+                    b.ToTable("permission", "YOUR_SCHEMA");
                 });
 
             modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.Role", b =>
@@ -90,23 +403,25 @@ namespace UserService.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Role", "YOUR_SCHEMA");
+                    b.ToTable("role", "YOUR_SCHEMA");
                 });
 
             modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.RolePermission", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("AssignedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("assigned_at");
 
                     b.Property<Guid>("PermissionId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("permission_id");
 
                     b.Property<Guid>("RoleId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("role_id");
 
                     b.HasKey("Id");
 
@@ -115,13 +430,12 @@ namespace UserService.Migrations
                     b.HasIndex("RoleId", "PermissionId")
                         .IsUnique();
 
-                    b.ToTable("Role_Permission", "YOUR_SCHEMA");
+                    b.ToTable("role_permission", "YOUR_SCHEMA");
                 });
 
             modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.Session", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
@@ -177,7 +491,7 @@ namespace UserService.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Session", "YOUR_SCHEMA");
+                    b.ToTable("session", "YOUR_SCHEMA");
                 });
 
             modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.User", b =>
@@ -247,6 +561,14 @@ namespace UserService.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("password_changed_date");
 
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("text")
+                        .HasColumnName("password_hash");
+
+                    b.Property<string>("PasswordSalt")
+                        .HasColumnType("text")
+                        .HasColumnName("password_salt");
+
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)")
@@ -267,15 +589,16 @@ namespace UserService.Migrations
                         .HasColumnType("character varying(20)")
                         .HasColumnName("status");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tenant_id");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
 
                     b.HasKey("Id")
                         .HasName("pk_users");
-
-                    b.HasIndex("DisplayName")
-                        .HasDatabaseName("ix_users_display_name");
 
                     b.HasIndex("EmailAddress")
                         .IsUnique()
@@ -284,10 +607,16 @@ namespace UserService.Migrations
                     b.HasIndex("IsActive")
                         .HasDatabaseName("ix_users_is_active");
 
+                    b.HasIndex("PhoneNumber")
+                        .HasDatabaseName("ix_users_phone_number");
+
                     b.HasIndex("Status")
                         .HasDatabaseName("ix_users_status");
 
-                    b.ToTable("User", "YOUR_SCHEMA");
+                    b.HasIndex("TenantId")
+                        .HasDatabaseName("ix_users_tenant_id");
+
+                    b.ToTable("user", "YOUR_SCHEMA");
                 });
 
             modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.UserIdentity", b =>
@@ -333,22 +662,26 @@ namespace UserService.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("User_Identity", "YOUR_SCHEMA");
+                    b.ToTable("user_identity", "YOUR_SCHEMA");
                 });
 
             modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.UserRole", b =>
                 {
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
 
                     b.Property<Guid>("RoleId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("role_id");
 
                     b.Property<DateTime>("AssignedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("assigned_at");
 
                     b.Property<Guid?>("AssignedBy")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("assigned_by");
 
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -357,7 +690,162 @@ namespace UserService.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("User_Role", "YOUR_SCHEMA");
+                    b.ToTable("user_role", "YOUR_SCHEMA");
+                });
+
+            modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.Entities.PasswordHistoryEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("ChangedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("changed_at");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("password_hash");
+
+                    b.Property<string>("Salt")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("password_salt");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("password_history", "YOUR_SCHEMA");
+                });
+
+            modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.Entities.SystemLogEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CorrelationId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("correlation_id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<long>("DurationMs")
+                        .HasColumnType("bigint")
+                        .HasColumnName("duration_ms");
+
+                    b.Property<string>("HttpMethod")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)")
+                        .HasColumnName("http_method");
+
+                    b.Property<string>("IpAddress")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("ip_address");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("path");
+
+                    b.Property<string>("RequestBodySnippet")
+                        .HasColumnType("text")
+                        .HasColumnName("request_body_snippet");
+
+                    b.Property<string>("RequestHeaders")
+                        .HasColumnType("text")
+                        .HasColumnName("request_headers");
+
+                    b.Property<string>("ResponseBodySnippet")
+                        .HasColumnType("text")
+                        .HasColumnName("response_body_snippet");
+
+                    b.Property<string>("ResponseHeaders")
+                        .HasColumnType("text")
+                        .HasColumnName("response_headers");
+
+                    b.Property<int>("StatusCode")
+                        .HasColumnType("integer")
+                        .HasColumnName("status_code");
+
+                    b.Property<string>("UserAgent")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("user_agent");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("system_log", "YOUR_SCHEMA");
+                });
+
+            modelBuilder.Entity("Steve.ManagerHero.TenantService.Domain.AggregatesModel.CustomDomain", b =>
+                {
+                    b.HasOne("Steve.ManagerHero.TenantService.Domain.AggregatesModel.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("Steve.ManagerHero.TenantService.Domain.AggregatesModel.TenantPolicy", b =>
+                {
+                    b.HasOne("Steve.ManagerHero.TenantService.Domain.AggregatesModel.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("Steve.ManagerHero.TenantService.Domain.Entities.TenantAddressEntity", b =>
+                {
+                    b.HasOne("Steve.ManagerHero.TenantService.Domain.AggregatesModel.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("Steve.ManagerHero.TenantService.Domain.Entities.TenantSettingEntity", b =>
+                {
+                    b.HasOne("Steve.ManagerHero.TenantService.Domain.AggregatesModel.Tenant", "Tenant")
+                        .WithOne("Setting")
+                        .HasForeignKey("Steve.ManagerHero.TenantService.Domain.Entities.TenantSettingEntity", "TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.Otp", b =>
+                {
+                    b.HasOne("Steve.ManagerHero.UserService.Domain.AggregatesModel.User", "User")
+                        .WithMany("Otps")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.RolePermission", b =>
@@ -424,7 +912,7 @@ namespace UserService.Migrations
 
                             b1.HasKey("UserId");
 
-                            b1.ToTable("User", "YOUR_SCHEMA");
+                            b1.ToTable("user", "YOUR_SCHEMA");
 
                             b1.ToJson("Address");
 
@@ -432,31 +920,7 @@ namespace UserService.Migrations
                                 .HasForeignKey("UserId");
                         });
 
-                    b.OwnsOne("Steve.ManagerHero.UserService.Domain.ValueObjects.PasswordHash", "PasswordHash", b1 =>
-                        {
-                            b1.Property<Guid>("UserId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("Hash")
-                                .HasColumnType("text")
-                                .HasColumnName("password_hash");
-
-                            b1.Property<string>("Salt")
-                                .HasColumnType("text")
-                                .HasColumnName("password_salt");
-
-                            b1.HasKey("UserId");
-
-                            b1.ToTable("User", "YOUR_SCHEMA");
-
-                            b1.WithOwner()
-                                .HasForeignKey("UserId");
-                        });
-
                     b.Navigation("Address");
-
-                    b.Navigation("PasswordHash")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.UserIdentity", b =>
@@ -489,6 +953,23 @@ namespace UserService.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.Entities.PasswordHistoryEntity", b =>
+                {
+                    b.HasOne("Steve.ManagerHero.UserService.Domain.AggregatesModel.User", "User")
+                        .WithMany("PasswordHistories")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Steve.ManagerHero.TenantService.Domain.AggregatesModel.Tenant", b =>
+                {
+                    b.Navigation("Setting")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.Permission", b =>
                 {
                     b.Navigation("RolePermissions");
@@ -504,6 +985,10 @@ namespace UserService.Migrations
             modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.User", b =>
                 {
                     b.Navigation("Identities");
+
+                    b.Navigation("Otps");
+
+                    b.Navigation("PasswordHistories");
 
                     b.Navigation("Sessions");
 

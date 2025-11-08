@@ -5,12 +5,16 @@
 */
 
 using AutoMapper;
+using Steve.ManagerHero.UserService.Domain.Constants;
+using Steve.ManagerHero.UserService.Domain.Services;
 
 namespace Steve.ManagerHero.Application.Features.Users.Commands;
 
 public class RegisterUserCommandHandler(
     IUnitOfWork _unitOfWork,
-    IMapper _mapper
+    IMapper _mapper,
+    IPasswordPolicy _passwordPolicy,
+    IPasswordHasher _passwordHasher
 ) : IRequestHandler<RegisterUserCommand, UserDto>
 {
     public async Task<UserDto> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
@@ -19,11 +23,18 @@ public class RegisterUserCommandHandler(
 
         if (isExistsEmail) throw new EmailAlreadyExistsException();
 
+        var validPasswordResult = _passwordPolicy.Validate(request.Password);
+        if (!validPasswordResult.IsValid)
+            throw new PasswordIncorrectException(messsage: validPasswordResult.Message ?? UserErrorMessages.PasswordIncorrectMessage);
+
+        (string passwordHash, string passwordSalt) = _passwordHasher.Hash(request.Password);
+
         User user = User.Register(
             firstName: request.FirstName,
             lastName: request.LastName,
             email: request.EmailAddress,
-            password: request.Password
+            passwordHash: passwordHash,
+            passwordSalt: passwordSalt
         );
 
         User userCreated = await _unitOfWork.Users.CreateAsync(user, cancellationToken);

@@ -4,7 +4,6 @@
 * - [2025-04-18] - Created by mrsteve.bang@gmail.com
 */
 
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Steve.ManagerHero.Api.Models;
@@ -54,6 +53,27 @@ public class AuthController : ControllerBase
         var result = await _mediator.Send(new LoginPasswordQuery(
             EmailAddress: request.EmailAddress,
             Password: request.Password
+        ));
+
+        return ApiResponseSuccess<AuthenticationResponseDto>.BuildOKObjectResult(result);
+    }
+
+    [HttpPost("passwordless/sms/otp")]
+    public async Task<IActionResult> LoginPhoneOTPRequest([FromBody] LoginPhoneOTPStartRequest loginPhoneOTPStartRequest)
+    {
+        var resultMessage = await _mediator.Send(new LoginPhoneOtpRequestQuery(
+            PhoneNumber: loginPhoneOTPStartRequest.PhoneNumber
+        ));
+
+        return ApiResponseSuccess<string>.BuildOKObjectResult(resultMessage);
+    }
+
+    [HttpPost("passwordless/sms/verify-otp-login")]
+    public async Task<IActionResult> VerifyLoginOTPCode([FromBody] LoginPhoneOTPCompleteRequest request)
+    {
+        var result = await _mediator.Send(new LoginPhoneOtpVerifyQuery(
+            PhoneNumber: request.PhoneNumber,
+            OtpCode: request.OtpCode
         ));
 
         return ApiResponseSuccess<AuthenticationResponseDto>.BuildOKObjectResult(result);

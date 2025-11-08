@@ -29,6 +29,7 @@ Manager Zero User Service is an open-source, modular user management microservic
     - [Docker](#docker)
     - [Kubernetes](#kubernetes)
   - [Contributing](#contributing)
+  - [Permissions](#permissions)
 
 ## Features
 
@@ -172,3 +173,17 @@ kubectl apply -f deploy/k8s/
 3. Commit your changes (git commit -m 'Add some feature')
 4. Push to the branch (git push origin feature/AmazingFeature)
 4. Open a Pull Request
+
+
+## Permissions
+
+| Code    | Description |
+| -------- | ------- |
+| users.read | Allows the user to read all user in the system |
+| users.manage | Allows the user to manage all user in the system |
+| roles.manage | Allows the user to manage all role in the system |
+| roles.read | Allows the user to read all role in the system |
+| permissions.manage | Allows the user to manage all permission in the system |
+| permissions.read | Allows the user to read all permission in the system |
+| sessions.manage | Allows the session to manage all permission in the system |
+| sessions.read | Allows the session to read all permission in the system |

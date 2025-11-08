@@ -10,18 +10,26 @@ using Steve.ManagerHero.UserService.Infrastructure.Repository;
 
 public class UnitOfWork(UserAppContext _context) : IUnitOfWork
 {
+    public UserAppContext Context => _context;
+
+    // private ITenantRepository? _tenantRepository;
+    // public ITenantRepository Tenants => _tenantRepository ??= new TenantRepository(_context);
+
     private IUserRepository? _userRepository;
     private IIdentityRepository? _identityRepository;
     private IRoleRepository? _roleRepository;
     private ISessionRepository? _sessionRepository;
     private IPermissionRepository? _permissionRepository;
+    private ISystemLogRepository? _systemLogRepository;
+    private IOtpRepository? _otpRepository;
 
-    public UserAppContext Context => _context;
     public IUserRepository Users => _userRepository ??= new UserRepository(_context);
     public IIdentityRepository Identities => _identityRepository ??= new IdentityRepository(_context);
     public IRoleRepository Roles => _roleRepository ??= new RoleRepository(_context);
     public ISessionRepository Sessions => _sessionRepository ??= new SessionRepository(_context);
     public IPermissionRepository Permissions => _permissionRepository ??= new PermissionRepository(_context);
+    public ISystemLogRepository SystemLogs => _systemLogRepository ??= new SystemLogRepository(_context);
+    public IOtpRepository Otps => _otpRepository ??= new OtpRepository(_context);
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

@@ -9,6 +9,6 @@ namespace Steve.ManagerHero.SharedKernel.Application.Constants;
 
 public class ErrorCodes
 {
-    public const string InputInvalid = "Input_Invalid";
+    public const string InputInvalid = "InputInvalid";
 
 }

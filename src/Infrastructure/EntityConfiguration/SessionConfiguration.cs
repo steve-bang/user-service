@@ -8,9 +8,12 @@ public class UserSessionConfiguration : IEntityTypeConfiguration<Session>
 {
     public void Configure(EntityTypeBuilder<Session> builder)
     {
-        builder.ToTable("Session");
+        builder.ToTable("session");
 
         builder.HasKey(us => us.Id);
+
+        builder.Property(e => e.Id)
+            .ValueGeneratedNever();
 
         builder.Property(us => us.RefreshToken)
             .HasColumnName("refresh_token")

@@ -4,8 +4,6 @@
 * - [2025-04-11] - Created by mrsteve.bang@gmail.com
 */
 
-
-
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,6 +23,11 @@ public class PermissionRepository(
     public Task<Permission?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return _context.Permissions.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+    }
+
+    public Task<Permission?> GetByCodeAsync(string code, CancellationToken cancellationToken = default)
+    {
+        return _context.Permissions.FirstOrDefaultAsync(x =>x.Code == code, cancellationToken);
     }
 
     public async Task<(IEnumerable<Permission> items, int totalCount)> GetPermissionsAsync(
@@ -90,5 +93,21 @@ public class PermissionRepository(
             .ToListAsync(cancellationToken);
 
         return (items, totalCount);
+    }
+
+    public Task<List<Permission>> GetPermissionsByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        return _context
+                .Permissions
+                .Include(p => p.RolePermissions)
+                    .ThenInclude(rp => rp.Role)
+                        .ThenInclude(r => r.UserRoles)
+                .Where(p =>
+                    p.RolePermissions.Any(rp =>
+                        rp.Role.UserRoles.Any(ur => ur.UserId == userId)
+                    )
+                )
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
     }
 }

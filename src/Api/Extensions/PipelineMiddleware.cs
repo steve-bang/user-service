@@ -13,6 +13,7 @@ public static class PipelineMiddleware
     public static WebApplication ConfigPipelineMiddlewares(this WebApplication app)
     {
         app.UseMiddleware<CorrelationIdMiddleware>();
+        app.UseMiddleware<RequestResponseLoggingMiddleware>();
         app.UseMiddleware<ExceptionMiddleware>();
         app.UseMiddleware<IpRestrictionMiddleware>();
 

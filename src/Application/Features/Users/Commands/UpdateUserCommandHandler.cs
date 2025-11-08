@@ -39,7 +39,7 @@ public class UpdateUserCommandHandler(
             address: request.Address
         );
 
-        _unitOfWork.Users.Update(user);
+        _unitOfWork.Users.Update(user, cancellationToken);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

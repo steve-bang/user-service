@@ -4,10 +4,13 @@
 * - [2025-05-04] - Created by mrsteve.bang@gmail.com
 */
 
+using Steve.ManagerHero.UserService.Application.Interfaces.Caching;
+
 namespace Steve.ManagerHero.Application.Features.Users.Commands;
 
 public class RemoveRolesFromUserCommandHandler(
-    IUnitOfWork _unitOfWork
+    IUnitOfWork _unitOfWork,
+    IPermissionCache _permissionCache
 ) : IRequestHandler<RemoveRolesFromUserCommand, bool>
 {
 
@@ -24,11 +27,11 @@ public class RemoveRolesFromUserCommandHandler(
         // Remove roles
         user.RemoveRoles(roles);
 
-        // Update the user in the repository
-        //_unitOfWork.Users.Update(user, cancellationToken);
-
         // Save changes to the database
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        // Clear cache permission code with user
+        _permissionCache.ClearByUserId(user.Id);
 
         return true;
     }

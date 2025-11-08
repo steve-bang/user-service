@@ -10,9 +10,10 @@ using Steve.ManagerHero.UserService.Requirements;
 
 namespace Steve.ManagerHero.UserService.Handlers;
 
+[Obsolete]
 public class PermissionPolicyProvider : IAuthorizationPolicyProvider
 {
-    public Task<AuthorizationPolicy> GetDefaultPolicyAsync() => 
+    public Task<AuthorizationPolicy> GetDefaultPolicyAsync() =>
         Task.FromResult(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build());
 
     public Task<AuthorizationPolicy?> GetFallbackPolicyAsync()

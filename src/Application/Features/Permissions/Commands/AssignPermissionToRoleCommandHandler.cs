@@ -13,7 +13,8 @@ public class AssignPermissionToRoleCommandHandler(
 
     public async Task<bool> Handle(AssignPermissionToRoleCommand request, CancellationToken cancellationToken)
     {
-        Role role = await _unitOfWork.Roles.GetByIdAsync(request.RoleId, cancellationToken) ?? throw new RoleNotFoundException();
+        Role role = await _unitOfWork.Roles.GetByIdAsync(request.RoleId, cancellationToken)
+                        ?? throw new RoleNotFoundException();
 
         var permissions = await _unitOfWork.Permissions.GetByIdsAsync(request.PermissionIds, cancellationToken);
         if (permissions.Count() != request.PermissionIds.Length)
@@ -23,9 +24,6 @@ public class AssignPermissionToRoleCommandHandler(
 
         // Add permissions to the role
         role.AddPermissions(permissions);
-
-        // Update the role in the repository
-        _unitOfWork.Roles.Update(role, cancellationToken);
 
         // Save changes to the database
         await _unitOfWork.SaveChangesAsync(cancellationToken);

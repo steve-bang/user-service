@@ -4,10 +4,13 @@
 * - [2025-04-22] - Created by mrsteve.bang@gmail.com
 */
 
+using Steve.ManagerHero.UserService.Application.Interfaces.Caching;
+
 namespace Steve.ManagerHero.Application.Features.Roles.Commands;
 
 public class AssignUserToRoleCommandHandler(
-    IUnitOfWork _unitOfWork
+    IUnitOfWork _unitOfWork,
+    IPermissionCache _permissionCache
 ) : IRequestHandler<AssignUserToRoleCommand, bool>
 {
     public async Task<bool> Handle(AssignUserToRoleCommand request, CancellationToken cancellationToken)
@@ -21,6 +24,8 @@ public class AssignUserToRoleCommandHandler(
         _unitOfWork.Users.Update(user);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        _permissionCache.ClearByUserId(user.Id);
 
         return true;
     }

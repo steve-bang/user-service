@@ -16,6 +16,12 @@ public class CreatePermissionCommandHandler(
 {
     public async Task<PermissionDto> Handle(CreatePermissionCommand request, CancellationToken cancellationToken)
     {
+        var permissionByCode = await _unitOfWork.Permissions.GetByCodeAsync(request.Code, cancellationToken);
+
+        // If the permission is exists by code, throw exception
+        if (permissionByCode != null)
+            throw new PermissionCodeAlreadyTakenException(request.Code);
+
         var permission = new Permission(
             request.Code,
             request.Name,

@@ -6,6 +6,8 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Steve.ManagerHero.TenantService.Domain.AggregatesModel;
+using Steve.ManagerHero.UserService.Domain.Entities;
 
 namespace Steve.ManagerHero.UserService.Infrastructure;
 
@@ -27,6 +29,12 @@ public class UserAppContext(
     public DbSet<UserRole> UserRoles { get; set; } = null!;
     public DbSet<RolePermission> RolePermissions { get; set; } = null!;
     public DbSet<Session> Sessions { get; set; } = null!;
+    public DbSet<PasswordHistoryEntity> PasswordHistories { get; set; } = null!;
+    public DbSet<SystemLogEntity> SystemLogs { get; set; } = null!;
+    public DbSet<Otp> Otps { get; set; } = null!;
+    //public DbSet<Tenant> Tenants { get; set; } = null!;
+    //public DbSet<TenantPolicy> TenantPolicies { get; set; } = null!;
+    //public DbSet<CustomDomain> CustomDomains { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

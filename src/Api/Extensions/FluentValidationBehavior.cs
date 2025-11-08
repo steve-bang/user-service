@@ -5,8 +5,6 @@
 */
 
 using FluentValidation;
-using MediatR;
-using Steve.ManagerHero.SharedKernel.Application.Exception;
 
 public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : class

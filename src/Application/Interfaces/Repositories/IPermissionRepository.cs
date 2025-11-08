@@ -25,7 +25,15 @@ public interface IPermissionRepository : IRepository
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task<Permission?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
-    
+
+    /// <summary>
+    /// Get a permission by code.
+    /// </summary>
+    /// <param name="code"><The code to get./param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<Permission?> GetByCodeAsync(string code, CancellationToken cancellationToken = default);
+
     /// <summary>
     /// Get permissions by ids.
     /// </summary>
@@ -66,6 +74,8 @@ public interface IPermissionRepository : IRepository
         int pageSize = PaginationConstant.PageSizeDefault,
         CancellationToken cancellationToken = default
     );
+
+    Task<List<Permission>> GetPermissionsByUserIdAsync(Guid userId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Update a permission.
