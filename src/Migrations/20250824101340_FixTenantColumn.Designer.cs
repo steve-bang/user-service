@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Steve.ManagerHero.UserService.Infrastructure;
@@ -11,9 +12,11 @@ using Steve.ManagerHero.UserService.Infrastructure;
 namespace UserService.Migrations
 {
     [DbContext(typeof(UserAppContext))]
-    partial class UserAppContextModelSnapshot : ModelSnapshot
+    [Migration("20250824101340_FixTenantColumn")]
+    partial class FixTenantColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -268,9 +271,14 @@ namespace UserService.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("tenant_id");
 
+                    b.Property<Guid?>("TenantId1")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("TenantId")
+                    b.HasIndex("TenantId");
+
+                    b.HasIndex("TenantId1")
                         .IsUnique();
 
                     b.ToTable("tenant_setting", "YOUR_SCHEMA");
@@ -830,10 +838,14 @@ namespace UserService.Migrations
             modelBuilder.Entity("Steve.ManagerHero.TenantService.Domain.Entities.TenantSettingEntity", b =>
                 {
                     b.HasOne("Steve.ManagerHero.TenantService.Domain.AggregatesModel.Tenant", "Tenant")
-                        .WithOne("Setting")
-                        .HasForeignKey("Steve.ManagerHero.TenantService.Domain.Entities.TenantSettingEntity", "TenantId")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Steve.ManagerHero.TenantService.Domain.AggregatesModel.Tenant", null)
+                        .WithOne("Setting")
+                        .HasForeignKey("Steve.ManagerHero.TenantService.Domain.Entities.TenantSettingEntity", "TenantId1");
 
                     b.Navigation("Tenant");
                 });

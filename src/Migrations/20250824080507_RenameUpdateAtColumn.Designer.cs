@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Steve.ManagerHero.UserService.Infrastructure;
@@ -11,9 +12,11 @@ using Steve.ManagerHero.UserService.Infrastructure;
 namespace UserService.Migrations
 {
     [DbContext(typeof(UserAppContext))]
-    partial class UserAppContextModelSnapshot : ModelSnapshot
+    [Migration("20250824080507_RenameUpdateAtColumn")]
+    partial class RenameUpdateAtColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -96,6 +99,7 @@ namespace UserService.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Branding")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("branding");
 
@@ -116,6 +120,7 @@ namespace UserService.Migrations
                         .HasColumnName("domain");
 
                     b.Property<string>("Metadata")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("metadata");
 
@@ -141,9 +146,6 @@ namespace UserService.Migrations
                         .HasColumnName("updated_at");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Domain")
-                        .HasDatabaseName("ix_domain");
 
                     b.ToTable("tenant", "YOUR_SCHEMA");
                 });
@@ -246,34 +248,30 @@ namespace UserService.Migrations
             modelBuilder.Entity("Steve.ManagerHero.TenantService.Domain.Entities.TenantSettingEntity", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("FriendlyName")
-                        .HasColumnType("text")
-                        .HasColumnName("friendly_name");
+                        .HasColumnType("text");
 
                     b.Property<string>("LogoUrl")
-                        .HasColumnType("text")
-                        .HasColumnName("logo_url");
+                        .HasColumnType("text");
 
                     b.Property<string>("SupportEmail")
-                        .HasColumnType("text")
-                        .HasColumnName("support_email");
+                        .HasColumnType("text");
 
                     b.Property<string>("SupportUrl")
-                        .HasColumnType("text")
-                        .HasColumnName("support_url");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("TenantId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("tenant_id");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
                     b.HasIndex("TenantId")
                         .IsUnique();
 
-                    b.ToTable("tenant_setting", "YOUR_SCHEMA");
+                    b.ToTable("TenantSettingEntity", "YOUR_SCHEMA");
                 });
 
             modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.Otp", b =>
@@ -334,7 +332,7 @@ namespace UserService.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("otp", "YOUR_SCHEMA");
+                    b.ToTable("Otp", "YOUR_SCHEMA");
                 });
 
             modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.Permission", b =>
@@ -371,7 +369,7 @@ namespace UserService.Migrations
                     b.HasIndex("Code")
                         .IsUnique();
 
-                    b.ToTable("permission", "YOUR_SCHEMA");
+                    b.ToTable("Permission", "YOUR_SCHEMA");
                 });
 
             modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.Role", b =>
@@ -403,7 +401,7 @@ namespace UserService.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("role", "YOUR_SCHEMA");
+                    b.ToTable("Role", "YOUR_SCHEMA");
                 });
 
             modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.RolePermission", b =>
@@ -430,7 +428,7 @@ namespace UserService.Migrations
                     b.HasIndex("RoleId", "PermissionId")
                         .IsUnique();
 
-                    b.ToTable("role_permission", "YOUR_SCHEMA");
+                    b.ToTable("Role_Permission", "YOUR_SCHEMA");
                 });
 
             modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.Session", b =>
@@ -491,7 +489,7 @@ namespace UserService.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("session", "YOUR_SCHEMA");
+                    b.ToTable("Session", "YOUR_SCHEMA");
                 });
 
             modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.User", b =>
@@ -589,16 +587,15 @@ namespace UserService.Migrations
                         .HasColumnType("character varying(20)")
                         .HasColumnName("status");
 
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("tenant_id");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
 
                     b.HasKey("Id")
                         .HasName("pk_users");
+
+                    b.HasIndex("DisplayName")
+                        .HasDatabaseName("ix_users_display_name");
 
                     b.HasIndex("EmailAddress")
                         .IsUnique()
@@ -607,16 +604,10 @@ namespace UserService.Migrations
                     b.HasIndex("IsActive")
                         .HasDatabaseName("ix_users_is_active");
 
-                    b.HasIndex("PhoneNumber")
-                        .HasDatabaseName("ix_users_phone_number");
-
                     b.HasIndex("Status")
                         .HasDatabaseName("ix_users_status");
 
-                    b.HasIndex("TenantId")
-                        .HasDatabaseName("ix_users_tenant_id");
-
-                    b.ToTable("user", "YOUR_SCHEMA");
+                    b.ToTable("User", "YOUR_SCHEMA");
                 });
 
             modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.UserIdentity", b =>
@@ -662,7 +653,7 @@ namespace UserService.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("user_identity", "YOUR_SCHEMA");
+                    b.ToTable("User_Identity", "YOUR_SCHEMA");
                 });
 
             modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.AggregatesModel.UserRole", b =>
@@ -676,12 +667,10 @@ namespace UserService.Migrations
                         .HasColumnName("role_id");
 
                     b.Property<DateTime>("AssignedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("assigned_at");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid?>("AssignedBy")
-                        .HasColumnType("uuid")
-                        .HasColumnName("assigned_by");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -690,7 +679,7 @@ namespace UserService.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("user_role", "YOUR_SCHEMA");
+                    b.ToTable("User_Role", "YOUR_SCHEMA");
                 });
 
             modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.Entities.PasswordHistoryEntity", b =>
@@ -705,12 +694,11 @@ namespace UserService.Migrations
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("password_hash");
+                        .HasColumnName("password_salt");
 
                     b.Property<string>("Salt")
                         .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("password_salt");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid")
@@ -720,7 +708,7 @@ namespace UserService.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("password_history", "YOUR_SCHEMA");
+                    b.ToTable("Password_History", "YOUR_SCHEMA");
                 });
 
             modelBuilder.Entity("Steve.ManagerHero.UserService.Domain.Entities.SystemLogEntity", b =>
@@ -791,7 +779,7 @@ namespace UserService.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("system_log", "YOUR_SCHEMA");
+                    b.ToTable("System_Log", "YOUR_SCHEMA");
                 });
 
             modelBuilder.Entity("Steve.ManagerHero.TenantService.Domain.AggregatesModel.CustomDomain", b =>
@@ -912,7 +900,7 @@ namespace UserService.Migrations
 
                             b1.HasKey("UserId");
 
-                            b1.ToTable("user", "YOUR_SCHEMA");
+                            b1.ToTable("User", "YOUR_SCHEMA");
 
                             b1.ToJson("Address");
 
