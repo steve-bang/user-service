@@ -17,7 +17,7 @@ public class UserRepository(
 
     public async Task<User> CreateAsync(User user, CancellationToken cancellationToken = default)
     {
-        var userAdded = await _context.Users.AddAsync(user);
+        var userAdded = await _context.Users.AddAsync(user, cancellationToken);
 
         return userAdded.Entity;
     }
@@ -30,31 +30,26 @@ public class UserRepository(
     }
 
     public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
-    {
-        return _context.Users
+        => _context.Users
             .Include(u => u.Identities)
             .Include(u => u.PasswordHistories)
-            .FirstOrDefaultAsync(x => x.EmailAddress == new EmailAddress(email));
-    }
+            .FirstOrDefaultAsync(x => x.EmailAddress == new EmailAddress(email), cancellationToken);
 
     public Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
-    {
-        return _context.Users
+        => _context.Users
             .Include(u => u.UserRoles)
             .ThenInclude(ur => ur.Role)
             .Include(u => u.Identities)
             .Include(u => u.PasswordHistories)
             .AsSplitQuery()
-            .FirstOrDefaultAsync(u => u.Id == id);
-    }
+            .FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
 
     public Task<User?> GetByPhoneNumberAsync(string phoneNumber, CancellationToken cancellationToken = default)
-    {
-        return _context.Users
+        => _context.Users
             .Include(u => u.Identities)
             .Include(u => u.PasswordHistories)
-            .FirstOrDefaultAsync(x => x.PhoneNumber == new PhoneNumber(phoneNumber));
-    }
+            .FirstOrDefaultAsync(x => x.PhoneNumber == new PhoneNumber(phoneNumber), cancellationToken);
+    
 
     public Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default)
     {
@@ -118,13 +113,10 @@ public class UserRepository(
     }
 
     public async Task<bool> IsExistEmailAsync(string email, CancellationToken cancellationToken = default)
-    {
-        var user = await _context
+        => await _context
             .Users
-            .FirstOrDefaultAsync(x => x.EmailAddress == new EmailAddress(email));
+            .AnyAsync(x => x.EmailAddress == new EmailAddress(email), cancellationToken);
 
-        return user != null;
-    }
 
     public Task<bool> IsUsernameUniqueAsync(string username, CancellationToken cancellationToken = default)
     {

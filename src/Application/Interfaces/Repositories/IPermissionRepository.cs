@@ -34,6 +34,8 @@ public interface IPermissionRepository : IRepository
     /// <returns></returns>
     Task<Permission?> GetByCodeAsync(string code, CancellationToken cancellationToken = default);
 
+    Task<bool> IsExistsCodeAsync(string code, CancellationToken cancellationToken = default);
+
     /// <summary>
     /// Get permissions by ids.
     /// </summary>

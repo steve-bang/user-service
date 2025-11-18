@@ -30,6 +30,9 @@ public class PermissionRepository(
         return _context.Permissions.FirstOrDefaultAsync(x =>x.Code == code, cancellationToken);
     }
 
+    public Task<bool> IsExistsCodeAsync(string code, CancellationToken cancellationToken = default)
+        => _context.Permissions.AnyAsync(x => x.Code == code, cancellationToken);
+
     public async Task<(IEnumerable<Permission> items, int totalCount)> GetPermissionsAsync(
         Expression<Func<Permission, bool>> filter,
         int pageNumber = PaginationConstant.PageNumberDefault,
